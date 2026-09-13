@@ -84,6 +84,25 @@ Listen to one of each case immediately (any player). A_dombra_solo must be instr
 
 **Checkpoint reached: outcome 2 (pretrained generation) is now demonstrable from saved audio.** Run `py -3.12 scripts/build_viewer_manifest.py` and open `viewer/index.html`.
 
+## 5a. Expand the dataset from the RTRK archive (CPU triage + GPU transcription, 30–60 min)
+
+The RTRK batch (see `docs/DATA_SOURCES.md`) is on disk under `data/raw/rtrk_kazakh_traditional_audio/` with `SOURCE.json`.
+1. **Triage by ear (10 min, Kazakh listener):** open `data/manifests/rtrk_triage.csv` in a spreadsheet, play each file,
+   fill `keep` (y/n), `instrument` (dombra solo / dombra+voice / orchestra / other), `vocal` (y/n). Only `dombra solo` kui and
+   `dombra+voice` terme/songs/lullabies go further.
+2. **Instrumental crops:** add kept kui to `crop_plan.csv` (2 crops of 36 s per file, `kind=instrumental`, caption
+   "solo dombra, Kazakh kui, two-string plucked lute, unaccompanied, archival broadcast recording"; `group_id` = the file).
+   Put 1–2 kept recordings in `split=val`.
+3. **Vocal crops need transcripts.** Draft them with Whisper (Kazakh is supported), then a Kazakh speaker corrects them:
+   ```
+   PS> uv run --with faster-whisper python scripts\transcribe_draft.py data\raw\rtrk_kazakh_traditional_audio\terme_009.wav --model large-v3 --device cuda
+   ```
+   (`scripts/transcribe_draft.py` writes `data/lyrics/drafts/<file>.draft.txt` with segment timestamps.) Cut crops on segment
+   boundaries, copy ONLY the corrected words of that crop into `data/lyrics/crops/<sample_id>.txt`. A draft that nobody reviewed
+   must not enter the training set (`reviewed: false` stays in the README). Whisper output is a diagnostic aid, never proof.
+4. Re-run `build_manifest.py → validate_dataset.py → export_dataset_json.py`; validation must print `RESULT: OK`.
+Target for the pilot: 20–40 reviewed crops of 30–40 s. Report real minutes and real number of recordings, never crop counts.
+
 ## 5. Dataset preprocessing (GPU, 5–15 min for ≤40 clips)
 
 Prerequisites (CPU, done tonight or now): `crop_plan.csv` filled → `build_manifest.py` → `validate_dataset.py` prints `RESULT: OK` → `export_dataset_json.py` wrote `data/processed/dataset_train.json` and `dataset_val.json`.

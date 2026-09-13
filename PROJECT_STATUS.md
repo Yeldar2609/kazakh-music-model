@@ -20,6 +20,11 @@
     with crop-specific Kazakh transcripts cut on subtitle cue times). Validation = 1 separate dombra recording → 2 crops.
     Crops of one recording are counted as one source, never as independent data.
   - No Kazakh singing *with dombra and lyrics* exists in the set; the yurt field recording (human, no transcript) is kept only as a human reference in the viewer.
+- **RTRK archive batch downloaded (2026-09-14 00:50):** 116 files / 264.7 min from the state broadcaster's Hugging Face dataset
+  (CC BY-NC 4.0 → non-commercial research use only, decision recorded in `docs/DATA_SOURCES.md`): 71 kui, 20 zhyr-terme,
+  15 folk-composer songs, 10 lullabies. In `data/raw/rtrk_kazakh_traditional_audio/` with `SOURCE.json`. **Not yet in the
+  training set**: instrumentation unverified by ear and no transcripts. Triage sheet `data/manifests/rtrk_triage.csv`;
+  transcription draft helper `scripts/transcribe_draft.py`; procedure = runbook step 5a.
 - Scripts: `generate_cases.py` (dry-run tested), `check_adapter.py` (tested on fixtures), `preprocess_dataset.{cmd,sh}`, `train_adapter.{cmd,sh}` (argument handling tested with a shim; flags verified against upstream `args.py`), viewer builder + page (rendered and checked at 1280×720).
 - Read-only review done; blocker (output layout vs viewer) and high findings fixed.
 
@@ -38,5 +43,9 @@ All of `docs/TOMORROW_RUNBOOK.md` steps 2–7 on the 5090: env sync on that OS, 
 - Presentation hour and GPU window not yet known → the 2 h cutoff in the runbook is unfilled.
 
 ## Next action
-1. Transfer project folder + `C:\kmm\checkpoints` to the 5090 machine (runbook step 0).
-2. Run runbook steps 1–4; listen to the baseline; then steps 5–7 if time allows.
+1. Transfer project folder (now ~1.6 GB with RTRK raw audio) + `C:\kmm\checkpoints` to the 5090 machine (runbook step 0).
+2. Run runbook steps 1–4; listen to the baseline.
+3. Step 5a: triage the RTRK files by ear, draft + review transcripts for a few terme/songs, expand `crop_plan.csv`, re-validate.
+4. Steps 5–7: preprocess, smoke train, pilot, adapter comparison.
+Open ask: request access to the gated `yeshpanovrustem/kazakh_songs_asr` (Kazakh songs with verbatim transcripts) with the
+founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics material directly.

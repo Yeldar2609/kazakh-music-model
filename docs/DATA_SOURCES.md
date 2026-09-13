@@ -89,3 +89,22 @@ Search coverage on Commons (all with the API, audio + video namespaces): dombra,
 https://archive.org/advancedsearch.php?q=(dombra+OR+dombyra+OR+kobyz+OR+(kazakh+AND+(kui+OR+song+OR+folk)))+AND+mediatype%3Aaudio&fl[]=identifier&fl[]=title&fl[]=licenseurl&fl[]=creator&fl[]=date&rows=100&output=json
 ```
 Keep only items whose `licenseurl` is a creativecommons.org `publicdomain/zero`, `licenses/by/`, or `licenses/by-sa/` URL, then confirm the license statement on the item page itself — IA metadata is uploader-supplied and often wrong for Soviet-era Melodiya rips.
+
+## Update 2026-09-14 — RTRK "Kazakh Traditional Audio Archive" (Hugging Face `rtrk/kazakh-traditional-audio`)
+
+- Uploader: Hugging Face organisation `rtrk` = *Republican Television and Radio Corporation "Kazakhstan" JSC* (the state
+  broadcaster; org page lists three staff members; not HF-verified). Provenance: the broadcaster's own archive — the strongest
+  rights chain of anything found so far.
+- License (verbatim, dataset card): **CC BY-NC 4.0 — non-commercial use only.** Evidence: https://huggingface.co/datasets/rtrk/kazakh-traditional-audio
+- Decision: **USED for the non-commercial research prototype** (allowed_uses = non-commercial research and demo; adapters
+  trained on it must not be released or used commercially; attribution "RTRK Kazakhstan, Kazakh Traditional Audio Archive, CC BY-NC 4.0").
+  This reverses the first pass's blanket NC exclusion; the founder confirmed there are no owned recordings and the work is a
+  research demo. If a commercial path ever opens, this material must be removed and the adapter retrained.
+- Contents (metadata.jsonl, 1,500 WAV 44.1 kHz mono): kui 400 files / 16.4 h (dombra kui by title, a few marked "(қобыз)" =
+  kobyz, excluded), zhyr_terme 300 / 83 h (sung poetry, typically with dombra; **no lyrics in metadata**), an_kompozitor 400 /
+  18.3 h (folk-composer songs), besik 50 / 2.6 h (lullabies), retro 250, ertegi 100 (spoken tales, not used).
+- Selected for download (first batch): ≤80 kui (non-kobyz, 50–240 s), 20 shortest zhyr_terme (60–200 s), 15 an_kompozitor,
+  10 besik. Raw copies: `data/raw/rtrk_kazakh_traditional_audio/`; per-file metadata in that folder's `SOURCE.json`.
+- Caveats: instrumentation is not verified by ear (some kui may be orchestral arrangements); no transcripts, so vocal clips
+  need machine transcription **plus human review** before any lyric is attached (see runbook step 5a). Triage sheet:
+  `data/manifests/rtrk_triage.csv`.
