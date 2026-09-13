@@ -1,0 +1,24 @@
+# heavy / machine-specific — never commit
+upstream/
+checkpoints/
+work/
+.venv/
+venv*/
+__pycache__/
+*.pyc
+.env.local
+sidestep.log
+# audio, tensors, weights, generated outputs
+data/raw/
+data/processed/
+outputs/
+*.wav
+*.flac
+*.mp3
+*.m4a
+*.ogg
+*.pt
+*.safetensors
+# keep manifests, lyrics, configs, docs, scripts
+!data/manifests/
+!data/lyrics/

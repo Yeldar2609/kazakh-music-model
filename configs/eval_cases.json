@@ -1,0 +1,42 @@
+{
+  "_note": "Fixed evaluation cases. Same lyrics/caption/seed/duration/settings for baseline and adapter runs. language is 'unknown' because ACE-Step has no Kazakh code (see docs/DECISIONS.md).",
+  "model_variant": "turbo",
+  "inference_steps": 8,
+  "shift": 3.0,
+  "guidance_scale": 1.0,
+  "duration_seconds": 30,
+  "seeds": [1001, 1002, 1003],
+  "vocal_language": "unknown",
+  "cases": [
+    {
+      "id": "A_dombra_solo",
+      "kind": "instrumental",
+      "caption": "solo dombra, Kazakh traditional two-string plucked lute, unaccompanied kui, steady strumming and melodic runs, no vocals, no drums, clean studio recording",
+      "lyrics": "[Instrumental]",
+      "instrumental": true,
+      "bpm": null,
+      "keyscale": "",
+      "timesignature": ""
+    },
+    {
+      "id": "B_verse_simple",
+      "kind": "vocal",
+      "caption": "Kazakh folk song, solo male vocal, simple acoustic accompaniment, slow tempo, intimate, clean recording",
+      "lyrics_file": "data/lyrics/eval_verse_abai.txt",
+      "instrumental": false,
+      "bpm": null,
+      "keyscale": "",
+      "timesignature": ""
+    },
+    {
+      "id": "C_verse_dombra_led",
+      "kind": "vocal",
+      "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
+      "lyrics_file": "data/lyrics/eval_verse_abai.txt",
+      "instrumental": false,
+      "bpm": null,
+      "keyscale": "",
+      "timesignature": ""
+    }
+  ]
+}

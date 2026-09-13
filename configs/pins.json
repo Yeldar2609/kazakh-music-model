@@ -1,0 +1,27 @@
+{
+  "engine": {
+    "repo": "https://github.com/ace-step/ACE-Step-1.5",
+    "revision": "ca1e85fe9430179831e6bc6be790c332190a3866",
+    "revision_date": "2026-08-29",
+    "clone_command": "git clone https://github.com/ace-step/ACE-Step-1.5.git upstream/ACE-Step-1.5 && git -C upstream/ACE-Step-1.5 checkout ca1e85fe9430179831e6bc6be790c332190a3866",
+    "python": ">=3.11,<3.13",
+    "torch_windows": "2.7.1+cu128",
+    "torch_linux_x86_64": "2.10.0+cu128"
+  },
+  "checkpoint": {
+    "hf_repo": "ACE-Step/Ace-Step1.5",
+    "revision": "19671f406d603126926c1b7e2adc169acbcade22",
+    "revision_date": "2026-02-03",
+    "components": ["acestep-v15-turbo", "vae", "Qwen3-Embedding-0.6B"],
+    "skipped": ["acestep-5Hz-lm-1.7B (planning LM, disabled for this experiment)"],
+    "approx_bytes": 6340000000,
+    "model_variant": "turbo",
+    "inference_steps": 8,
+    "shift": 3.0
+  },
+  "reference": {
+    "repo": "https://github.com/pymaster17/VocalRender",
+    "revision": "c0ab96e1a506d6513486d5a2c5974bac0476d79b",
+    "role": "research reference only; not used in the prototype"
+  }
+}
