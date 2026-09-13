@@ -1,0 +1,91 @@
+# Data sources inventory — license-clean audio for the Kazakh music prototype
+
+Compiled 2026-09-13 by the DATA agent. Scope: real recordings we may legally use for a small
+ACE-Step LoRA training set. Accepted licenses: public domain, CC0, CC BY, CC BY-SA.
+Anything non-commercial, ND, gated, "all rights reserved", or with unclear uploader rights is EXCLUDED.
+
+Pilot files on disk: `data/raw/wikimedia_commons/` (5 files, 664.6 s = 11.1 min, 5 recordings / 4 compositions).
+Per-file metadata (sha256, ffprobe, license evidence): `data/raw/wikimedia_commons/SOURCE.json`.
+
+## Summary
+
+| Decision  | Count | What |
+|-----------|------:|------|
+| PILOT     | 5 | 2 dombra solo (video containers), 1 vocal+dombra field clip (30 s), 2 vocal anthem recordings with time-aligned Kazakh lyrics |
+| CANDIDATE | 4 rows (5 files) | 1 dombra solo (provenance unresolved), 1 Jambyl archival footage + sibling film (museum, CC BY-SA), 1 PD 1992–2006 anthem vocal, 1 Kazakh SSR anthem (1945) |
+| EXCLUDED  | 13 rows | NC/ND datasets, gated dataset, speech-only, pronunciation clips, brass-band anthems, commercial sample packs, InC archives, direct YouTube |
+| NOT REACHABLE | 2 | archive.org and flickr.com timed out on every probe from this network (not searched, not "nothing found") |
+
+Type legend: **DS** = dombra solo, **V+D** = vocal with dombra, **V** = vocal only (choir/orchestra), **S** = speech.
+
+## Inventory
+
+| # | Source | URL | Title | Performer | License (verbatim) + evidence URL | Type | Duration | Lyrics | Decision / reason |
+|---|--------|-----|-------|-----------|-----------------------------------|------|----------|--------|-------------------|
+| 1 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Boz_salkin_-_dombra_%D0%B1%D0%BE%D0%B7_%D1%81%D0%B0%D0%BB%D0%BA%D0%B8%D0%BD.webm | boz salkin - dombra боз салкин | ojutan (own performance, hobbyist) | "Creative Commons Attribution 3.0 Unported" — `{{YouTube CC-BY\|ojutan}}` + `{{YouTubeReview ... date=2020-02-14}}`; evidence: file page above | DS (Kyrgyz tune on fretless 2-string dombra) | 231.9 s | no | **PILOT** — clean solo dombra, first-person own-work description. Flag: Kyrgyz repertoire, non-Kazakh performer. |
+| 2 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Moon_and_stars.webm | Moon and stars | Rustem4397 (own work; performer unnamed) | "Creative Commons Attribution-Share Alike 4.0 International" — `{{self\|cc-by-sa-4.0}}`; evidence: file page above | DS (Wiki Loves Folklore 2023, Kazakhstan) | 200.9 s | no | **PILOT** — license-clean own work; content needs a human ear (could be a school video with a backing track; sits in "to check" category). |
+| 3 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Singing_in_the_Yurt_at_Nowruz_Flickr.webm | Singing in the Yurt at Nowruz | unnamed singer with dombra; rec. Ken & Nyetta (Flickr kjfnjy) | "Creative Commons Attribution 2.0 Generic" — `{{Flickrreview\|Dyolf77\|2015-03-26}}{{cc-by-2.0}}`; evidence: file page above (Flickr original https://www.flickr.com/photos/kjfnjy/8579937298 unreachable from this network) | V+D (field recording, Nauryz 2015) | 30.04 s | no | **PILOT** — only vocal+dombra item found; passes the 30 s floor by 0.04 s; tourist-camera audio. |
+| 4 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Kazakhstan_2006.ogg | Менің Қазақстаным — anthem, vocal, 2006 | unnamed soloist, Choir of the State Opera & Ballet Theatre + State Symphony Orchestra of RK, cond. Aidar Torybaev | "Public domain" — `{{PD-KZ-exempt}}` (Copyrighted=False); evidence: file page above; template: https://commons.wikimedia.org/wiki/Template:PD-KZ-exempt | V (choir + orchestra) | 109.7 s | **yes, time-aligned**: https://commons.wikimedia.org/wiki/TimedText:Kazakhstan_2006.ogg.kk.srt (cue 4 typo "дазағым" → "қазағым") | **PILOT** — only source of sung Kazakh with aligned lyrics; off-genre (anthem, orchestral). |
+| 5 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Kazakhstan_National_Anthem_2012.ogg | Менің Қазақстаным — official anthem recording, 2012 | Government of Kazakhstan (president.kz file; performers unnamed) | "Public domain" — `{{PD-KZ-exempt}}`; evidence: file page above | V (choir + orchestra) | 92.1 s | **yes, time-aligned**: https://commons.wikimedia.org/wiki/TimedText:Kazakhstan_National_Anthem_2012.ogg.kk.srt (canonical text; also https://en.wikipedia.org/wiki/Meni%C5%A3_Qazaqstanym) | **PILOT** — same composition as #4 (counts once as a song), cleanest chain (official file). |
+| 6 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Master_of_Dombra.webm | Master of Dombra | unknown; YouTube channel "Yerbol Akpanov" (Ербол Акпанов) | "Creative Commons Attribution 3.0 Unported" — `{{YouTube CC-BY}}` + `{{YouTubeReview ... date=2020-02-12}}`; evidence: file page above | DS | 693.2 s | no | **CANDIDATE** — 11.5 min of solo dombra, but YouTube description is empty and the channel is not verified as the performer; Commons review only certifies the CC-BY tag. Resolve by contacting the channel before use. |
+| 7 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2%D1%82%D1%8B%D2%A3_%D0%BC%D2%B1%D1%80%D0%B0%D2%93%D0%B0%D1%82%D1%82%D1%8B%D2%9B_%D0%B1%D0%B5%D0%B9%D0%BD%D0%B5%D0%B6%D0%B0%D0%B7%D0%B1%D0%B0%D1%81%D1%8B.webm | Жамбыл Жабаевтың мұрағаттық бейнежазбасы (archival video of Jambyl Jabayev) | Zhambyl museum (donated content, VRT ticket 2025081310002993) | "Creative Commons Attribution-Share Alike 4.0" — `{{cc-by-sa 4.0}}` + `{{PermissionTicket}}`; evidence: file page above | unknown (possibly aqyn recitation with dombra, 1930s-40s newsreel) | 1123.6 s (135 MB) | unknown | **CANDIDATE** — strongest provenance of anything found (museum permission on file), content and audio quality unverified; a human should watch it first. Sibling: "Жамбыл Жабаев туралы фильм.webm" (460 s, 416 MB, same license). |
+| 8 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:%D2%9A%D0%B0%D0%B7%D0%B0%D2%9B%D1%81%D1%82%D0%B0%D0%BD_%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%D1%81%D1%8B%D0%BD%D1%8B%D2%A3_%D0%9C%D0%B5%D0%BC%D0%BB%D0%B5%D0%BA%D0%B5%D1%82%D1%82%D1%96%D0%BA_%D3%98%D0%BD%D2%B1%D1%80%D0%B0%D0%BD%D1%8B.ogg | Anthem of Kazakhstan 1992–2006, vocal | Government of Kazakhstan (hymn.ru copy) | "Public domain" — `{{PD-KZ-exempt}}`; evidence: file page above | V | 193.3 s | yes (text only): https://en.wikipedia.org/wiki/Anthem_of_the_Republic_of_Kazakhstan (no SRT) | **CANDIDATE** — another sung-Kazakh recording with known lyrics, not aligned; off-genre. |
+| 9 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:Anthem_of_the_Kazakh_Soviet_Socialist_Republic.ogg | Anthem of the Kazakh SSR (1945 Melodiya recording, choral) | Soviet state ensemble (unnamed) | "Public domain" — `{{PD-KZ-exempt}}`; evidence: file page above | V | 206.8 s | yes (text): https://en.wikipedia.org/wiki/Anthem_of_the_Kazakh_Soviet_Socialist_Republic | **CANDIDATE** — sung Kazakh, PD claim via state-symbol exemption on a Soviet-era phonogram (weaker than #4/#5); off-genre. |
+| 10 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:%D0%94%D0%BE%D0%BC%D0%B1%D1%80%D0%B0.ogg | Домбра.ogg | Lvova | "CC0 1.0" (Creative Commons Zero) | S (word pronunciation, 40 KB) | ~1 s | n/a | **EXCLUDED** — not music, under 30 s. Same for `File:LL-Q150 (fra)-Mathieu Kappler-Dombras.wav` (French pronunciation, CC BY-SA 4.0). |
+| 11 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:National_Anthem_of_Kazahstan,_Performed_by_the_Us_Navy_Band.ogg (+ 5 sibling files) | Kazakhstan anthem, US Navy Band / State Symphony instrumental | US Navy Band; State Symphony Orchestra of RK | Commons API `LicenseShortName`: "Public domain" for the Navy Band and State Symphony files, "CC BY-SA 4.0" for `National Anthem of Kazahstan, Performed by the Us Navy Band.ogg` and `Khazakhssranthem.ogg` (own-work uploads) | instrumental brass band / symphony | 60–200 s | n/a | **EXCLUDED** — license-clean but no dombra and no voice; useless for the target style. |
+| 12 | Wikimedia Commons | https://commons.wikimedia.org/wiki/File:%D0%9F%D0%B0%D0%B9%D0%B4%D0%B0%D0%BD%D0%B3_%D0%A1%D0%B0%D0%B1%D0%B0%D1%80%D0%B4%D0%B0%D2%A3_-_Paidang_Sabardang_-_traditional_mongolian_music_on_Dombra_-_Tovshuur.webm | Paidang Sabardang — Mongolian music on dombra/tovshuur | ojutan | "Creative Commons Attribution 3.0 Unported" (YouTube CC-BY, reviewed) | DS (Mongolian Oirat repertoire) | 57.8 s | no | **EXCLUDED** — Mongolian repertoire, not Kazakh; could be added later only as generic dombra timbre. |
+| 13 | Hugging Face | https://huggingface.co/datasets/rtrk/kazakh-traditional-audio | Kazakh Traditional Audio Archive (1500 WAV: küi, zhyr/terme, folk songs, lullabies, retro 1950–90) | various (unnamed) | "CC BY-NC 4.0 — non-commercial use only" (README + `license: cc-by-nc-4.0` card) | DS + V+D + V + S | ~1500 clips | partial (titles only; metadata.jsonl not present at root) | **EXCLUDED** — NC licence; also 1950–90 "retro" tracks cannot be the uploader's to license, so provenance is doubtful even for NC research. Best-shaped dataset found; revisit only if the project is formally non-commercial AND rights are clarified with open@rtrk.kz. |
+| 14 | Hugging Face | https://huggingface.co/datasets/yeshpanovrustem/kazakh_songs_asr | Kazakh Songs ASR Dataset (3013 sung segments with transcriptions, artist, title) | various commercial artists | `license: other`, gated (manual approval), "Use of this dataset for commercial purposes is strictly prohibited" | V (sung Kazakh with lyrics) | 3013 segments | **yes — verbatim transcriptions** | **EXCLUDED** — gated + NC + underlying songs are commercial releases. Ideal shape for the lyrics path if written permission is ever obtained (arXiv 2603.00961). |
+| 15 | Hugging Face | https://huggingface.co/datasets/issai/KazakhTTS , https://huggingface.co/datasets/ai4kazakh/ISSAI_KazakhTTS2 | KazakhTTS / KazakhTTS2 (ISSAI) | 5 professional readers | no license field on the HF cards (paper says open corpus; verify at https://github.com/IS2AI/Kazakh_TTS before use) | S (read speech, 44.1 kHz) | 100+ h | n/a | **EXCLUDED** for singing — speech only. Noted as a possible source of Kazakh phonetics if a speech-conditioned step is ever needed. |
+| 16 | Hugging Face | https://huggingface.co/datasets/issai/Kazakh_Speech_Corpus_2 | Kazakh Speech Corpus 2 | crowd speakers | `license: mit` (HF card) | S | ~1200 h | n/a | **EXCLUDED** — speech, not singing. |
+| 17 | Mozilla Common Voice | https://commonvoice.mozilla.org/ | Common Voice — Kazakh (kk) | crowd | CC0 (Common Voice policy; per Wikipedia "available under the public domain license CC0") | S (read sentences) | hours not verified from this box (HF mirror is gated) | n/a | **EXCLUDED for singing** — speech only; exists and is CC0 if a speech corpus is ever needed. |
+| 18 | Freesound | https://freesound.org/search/?q=dombra (0 results), https://freesound.org/people/yeldarx/sounds/710766/ | Astana Train Station Announcements in Kazakh | yeldarx | not read (login needed for download; license not shown in search) | S | n/a | n/a | **EXCLUDED** — zero dombra/kobyz/dombyra results on Freesound; the only "kazakh" hit is station announcements (speech). |
+| 19 | Jamendo (via Openverse) | https://www.jamendo.com/track/1744778 and 9 sibling tracks ("Kazakh Night", "Kazakh Strings fast", ...) | "Kazakh ..." production tracks | Vladimir Ney | CC BY-NC-ND 3.0 (Openverse metadata) | instrumental (synth/ethnic library) | 16–79 s | n/a | **EXCLUDED** — NC-ND; also stock-library style, not traditional dombra. |
+| 20 | Europeana | https://www.europeana.eu/ (query "kazakh": CREM/CNRS Central-Asian dutar/tambur solos; query "kobyz": Endangered Archives Programme Udmurt recordings) | Central-Asian field recordings | various | `http://rightsstatements.org/vocab/InC/1.0/` (In Copyright) | instrumental / vocal | various | no | **EXCLUDED** — all In Copyright; "kobyz" hits are Udmurt (Volga fiddle), not Kazakh. No dombra hits at all. |
+| 21 | Commercial sample libraries | Loopmasters, Big Fish Audio "Kazakh Dombra", Pond5, Slooply, Impact Soundworks "Plectra 3: Kazakh Dombra" | dombra loops / Kontakt library | session players | proprietary EULA (purchase required) | DS | n/a | n/a | **EXCLUDED** — paid, EULA typically forbids redistribution/training; no purchase allowed. |
+| 22 | YouTube (direct) | e.g. https://www.youtube.com/watch?v=pw9psltZ2jc (Сүгір Қаратау шертпесі) and similar | many dombra küy performances | various | mostly Standard YouTube License; some CC BY | DS / V+D | many | rarely | **EXCLUDED** — no YouTube downloaders permitted; only Commons-imported, license-reviewed copies (rows 1, 6, 12) are used. |
+| 23 | Internet Archive | https://archive.org/advancedsearch.php?q=dombra+AND+mediatype%3Aaudio | — | — | — | — | — | — | **NOT REACHABLE** — every HTTP probe to archive.org timed out (TCP, 25 s) from this network on 2026-09-13; not searched. Re-run the query from another network (see below). |
+| 24 | Flickr | https://www.flickr.com/photos/kjfnjy/8579937298 | (original of row 3) | — | — | — | — | — | **NOT REACHABLE** — connection reset/timeout; license evidence taken from the Commons Flickr review instead. |
+
+Search coverage on Commons (all with the API, audio + video namespaces): dombra, dombyra, домбыра, күй, kui, қазақ әні, Kazakh song, Kazakh music/folk/traditional, Құрманғазы/Kurmangazy, Абай, Дина Нұрпейісова, қобыз/kobyz, ақын/айтыс, Наурыз, бесік жыры, жыр, терме, Kazakhstan/Казахстан/Қазақстан; categories Dombra, People playing dombras, Music of Kazakhstan, Folk music of Kazakhstan, Musicians/Vocalists/Composers from Kazakhstan, Kazakh singers, Aqyns, Videos from Kazakhstan (by year), Wiki Loves Folklore 2023, Zhambyl museum, National anthems of Kazakhstan, PD-Kazakhstan. Result: exactly four dombra media files exist on Commons (rows 1, 2, 3, 6) plus one Mongolian one (row 12).
+
+## Usable totals (files on disk)
+
+- 664.6 s = 11.1 min across 5 files.
+- Independent recordings: 5. Independent compositions: 4 (rows 4 and 5 are two recordings of one anthem).
+- On-target (dombra) material: 462.9 s = 7.7 min (rows 1–3). Sung Kazakh with aligned lyrics: 201.7 s = 3.4 min (rows 4–5, orchestral anthem, off-genre).
+- Files with matching sung lyrics: rows 4 and 5 (time-aligned SRT on Commons). Rows 1–3: none.
+
+## License caveats to carry into the presentation
+
+- `{{PD-KZ-exempt}}` is a Kazakh-law exemption for official state symbols (the anthem's music and words). Commons extends it to the recordings; the phonogram rights of the 2006/2012 state recordings are not separately documented. Low practical risk (official government files), but say so.
+- CC BY-SA 4.0 (row 2) is share-alike: anything derived and published must carry the same license — fine for a research prototype, note it for any released model weights.
+- Attribution strings for each file are in `SOURCE.json` (`attribution` field).
+
+## How to collect more
+
+### 1. Wikimedia Commons (best license hygiene; small but growing)
+
+1. List every media file in the category, then read license + duration with one API call (no login needed; always send a User-Agent):
+   ```
+   https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:People_playing_dombras&cmtype=file&cmlimit=500&format=json
+   https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&titles=File:<name>&iiprop=url|size|extmetadata&format=json
+   ```
+   `extmetadata.LicenseShortName` must be one of `CC0`, `Public domain`, `CC BY x.x`, `CC BY-SA x.x`; `imageinfo[0].duration` must be ≥ 30.
+2. Also sweep: `Category:Dombra` (and its "People with dombras" subtree), `Category:Zhambyl museum` / `Category:Content donated by Zhambyl Museum`, `Category:Videos from Wiki Loves Folklore <year>` (filter country Kazakhstan), and full-text search `srsearch="<term> filetype:video"` for домбыра, күй, ақын, айтыс, Наурыз, жыр, терме.
+3. Download the original bytes from `imageinfo[0].url` (strip the `?utm_...` suffix) with `curl -L -A "<project>/<version> (<contact>)"`, keep the original filename, run `sha256sum` + `ffprobe`, and add a row to `SOURCE.json`.
+4. Watch the Jambyl museum donation (VRT ticket 2025081310002993, uploaded 2025-08-10): the museum has already released material under CC BY-SA 4.0; ask them (via the Commons uploader Sofiemama / the VRT ticket) whether they hold audio recordings of aqyns they could release the same way.
+5. For YouTube-hosted CC BY performances the Commons-sanctioned path is the `video2commons` tool (a Commons volunteer imports it and the `{{YouTubeReview}}` bot archives the license). Only accept imports whose channel demonstrably belongs to the performer (row 6 shows the failure mode).
+
+### 2. Direct permission from rights-holding collections (only real route to dombra-accompanied singing with lyrics)
+
+1. `yeshpanovrustem/kazakh_songs_asr` (HF, gated): request access with real details and, separately, e-mail the author for written permission covering model training and any release of weights. Non-commercial only; the underlying songs are commercial releases, so this can only ever cover research use. Payoff: 3013 sung segments with verbatim transcriptions.
+2. `rtrk/kazakh-traditional-audio` (HF, CC BY-NC 4.0): e-mail open@rtrk.kz asking (a) for the provenance of the küi / zhyr-terme / besik subsets and (b) whether they can relicense the self-produced subsets as CC BY 4.0. Skip the "retro 1950–90" subset entirely.
+3. Fallback that is fully clean: record 5–10 küy with a conservatory student under a signed CC BY 4.0 release (one afternoon, phone + lavalier), then upload to Commons so the license is publicly evidenced.
+
+### Re-run when archive.org is reachable
+
+```
+https://archive.org/advancedsearch.php?q=(dombra+OR+dombyra+OR+kobyz+OR+(kazakh+AND+(kui+OR+song+OR+folk)))+AND+mediatype%3Aaudio&fl[]=identifier&fl[]=title&fl[]=licenseurl&fl[]=creator&fl[]=date&rows=100&output=json
+```
+Keep only items whose `licenseurl` is a creativecommons.org `publicdomain/zero`, `licenses/by/`, or `licenses/by-sa/` URL, then confirm the license statement on the item page itself — IA metadata is uploader-supplied and often wrong for Soviet-era Melodiya rips.

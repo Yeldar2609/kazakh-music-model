@@ -10,7 +10,8 @@ generation works · adapter trained and reloaded · human-reviewed improvement. 
 
 ## Pinned foundation
 - Engine: `ace-step/ACE-Step-1.5` @ `ca1e85fe…` (2026-08-29), MIT. Weights: HF `ACE-Step/Ace-Step1.5` @ `19671f40…`
-  (turbo DiT 4.6 GB + VAE 0.3 GB + Qwen3-Embedding-0.6B 1.1 GB; planning LM not used). `configs/pins.json`.
+  (turbo DiT 4.6 GB + VAE 0.3 GB + Qwen3-Embedding-0.6B 1.1 GB, plus the 3.7 GB planning LM folder which is present
+  on disk because upstream's init requires it but is never loaded). `configs/pins.json`, `configs/checkpoint_checksums.json`.
 - Kazakh is **not** a supported language code → all Kazakh samples/cases use `language: "unknown"`; lyrics stay Cyrillic.
 - Reference: `pymaster17/VocalRender` (score-native singing synthesis) is documented, not used.
 
@@ -30,8 +31,11 @@ whole repo unpinned — see `docs/TOMORROW_RUNBOOK.md` step 0), and writes `CHEC
 ## Verified tonight (CPU laptop, RTX 3050 Ti 4 GB)
 - Upstream docs/source read; language handling, trainer flags, adapter reload path confirmed in code.
 - Weights downloaded, sha256 verified against Hugging Face LFS.
-- `scripts/validate_dataset.py --selftest` (Kazakh letters round-trip) and a synthetic end-to-end run of
-  `build_manifest.py → validate_dataset.py → export_dataset_json.py` (leakage + duplicate detection fired as designed).
+- `scripts/validate_dataset.py --selftest` (Kazakh letters round-trip), a synthetic end-to-end run (leakage + duplicate
+  detection fired as designed), and the real pilot dataset: 11 crops, 7.0 min, 3 independent recording groups
+  (`data/manifests/manifest.json`, sources and licenses in `docs/DATA_SOURCES.md`).
+- One 10 s pretrained generation on the laptop (INT8, CPU offload): `outputs/baseline_laptop_smoke/` — evidence the
+  engine runs, not the demo baseline.
 - GPU-dependent steps are **prepared, awaiting 5090 validation** — see `docs/TOMORROW_RUNBOOK.md`.
 
 ## Data workflow (CPU)

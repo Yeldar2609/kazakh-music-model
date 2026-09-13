@@ -1,26 +1,27 @@
-!data/lyrics/
-!data/manifests/
+# heavy / machine-specific - never commit
+upstream/
+checkpoints/
+work/
+.venv/
+venv*/
+__pycache__/
+*.pyc
+.env.local
+sidestep.log
+.cache/
+.gstack/
 # audio, tensors, weights, generated outputs
-# heavy / machine-specific — never commit
-# keep manifests, lyrics, configs, docs, scripts
+data/raw/
+data/processed/*
+!data/processed/*.json
+outputs/
+*.wav
 *.flac
-*.m4a
 *.mp3
+*.m4a
 *.ogg
 *.pt
-*.pyc
 *.safetensors
-*.wav
-.cache/
-.env.local
-.gstack/
-.venv/
-__pycache__/
-checkpoints/
-data/processed/
-data/raw/
-outputs/
-sidestep.log
-upstream/
-venv*/
-work/
+# keep manifests, lyrics, configs, docs, scripts
+!data/manifests/
+!data/lyrics/

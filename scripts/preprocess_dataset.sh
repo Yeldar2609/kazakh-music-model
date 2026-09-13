@@ -18,8 +18,9 @@ if [ -f "$ROOT/.env.local" ]; then
 fi
 export KMM_CHECKPOINTS="${KMM_CHECKPOINTS:-$ROOT/checkpoints}"
 export PYTHONUTF8=1
+# Absolutise both paths BEFORE cd-ing into the upstream clone.
 DATASET_JSON="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
-TENSOR_OUT="$2"
+TENSOR_OUT="$(mkdir -p "$2" && cd "$2" && pwd)"
 shift 2
 cd "$ROOT/upstream/ACE-Step-1.5"
 echo "[preprocess_dataset] checkpoints=$KMM_CHECKPOINTS env=${UV_PROJECT_ENVIRONMENT:-<uv default>}"

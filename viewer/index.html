@@ -247,11 +247,11 @@
 <script src="manifest.js"></script>
 <script>
 "use strict";
-// Inline copy of viewer/manifest.example.json. Used only when manifest.js is absent
-// and manifest.example.json cannot be fetched (Chrome blocks fetch on file://).
+// Inline EXAMPLE manifest (no outputs, no notes). Used only when manifest.js is absent so the
+// layout and empty states can be checked. It never carries results.
 const KMM_EXAMPLE_INLINE = {
-  "_note": "EXAMPLE manifest for layout checks. Same shape as the generated viewer/manifest.json. The wav paths do not exist; the viewer only uses this when manifest.js is absent. Human reference recordings are NOT generated; the viewer labels them separately.",
-  "built_at": "2026-09-13T20:00:00",
+  "_note": "INLINE EXAMPLE (built into index.html). Shown only when viewer/manifest.js is absent. Carries NO outputs and NO listening notes: every slot renders its empty state. Run scripts/build_viewer_manifest.py to build the real manifest.",
+  "built_at": null,
   "outputs_root": "outputs",
   "settings": {
     "model_variant": "turbo",
@@ -286,36 +286,7 @@ const KMM_EXAMPLE_INLINE = {
       "lyrics_reviewed_by_kazakh_speaker": null,
       "language": "unknown",
       "instrumental": true,
-      "entries": [
-        {
-          "label": "baseline",
-          "seed": 1001,
-          "wav": "../outputs/baseline/A_dombra_solo/A_dombra_solo_seed1001.wav",
-          "wav_missing": false,
-          "wav_bytes": 5292044,
-          "generated_on": "2026-09-12T18:41:07",
-          "generated_on_source": "wav file mtime",
-          "sidecar_missing": false,
-          "sidecar_error": null,
-          "sidecar": {
-            "case_id": "A_dombra_solo",
-            "caption": "solo dombra, Kazakh traditional two-string plucked lute, unaccompanied kui, steady strumming and melodic runs, no vocals, no drums, clean studio recording",
-            "lyrics": "[Instrumental]",
-            "vocal_language": "unknown",
-            "seed": 1001,
-            "duration": 30,
-            "inference_steps": 8,
-            "shift": 3.0,
-            "model_variant": "turbo",
-            "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
-            "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
-            "adapter": null,
-            "wall_time_s": 41.8,
-            "peak_vram_bytes": 9126805504
-          },
-          "listening_notes": ""
-        }
-      ]
+      "entries": []
     },
     {
       "id": "B_verse_simple",
@@ -337,67 +308,7 @@ const KMM_EXAMPLE_INLINE = {
       "lyrics_reviewed_by_kazakh_speaker": false,
       "language": "unknown",
       "instrumental": false,
-      "entries": [
-        {
-          "label": "baseline",
-          "seed": 1001,
-          "wav": "../outputs/baseline/C_verse_dombra_led/C_verse_dombra_led_seed1001.wav",
-          "wav_missing": false,
-          "wav_bytes": 5292044,
-          "generated_on": "2026-09-12T18:52:30",
-          "generated_on_source": "wav file mtime",
-          "sidecar_missing": false,
-          "sidecar_error": null,
-          "sidecar": {
-            "case_id": "C_verse_dombra_led",
-            "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
-            "lyrics": "[Verse]\nЖелсіз түнде жарық ай,\nСәулесі суда дірілдеп.\nАуылдың жаны терең сай,\nТасыған өзен күрілдеп.\n",
-            "vocal_language": "unknown",
-            "seed": 1001,
-            "duration": 30,
-            "inference_steps": 8,
-            "shift": 3.0,
-            "model_variant": "turbo",
-            "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
-            "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
-            "adapter": null,
-            "wall_time_s": 44.2,
-            "peak_vram_bytes": 9126805504
-          },
-          "listening_notes": ""
-        },
-        {
-          "label": "adapter",
-          "seed": 1001,
-          "wav": "../outputs/adapter/C_verse_dombra_led/C_verse_dombra_led_seed1001.wav",
-          "wav_missing": false,
-          "wav_bytes": 5292044,
-          "generated_on": "2026-09-13T09:15:02",
-          "generated_on_source": "sidecar.generated_at",
-          "sidecar_missing": false,
-          "sidecar_error": null,
-          "sidecar": {
-            "case_id": "C_verse_dombra_led",
-            "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
-            "lyrics": "[Verse]\nЖелсіз түнде жарық ай,\nСәулесі суда дірілдеп.\nАуылдың жаны терең сай,\nТасыған өзен күрілдеп.\n",
-            "vocal_language": "unknown",
-            "seed": 1001,
-            "duration": 30,
-            "inference_steps": 8,
-            "shift": 3.0,
-            "model_variant": "turbo",
-            "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
-            "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
-            "adapter": {
-              "path": "outputs/training/lora_kz_v1/adapter.safetensors",
-              "scale": 0.8
-            },
-            "wall_time_s": 45.1,
-            "peak_vram_bytes": 9337568256
-          },
-          "listening_notes": "Example note (from a previous manifest.json). Dombra attack sounds closer to a real pluck than the baseline."
-        }
-      ]
+      "entries": []
     }
   ]
 };
@@ -428,6 +339,16 @@ function h(tag, attrs = {}, ...children) {
   for (const c of children.flat()) if (c != null) el.append(c);
   return el;
 }
+function adapterText(a) {
+  if (!a) return "unknown (missing in sidecar)";
+  const eff = a.scale_effective != null ? a.scale_effective : a.scale;
+  const req = a.scale_requested != null ? a.scale_requested : a.scale;
+  let t = "scale " + (eff != null ? eff : "?");
+  if (a.scale_effective != null) t += " (effective)";
+  if (req != null && eff != null && Number(req) !== Number(eff)) t += `, requested ${req}`;
+  const name = String(a.path || "").split(/[\/]/).pop();
+  return name ? `${t} · ${name}` : t;
+}
 function short(hash) { return hash ? String(hash).slice(0, 7) : "—"; }
 function fmtDate(iso) {
   if (!iso) return "unknown date";
@@ -442,13 +363,9 @@ function lsRemove(k) { try { localStorage.removeItem(k); } catch (e) {} }
 
 let MANIFEST = null, SOURCE = "", currentId = null;
 
-async function loadManifest() {
+function loadManifest() {
   if (window.KMM_MANIFEST) return { m: window.KMM_MANIFEST, source: "manifest.js (built " + (window.KMM_MANIFEST.built_at || "?") + ")" };
-  try {
-    const r = await fetch("manifest.example.json");
-    if (r.ok) return { m: await r.json(), source: "EXAMPLE manifest (manifest.example.json) — manifest.js not found; run scripts/build_viewer_manifest.py" };
-  } catch (e) { /* file:// cannot fetch; fall through */ }
-  return { m: KMM_EXAMPLE_INLINE, source: "EXAMPLE manifest (inline copy) — manifest.js not found; run scripts/build_viewer_manifest.py" };
+  return { m: KMM_EXAMPLE_INLINE, source: "EXAMPLE layout (no outputs) — manifest.js not found; run scripts/build_viewer_manifest.py" };
 }
 
 function renderCaseList() {
@@ -577,9 +494,7 @@ function playerCard(c, e, pins) {
     add("Model", sc.model_variant ? `ACE-Step 1.5 ${sc.model_variant}` : "unknown");
     add("Engine commit", short(sc.engine_commit));
     add("Checkpoint rev", short(sc.checkpoint_revision));
-    add("Adapter", e.label === "adapter"
-      ? (sc.adapter ? `scale ${sc.adapter.scale} · ${String(sc.adapter.path || "").split("/").pop()}` : "unknown (missing in sidecar)")
-      : "none");
+    add("Adapter", e.label === "adapter" ? adapterText(sc.adapter) : "none");
     add("Steps / shift", (sc.inference_steps != null ? sc.inference_steps : "?") + " / " + (sc.shift != null ? sc.shift : "?"));
     add("Duration", sc.duration != null ? sc.duration + " s" : null);
     add("Generated on", `${fmtDate(e.generated_on)} (${e.generated_on_source || "?"})`);
@@ -696,9 +611,9 @@ $("#themeBtn").addEventListener("click", () => {
 $("#exportBtn").addEventListener("click", showExport);
 $("#importBtn").addEventListener("click", showImport);
 
-(async function init() {
+(function init() {
   applyTheme(lsGet("kmm_theme"));
-  const { m, source } = await loadManifest();
+  const { m, source } = loadManifest();
   MANIFEST = m; SOURCE = source;
   $("#src").textContent = source; $("#src").title = source;
   const last = lsGet("kmm_last_case");

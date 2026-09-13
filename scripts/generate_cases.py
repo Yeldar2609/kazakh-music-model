@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 """Generate the fixed evaluation cases (configs/eval_cases.json) with ACE-Step 1.5 turbo.
 
-One WAV + one JSON sidecar per (case, seed). Baseline run and adapter run use the
-same script; only --adapter/--adapter-scale differ.
+One WAV + one JSON sidecar per (case, seed), laid out as
+    <out>/<case_id>/<case_id>_seed<seed>.wav  +  .json
+Baseline run and adapter run use the same script; only --adapter/--adapter-scale differ.
 
 Run with the uv environment interpreter (torch is required unless --dry-run):
     C:\\kmm\\venv-acestep\\Scripts\\python.exe scripts\\generate_cases.py --cases configs/eval_cases.json --out outputs/baseline
     uv run --project upstream/ACE-Step-1.5 python scripts/generate_cases.py ...
---dry-run prints the resolved parameters and never imports torch, so it works
-with the plain `py -3.12`.
+--dry-run prints the resolved parameters and never imports torch, so it also works
+with a plain interpreter (`py -3.12`, or the venv python / `uv run --project upstream/ACE-Step-1.5 python`).
 
 GPU steps are prepared but not yet validated on the 5090.
 """
@@ -186,12 +187,15 @@ def run(args, defaults, jobs):
             sys.exit("set_use_lora failed")
         msg = handler.set_lora_scale(args.adapter_scale)
         print(msg)
-        if not msg.startswith("✅"):
+        if msg.startswith("❌"):
             sys.exit("set_lora_scale failed")
+        if msg.startswith("⚠️"):
+            print(f"[generate_cases] WARNING from set_lora_scale: {msg}")
         if abs(handler.lora_scale - args.adapter_scale) > 1e-9:
             print(f"[generate_cases] WARNING: requested scale {args.adapter_scale} clamped to {handler.lora_scale}")
         adapter_info = {
             "path": adapter_dir,
+            "scale": handler.lora_scale,
             "scale_requested": args.adapter_scale,
             "scale_effective": handler.lora_scale,
             "weights_hash": get_lora_weights_hash(handler),
@@ -200,10 +204,13 @@ def run(args, defaults, jobs):
     use_cuda = torch.cuda.is_available() and str(handler.device).startswith("cuda")
     failures = 0
     for job in jobs:
-        stem = f"{job['case_id']}__seed{job['seed']}"
-        wav_path = os.path.join(args.out, stem + ".wav")
-        json_path = os.path.join(args.out, stem + ".json")
-        print(f"\n=== {stem} ===")
+        # Layout contract shared with the viewer builder: outputs/<label>/<case_id>/<case_id>_seed<seed>.{wav,json}
+        case_dir = os.path.join(args.out, job["case_id"])
+        os.makedirs(case_dir, exist_ok=True)
+        stem = f"{job['case_id']}_seed{job['seed']}"
+        wav_path = os.path.join(case_dir, stem + ".wav")
+        json_path = os.path.join(case_dir, stem + ".json")
+        print(f"\n=== {job['case_id']}/{stem} ===")
 
         params = GenerationParams(
             task_type="text2music",
@@ -234,7 +241,7 @@ def run(args, defaults, jobs):
         if use_cuda:
             torch.cuda.reset_peak_memory_stats()
         t0 = time.perf_counter()
-        result = generate_music(handler, None, params, config, save_dir=args.out)
+        result = generate_music(handler, None, params, config, save_dir=case_dir)
         wall = time.perf_counter() - t0
         peak = torch.cuda.max_memory_allocated() if use_cuda else None
 
@@ -244,11 +251,16 @@ def run(args, defaults, jobs):
             print(f"FAILED: {result.error or result.status_message}")
             continue
         os.replace(saved, wav_path)
+        # Upstream's own record of adapter state at generation time (inference.py:985-988):
+        # independent evidence that the LoRA was actually active for this clip.
+        engine_params = result.audios[0].get("params", {})
+        engine_lora = {k: engine_params.get(k) for k in ("lora_loaded", "use_lora", "lora_scale", "lora_weights_hash")}
 
         sidecar = {
             "case_id": job["case_id"],
             "kind": job["kind"],
             "output_wav": os.path.basename(wav_path),
+            "output_rel": f"{job['case_id']}/{os.path.basename(wav_path)}",
             "caption": job["caption"],
             "lyrics": job["lyrics"],
             "lyrics_file": job["lyrics_file"],
@@ -269,11 +281,12 @@ def run(args, defaults, jobs):
             "checkpoint_revision": defaults["checkpoint_revision"],
             "checkpoints_dir": ckpt_dir,
             "adapter": adapter_info,
+            "engine_lora_state": engine_lora,
             "device": str(handler.device),
             "dtype": str(handler.dtype),
             "offload_to_cpu": bool(args.offload_to_cpu),
-            "wall_time_sec": round(wall, 3),
-            "cuda_max_memory_allocated_bytes": peak,
+            "wall_time_s": round(wall, 3),
+            "peak_vram_bytes": peak,
             "time_costs": result.extra_outputs.get("time_costs"),
             "sample_rate": result.audios[0].get("sample_rate"),
             "generated_at": _dt.datetime.now(_dt.timezone.utc).isoformat(timespec="seconds"),

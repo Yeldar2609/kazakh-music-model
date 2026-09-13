@@ -8,6 +8,14 @@ Time plan (fill in): GPU access starts __:__ ; presentation __:__ ; **hard stop 
 Reserve the last 90–120 min for export, playback check in the viewer, rehearsal.
 
 Legend: `PS>` Windows PowerShell, `$` Linux bash. Paths are relative to the project folder `Kazak Music Model`.
+`py -3.12` = the Windows Python launcher; if it is absent, every `py -3.12 scripts/x.py` also works as
+`C:\kmm\venv-acestep\Scripts\python.exe scripts\x.py` (Windows) or `uv run --project upstream/ACE-Step-1.5 python scripts/x.py` (any OS).
+PowerShell 5.1 has no `&&`: run chained commands as separate lines.
+
+**Data state:** as of Sunday night the pilot dataset exists and validates (11 crops, 7.0 min, 3 recording groups; 9 train / 2 val;
+`data/processed/dataset_train.json` + `dataset_val.json` are committed). If you add recordings, re-run
+`build_manifest.py → validate_dataset.py → export_dataset_json.py` (CPU) and require `RESULT: OK` before step 5.
+Steps 1–4 (env + baseline) never depend on the dataset.
 
 ---
 
@@ -93,14 +101,17 @@ PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train outputs\training\smoke 1
 $  scripts/train_adapter.sh /path/kmm/work/tensors_train outputs/training/smoke 1
 ```
 (wrapper = `uv run python train.py --yes --plain fixed --checkpoint-dir … --model-variant turbo --dataset-dir … --output-dir … --epochs N --save-every 1 --batch-size 1 --gradient-accumulation 4 --lr 1e-4 --rank 64 --alpha 128 --adapter-type lora --shift 3.0 --num-inference-steps 8`; `--yes --plain` must come BEFORE `fixed`, the wrapper does this.)
-Expected in the log: dataset size, `loss` values that are finite (not `nan`/`inf`), `grad_norm` > 0, step time per optimizer step, then `outputs/training/smoke/final/adapter_config.json` + `adapter_model.safetensors`, and `checkpoints/epoch_1_loss_0.XXXX/` (the trainer appends the loss to the folder name) with `training_state.pt`. Note **step time** and **peak VRAM** (`nvidia-smi` in a second terminal, or the TensorBoard `runs/`).
+Expected in the log: dataset size, then `Loss`/`Step`/`Epoch` lines with finite loss values (not `nan`/`inf`; step-level loss prints every 10 optimizer steps, so a 1-epoch smoke with few clips may show only the epoch line), then `outputs/training/smoke/final/adapter_config.json` + `adapter_model.safetensors`, and `checkpoints/epoch_1_loss_0.XXXX/` (the trainer appends the loss to the folder name) with `training_state.pt`. Gradient norms are logged to TensorBoard only (`runs/`), not the console. Note: the smoke run's ~8 optimizer steps sit inside the default 100-step LR warm-up, so its loss is not comparable to the pilot.
+Measure disk: `du -sh outputs/training/smoke/checkpoints/*` — each epoch dir is roughly 0.5 GB (adapter + optimizer state). Note **step time** and **peak VRAM** (`nvidia-smi` in a second terminal, or the TensorBoard `runs/`).
 Validate the artefact: `py -3.12 scripts/check_adapter.py outputs/training/smoke/final` → prints tensor count/shapes, exit 0.
 
-Pilot budget: optimizer steps per epoch = ceil(N_samples / 4). Choose epochs so that (epochs × steps/epoch × measured step time) ≤ 45 min, leaving time for adapter generation. Start there, e.g. with 30 clips at ~1 s/step: 200 epochs ≈ 8 steps × 200 × 1 s ≈ 27 min. Defaults `--save-every 1` protect the work. Do **not** copy the tutorial's 500–800 epochs blindly.
+Pilot budget: optimizer steps per epoch = ceil(N_samples / 4). Choose epochs so that (epochs × steps/epoch × measured step time) ≤ 45 min, leaving time for adapter generation. Start there, e.g. with 30 clips at ~1 s/step: 200 epochs ≈ 8 steps × 200 × 1 s ≈ 27 min. Do **not** copy the tutorial's 500–800 epochs blindly.
+Checkpoint budget: epochs ÷ save-every × 0.5 GB must fit the disk; write the pilot under `KMM_WORK` (outside OneDrive) and copy only `final/` back into `outputs/training/`.
 ```
-PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train outputs\training\pilot 200
+PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train C:\kmm\work\pilot 200 --save-every 25
+PS> Copy-Item -Recurse C:\kmm\work\pilot\final outputs\training\pilot\final
 ```
-Resume after interruption: add `--resume-from outputs/training/pilot/checkpoints/epoch_N_loss_X.XXXX` (tab-complete the real name; full resume: adapter + optimizer + scheduler state).
+Resume after interruption: add `--resume-from C:\kmm\work\pilot\checkpoints\epoch_N_loss_X.XXXX` (tab-complete the real name; full resume: adapter + optimizer + scheduler state). Validation tensors are not consumed by the trainer; `dataset_val.json` exists so the held-out recording is never trained on and can be listened to against the adapter.
 Windows note: DataLoader workers are forced to 0 (upstream behaviour) — expected, not an error.
 
 ## 7. Adapter reload + matched comparison (5–10 min)
@@ -109,7 +120,7 @@ Windows note: DataLoader workers are forced to 0 (upstream behaviour) — expect
 PS> py -3.12 scripts\check_adapter.py outputs\training\pilot\final
 PS> C:\kmm\venv-acestep\Scripts\python.exe scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\adapter --checkpoints C:\kmm\checkpoints --adapter outputs\training\pilot\final --adapter-scale 1.0
 ```
-Same cases, seeds, duration, steps, shift as step 4; only the adapter differs. Expected: `✅` load message in the log, 9 WAVs + sidecars with `adapter: {path, scale}`. Optionally a second pass with `--adapter-scale 0.5 --out outputs/adapter_s05` (record the change).
+Same cases, seeds, duration, steps, shift as step 4; only the adapter differs. Expected: `✅` load message in the log, 9 WAVs + sidecars with `adapter: {path, scale, …}` and upstream's own `lora_loaded/use_lora` flags. A second pass at another strength (`--adapter-scale 0.5`) must go to `outputs/adapter` with a different case set or be documented by hand: the viewer only reads `outputs/baseline`, `outputs/adapter`, `outputs/human_reference`.
 - "LoRA loading is not supported when quantization is active" → the script initialises with `quantization=None`; if you changed that, revert.
 - "expected PEFT LoRA directory containing adapter_config.json" → point at `…/final` or `…/checkpoints/epoch_N`, not at a file.
 

@@ -4,7 +4,10 @@ Status: every GPU step below is **prepared, awaiting 5090 validation**. Nothing 
 against the model yet; only `--dry-run`, `check_adapter.py`, argparse and shell-wrapper checks
 have executed on the 4 GB laptop. Engine pin: `upstream/ACE-Step-1.5` @ `ca1e85fe` (see
 `configs/pins.json`); checkpoint pin: HF `ACE-Step/Ace-Step1.5` @ `19671f40`, components
-`acestep-v15-turbo`, `vae`, `Qwen3-Embedding-0.6B` only (the 5Hz planning LM is deliberately absent).
+`acestep-v15-turbo`, `vae`, `Qwen3-Embedding-0.6B` are the ones used. The 5Hz planning LM folder
+`acestep-5Hz-lm-1.7B` is also present on disk (auto-downloaded once by `initialize_service`, kept so
+init never needs the network again) but is **never loaded**: `generate_cases.py` passes
+`llm_handler=None` and disables every LM/CoT flag.
 
 ## Environment
 
@@ -18,12 +21,15 @@ have executed on the 4 GB laptop. Engine pin: `upstream/ACE-Step-1.5` @ `ca1e85f
 
 Interpreter rules:
 
-- `py -3.12` (global) has **no torch / safetensors**. It can run `generate_cases.py --dry-run`
-  and `check_adapter.py` only.
+- `py -3.12` (global launcher on the laptop) has **no torch / safetensors**. It can run
+  `generate_cases.py --dry-run` and `check_adapter.py` only. Wherever this doc says `py -3.12`,
+  the venv python (`C:\kmm\venv-acestep\Scripts\python.exe`) or
+  `uv run --project upstream/ACE-Step-1.5 python` works just as well — the 5090 box may lack the
+  `py` launcher entirely.
 - Everything that touches the model runs inside the uv env:
   `C:\kmm\venv-acestep\Scripts\python.exe scripts\generate_cases.py ...` or
   `uv run --project upstream/ACE-Step-1.5 python scripts/generate_cases.py ...`.
-- Bare `python` on this box is the broken Store 3.8 stub; never use it.
+- Bare `python` on the laptop is the broken Store 3.8 stub; never use it there.
 
 ## 1. `scripts/generate_cases.py` — fixed evaluation cases (prepared, awaiting 5090 validation)
 
@@ -32,7 +38,7 @@ guidance 1.0, `vocal_language="unknown"`). Baseline and adapter runs are the sam
 `--adapter` differs, so outputs are directly comparable per `(case, seed)`.
 
 ```
-# resolved parameters only, no torch (works with py -3.12)
+# resolved parameters only, no torch (py -3.12, the venv python, or `uv run --project upstream/ACE-Step-1.5 python`)
 py -3.12 scripts\generate_cases.py --dry-run
 py -3.12 scripts\generate_cases.py --dry-run --case-id B_verse_simple --seeds 1001
 
@@ -57,13 +63,14 @@ What it does, in order:
 1. Loads `.env.local`, resolves every job (per-case `seeds`/`duration`/`steps`/`shift` override the
    file-level defaults; `--seeds` overrides both). Lyrics files are read as UTF-8.
 2. Refuses to start unless `acestep-v15-turbo`, `vae`, `Qwen3-Embedding-0.6B` each contain a
-   weights file. **Upstream would otherwise auto-download the whole HF repo, unpinned**, because
-   its "main model present" check also demands `acestep-5Hz-lm-1.7B`
-   (`acestep/model_downloader.py:307-312`, `check_main_model_exists` :386-400). To stop that, the
-   script replaces the module-level `check_main_model_exists` that
+   weights file. Upstream's own "main model present" check also demands `acestep-5Hz-lm-1.7B`
+   (`acestep/model_downloader.py:307-312`, `check_main_model_exists` :386-400) and, when it is
+   missing, **auto-downloads the whole HF repo, unpinned** — which is how the LM folder got onto
+   disk the first night. It is kept so init never needs the network; it is never loaded. As
+   belt-and-braces the script still replaces the module-level `check_main_model_exists` that
    `acestep/core/generation/handler/init_service_downloads.py:31` calls with a function that
-   returns `True`. It prints `LM presence check neutralised` when it does. No stub LM directory is
-   created on disk.
+   returns `True` (printing `LM presence check neutralised`), so a deleted or half-copied LM folder
+   can never re-trigger the download.
 3. Sets `ACESTEP_CHECKPOINTS_DIR` (read first by `init_service_orchestrator.py:122-124`), then
    `AceStepHandler().initialize_service(project_root=<upstream>, config_path="acestep-v15-turbo",
    device, compile_model=False, offload_to_cpu, offload_dit_to_cpu=False, quantization=None)` and
@@ -74,22 +81,28 @@ What it does, in order:
    bpm, keyscale, timesignature, duration, inference_steps, shift, guidance_scale, seed,
    thinking=False, use_cot_metas/caption/language=False)` and
    `GenerationConfig(batch_size=1, use_random_seed=False, seeds=[seed], audio_format="wav")`, then
-   `generate_music(handler, None, params, config, save_dir=out)`. The engine writes `<uuid>.wav`;
-   the script renames it to `<case_id>__seed<seed>.wav` and writes `<same>.json`.
+   `generate_music(handler, None, params, config, save_dir=<case dir>)`. The engine writes
+   `<uuid>.wav` there; the script renames it to `<case_id>_seed<seed>.wav` and writes `<same>.json`.
 
-Expected output per job:
+Output layout (contract shared with the viewer builder — case subdirectory, single underscore):
 
 ```
-outputs/baseline/A_dombra_solo__seed1001.wav
-outputs/baseline/A_dombra_solo__seed1001.json
+outputs/<label>/<case_id>/<case_id>_seed<seed>.wav
+outputs/<label>/<case_id>/<case_id>_seed<seed>.json
+e.g. outputs/baseline/A_dombra_solo/A_dombra_solo_seed1001.wav
+     outputs/adapter/A_dombra_solo/A_dombra_solo_seed1001.wav
 ```
 
-Sidecar fields: `case_id, kind, output_wav, caption, lyrics, lyrics_file, instrumental,
-vocal_language, bpm, keyscale, timesignature, seed, seed_used, duration, inference_steps, shift,
-guidance_scale, model_variant, config_path, engine_commit, checkpoint_revision, checkpoints_dir,
-adapter {path, scale_requested, scale_effective, weights_hash} | null, device, dtype,
-offload_to_cpu, wall_time_sec, cuda_max_memory_allocated_bytes, time_costs, sample_rate,
-generated_at`. Written with `ensure_ascii=False`.
+Sidecar keys (viewer contract): `case_id, caption, lyrics, vocal_language, seed, duration,
+inference_steps, shift, model_variant, engine_commit, checkpoint_revision,
+adapter (null | {path, scale, scale_requested, scale_effective, weights_hash}), wall_time_s,
+peak_vram_bytes, generated_at`. Extra keys also written: `kind, output_wav, output_rel,
+lyrics_file, instrumental, bpm, keyscale, timesignature, seed_used, guidance_scale, config_path,
+checkpoints_dir, engine_lora_state, device, dtype, offload_to_cpu, time_costs, sample_rate`.
+`engine_lora_state` = `{lora_loaded, use_lora, lora_scale, lora_weights_hash}` copied from
+upstream's own per-audio params (`inference.py:985-988`) — independent evidence that the adapter
+was active (baseline should show `lora_loaded: false`; adapter runs `true/true/<scale>/<md5>`).
+Written with `ensure_ascii=False`.
 
 Expected log lines on first init (not errors): `Model code mismatch detected ... Auto-syncing from
 acestep/models/` — the engine copies its own `modeling_acestep_v15_turbo.py` /
@@ -111,6 +124,10 @@ Notes:
 scripts\preprocess_dataset.cmd  data\processed\dataset_train.json  C:\kmm\work\tensors            [extra args]
 bash scripts/preprocess_dataset.sh data/processed/dataset_train.json /c/kmm/work/tensors        [extra args]
 ```
+
+Relative paths are fine: both wrappers absolutise the JSON and the tensor dir (creating it) before
+they `cd` into the upstream clone (`%~f1`/`%~f2` in `.cmd`, `mkdir -p && cd && pwd` in `.sh`), so
+nothing lands inside `upstream/`. Same for `train_adapter.{cmd,sh}`.
 
 Runs, from inside `upstream/ACE-Step-1.5`:
 
@@ -154,10 +171,15 @@ Runs, from inside `upstream/ACE-Step-1.5`:
 
 ```
 uv run python train.py --yes --plain fixed --checkpoint-dir %KMM_CHECKPOINTS% --model-variant turbo ^
-    --dataset-dir <tensors> --output-dir <out> --epochs N --save-every 1 ^
+    --dataset-dir <tensors> --output-dir <out> --epochs N --save-every 10 ^
     --batch-size 1 --gradient-accumulation 4 --lr 1e-4 --adapter-type lora --rank 64 --alpha 128 ^
     --shift 3.0 --num-inference-steps 8 [extra]
 ```
+
+Disk: every saved epoch dir is ~0.5 GB (adapter + `training_state.pt`), so the default is
+`--save-every 10`. A pilot should pass `--save-every 25`, use an output dir under `KMM_WORK`
+(e.g. `C:\kmm\work\lora1`), and copy only `final/` back into the project
+(`outputs/training/<name>/final/`) — `checkpoints/` stays machine-local.
 
 `--yes --plain` are root-parser flags (`args.py:85-97`) and must precede `fixed`; putting them
 after the subcommand gives `error: unrecognized arguments: --yes --plain` (reproduced locally).
@@ -184,6 +206,7 @@ the real name, or pass the `training_state.pt` inside it (Side-Step uses the par
 
 ```
 py -3.12 scripts\check_adapter.py C:\kmm\work\lora1\final
+# or: C:\kmm\venv-acestep\Scripts\python.exe scripts\check_adapter.py ...  /  uv run --project upstream/ACE-Step-1.5 python scripts/check_adapter.py ...
 ```
 
 Mirrors what `load_lora` needs (`lora/lifecycle.py:14` requires only `peft_type`; :216-224 checks
@@ -192,7 +215,7 @@ tensor name/shape/dtype and the total parameter count via `safetensors.safe_open
 when available, else by parsing the 8-byte length + JSON header (no dependencies). Warns on missing
 `r`/`lora_alpha`/`target_modules`, `lora_A`/`lora_B` count mismatch, or `lora_A` dim0 != `r`.
 Exit 0 valid, 1 invalid, 2 usage. Tested on synthetic fixtures: valid -> 0, no `peft_type` -> 1,
-no weights -> 1 — all through the header-parse path, since `py -3.12` has no safetensors. Expect
+no weights -> 1 — all through the header-parse path, since the laptop's `py -3.12` has no safetensors. Expect
 header-parse on real adapters too: training precision `auto` gives bf16 on Ampere+, and
 `framework="np"` cannot represent bf16, so the numpy path raises and the script falls back
 (the fallback line names the exception class so a corrupt file is distinguishable from a dtype
@@ -203,14 +226,15 @@ fallback).
 | Symptom | Cause / fix |
 | --- | --- |
 | `Missing checkpoint weights (run the pinned download first ...)` | `KMM_CHECKPOINTS` wrong or download incomplete. Fix the path; do not let upstream download. |
-| `Main model not found. Starting automatic download...` | The LM guard did not engage (script modified?). Kill it immediately: this is an unpinned whole-repo download into the pinned dir. |
+| `Main model not found. Starting automatic download...` | Both the on-disk LM folder and the script's guard are missing (script modified? wrong `--checkpoints`?). Kill it: this is an unpinned whole-repo download into the pinned dir. |
+| `set_lora_scale` prints a `⚠️` line (e.g. `skipped N targets`, `no modules found`) | Logged, not fatal — the run continues. Check `engine_lora_state.lora_scale` in the sidecars; only a `❌` from load/enable/scale aborts. |
 | `LoRA loading is not supported on quantized models` | `initialize_service` was called with `quantization` set. `generate_cases.py` always passes `None`. |
 | `Invalid adapter: expected PEFT LoRA directory containing adapter_config.json` | `--adapter` points at `<out>` instead of `<out>/final` or `<out>/checkpoints/epoch_K_loss_X.XXXX`. Run `check_adapter.py` first. |
 | `.cmd` wrapper drops `!` from a pass-through argument | The `.cmd` files use delayed expansion to collect extra args. Use the `.sh` wrapper (Git Bash) for arguments containing `!`. |
 | `adapter_config.json is missing required field 'peft_type'` | Not a PEFT export (LoKR produces `lokr_weights.safetensors`, no config). Train with `--adapter-type lora`. |
 | Degraded / noisy output with a correctly trained adapter | Wrong turbo settings. Turbo = 8 steps, shift 3.0; base/sft = 50 steps, shift 1.0. `generate_cases.py` refuses non-turbo checkpoints; `--shift 3.0 --num-inference-steps 8` are also passed at training time as metadata. |
 | `guidance_scale ... -> 1.0 (turbo does not use CFG)` in the log | Informational: turbo forces CFG off (`generate_music.py:312-318`). |
-| `CUDA out of memory` during generation | Re-run with `--offload-to-cpu`; VAE decode of 30 s clips is the peak. Check `cuda_max_memory_allocated_bytes` in the sidecars of the clips that did finish. |
+| `CUDA out of memory` during generation | Re-run with `--offload-to-cpu`; VAE decode of 30 s clips is the peak. Check `peak_vram_bytes` in the sidecars of the clips that did finish. |
 | `CUDA out of memory` during training | Add `--optimizer-type adamw8bit --offload-encoder`, then `--rank 16`. Batch is already 1. |
 | Training hangs / crashes in DataLoader on Windows | `num_workers` must be 0 on Windows (spawn multiprocessing); Side-Step forces it (`args.py:15`, `docs/sidestep/Windows Notes.md`). Do not pass `--num-workers N`. |
 | `train.py fixed: error: the following arguments are required: --dataset-dir, --output-dir` | You called `train.py fixed --preprocess`. Use the wrapper (module entry point). |

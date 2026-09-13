@@ -73,8 +73,9 @@ def main():
                 errs.append(f"{sid}: vocal crop flagged is_instrumental")
         elif s["kind"] == "instrumental" and not s.get("is_instrumental"):
             errs.append(f"{sid}: instrumental crop not flagged")
-        if not s.get("license"):
-            warns.append(f"{sid}: no license recorded - export will exclude it from training")
+        if not (s.get("license") and s.get("license_evidence_url")):
+            (errs if s["split"] == "train" else warns).append(
+                f"{sid}: license or license_evidence_url missing - not allowed in the training set")
     for g, splits in groups.items():
         if len(splits) > 1:
             errs.append(f"group {g} appears in splits {sorted(splits)} - leakage")

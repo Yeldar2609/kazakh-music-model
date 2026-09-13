@@ -1,7 +1,8 @@
 """Crop raw recordings per data/manifests/crop_plan.csv into data/processed/ and write the manifest.
 
 crop_plan.csv columns: sample_id, raw_path (project-relative), start_s, end_s, kind (instrumental|vocal),
-split (train|val), caption, lyrics_path (project-relative .txt for vocal crops: the words sung IN THIS CROP only), notes.
+split (train|val), caption, lyrics_path (project-relative .txt for vocal crops: the words sung IN THIS CROP only), notes,
+group_id (optional; same value for different recordings of the same song so they never straddle splits).
 Processing is deliberately minimal: cut + resample to 48 kHz (model requirement) + PCM 16-bit. No normalisation,
 no filters. Raw files are never modified. Re-running overwrites processed crops deterministically.
 """
@@ -54,8 +55,8 @@ def main():
             "performer": prov.get("performer"),
             "license": prov.get("license"),
             "license_evidence_url": prov.get("license_evidence_url"),
-            "allowed_uses": prov.get("allowed_uses", "training + research demo; attribution if CC-BY/CC-BY-SA"),
-            "group_id": prov.get("group_id") or f"{prov.get('source_slug', 'raw')}/{raw.stem}",
+            "allowed_uses": prov.get("allowed_uses"),  # only what SOURCE.json states; never invented
+            "group_id": (r.get("group_id") or "").strip() or prov.get("group_id") or f"{prov.get('source_slug', 'raw')}/{raw.stem}",
             "crop_start_s": start,
             "crop_end_s": end,
             "duration_s": round(info["duration"], 3),

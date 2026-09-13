@@ -1,0 +1,180 @@
+{
+  "source": "Wikimedia Commons",
+  "source_slug": "wikimedia_commons",
+  "source_url": "https://commons.wikimedia.org/",
+  "collected_by": "DATA agent, Kazak Music Model",
+  "downloaded_at": "2026-09-13",
+  "download_method": "curl -L with a descriptive User-Agent from the Commons 'original file' URL (upload.wikimedia.org); bytes stored untouched; sizes match Commons imageinfo",
+  "verification": "sha256sum; ffprobe -v error -show_entries format=duration:stream=sample_rate,channels,codec_name -of json; ffmpeg -f null decode test; ffmpeg volumedetect",
+  "note": ".webm files are video containers - the audio stream (opus/vorbis) is what is used; extraction to wav/flac is a downstream data/processed step",
+  "usable_seconds_total": 664.619,
+  "independent_recordings": 5,
+  "independent_compositions": 4,
+  "files": [
+    {
+      "file": "Boz salkin - dombra боз салкин.webm",
+      "url": "https://commons.wikimedia.org/wiki/File:Boz_salkin_-_dombra_%D0%B1%D0%BE%D0%B7_%D1%81%D0%B0%D0%BB%D0%BA%D0%B8%D0%BD.webm",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/8/81/Boz_salkin_-_dombra_%D0%B1%D0%BE%D0%B7_%D1%81%D0%B0%D0%BB%D0%BA%D0%B8%D0%BD.webm",
+      "title": "boz salkin - dombra  боз салкин",
+      "performer": "ojutan (YouTube user, own performance; hobbyist multi-instrumentalist, not Kazakh)",
+      "type": "dombra solo",
+      "repertoire_note": "Kyrgyz piece (Боз салкын), normally played on komuz, adapted by the performer to a two-stringed fretless dombra. NOT a Kazakh küy.",
+      "license": "Creative Commons Attribution 3.0 Unported (CC BY 3.0) — Commons templates {{YouTube CC-BY|ojutan}} + {{YouTubeReview|id=p8p4jp2l47w|ChannelName=ojutan|...|date=2020-02-14}}",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Boz_salkin_-_dombra_%D0%B1%D0%BE%D0%B7_%D1%81%D0%B0%D0%BB%D0%BA%D0%B8%D0%BD.webm",
+      "license_url": "https://creativecommons.org/licenses/by/3.0",
+      "attribution": "ojutan, 'boz salkin - dombra боз салкин', YouTube p8p4jp2l47w, CC BY 3.0, via Wikimedia Commons",
+      "original_date": "2017-04-19",
+      "downloaded_at": "2026-09-13",
+      "size_bytes": 40017534,
+      "sha256": "53031da71848513f485e30d907d3a64b66b7dd08ef4605d288a77640f0e4bd55",
+      "ffprobe": {
+        "duration_s": 231.941,
+        "audio_codec": "opus",
+        "sample_rate": 48000,
+        "channels": 2,
+        "container": "webm",
+        "video_stream": "vp9"
+      },
+      "decode_test": "ffmpeg -f null: OK",
+      "volumedetect": {
+        "mean_dB": -22.4,
+        "max_dB": -3.9
+      },
+      "lyrics_available": false,
+      "lyrics_location": null,
+      "provenance_risk": "low — first-person description ('I adapted it ... to a dombra'); Commons YouTubeReview archived the CC-BY tag on 2020-02-14"
+    },
+    {
+      "file": "Moon and stars.webm",
+      "url": "https://commons.wikimedia.org/wiki/File:Moon_and_stars.webm",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/2/29/Moon_and_stars.webm",
+      "title": "Moon and stars",
+      "performer": "Rustem4397 (Commons user, 'own work'; performer not named)",
+      "type": "dombra (Wiki Loves Folklore 2023, Kazakhstan; category 'People playing dombras')",
+      "repertoire_note": "Description only says 'This work is dedicated to teachers and students'. Piece and performer unnamed; file sits in 'Images from Wiki Loves Folklore 2023 to check' (unreviewed). A human should listen to confirm it is live dombra and not a backing track.",
+      "license": "Creative Commons Attribution-Share Alike 4.0 International (CC BY-SA 4.0) — Commons template {{self|cc-by-sa-4.0}}",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Moon_and_stars.webm",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution": "Rustem4397, 'Moon and stars', Wikimedia Commons, CC BY-SA 4.0",
+      "original_date": "2023-02-14",
+      "downloaded_at": "2026-09-13",
+      "size_bytes": 52611910,
+      "sha256": "c30e790e1084c253d1130af25115aa7cdcc016e212a7b76c021dec563fa7072a",
+      "ffprobe": {
+        "duration_s": 200.9,
+        "audio_codec": "vorbis",
+        "sample_rate": 44100,
+        "channels": 2,
+        "container": "webm",
+        "video_stream": "vp8"
+      },
+      "decode_test": "ffmpeg -f null: OK",
+      "volumedetect": {
+        "mean_dB": -21.2,
+        "max_dB": -4.8
+      },
+      "lyrics_available": false,
+      "lyrics_location": null,
+      "provenance_risk": "medium — own-work claim by uploader, not reviewed by Commons; content unverified by ear"
+    },
+    {
+      "file": "Singing in the Yurt at Nowruz Flickr.webm",
+      "url": "https://commons.wikimedia.org/wiki/File:Singing_in_the_Yurt_at_Nowruz_Flickr.webm",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Singing_in_the_Yurt_at_Nowruz_Flickr.webm",
+      "title": "Singing in the Yurt at Nowruz",
+      "performer": "unnamed singer with dombra; recorded by Ken & Nyetta (Flickr user kjfnjy)",
+      "type": "vocal + dombra (field recording, Nauryz 2015, Kazakhstan; category 'People playing dombras')",
+      "repertoire_note": "Tourist camera field recording; 'the singer is not in focus but you can hear his music'. Song unidentified.",
+      "license": "Creative Commons Attribution 2.0 Generic (CC BY 2.0) — Commons templates {{Flickrreview|Dyolf77|2015-03-26}}{{cc-by-2.0}}",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Singing_in_the_Yurt_at_Nowruz_Flickr.webm",
+      "license_url": "https://creativecommons.org/licenses/by/2.0",
+      "attribution": "Ken & Nyetta, 'Singing in the Yurt at Nowruz', Flickr https://www.flickr.com/photos/kjfnjy/8579937298, CC BY 2.0, via Wikimedia Commons",
+      "original_date": "2015-03-22",
+      "downloaded_at": "2026-09-13",
+      "size_bytes": 5675153,
+      "sha256": "f5c40a15c09230ffe91f1835f5f3bae1eb926007d03e97feb871c006e8ee9473",
+      "ffprobe": {
+        "duration_s": 30.042,
+        "audio_codec": "vorbis",
+        "sample_rate": 44100,
+        "channels": 2,
+        "container": "webm",
+        "video_stream": "vp8"
+      },
+      "decode_test": "ffmpeg -f null: OK",
+      "volumedetect": {
+        "mean_dB": -24.4,
+        "max_dB": -5.2
+      },
+      "lyrics_available": false,
+      "lyrics_location": null,
+      "provenance_risk": "low for the license (Flickr license reviewed by Commons trusted user Dyolf77 on 2015-03-26); Flickr itself unreachable from this network on 2026-09-13"
+    },
+    {
+      "file": "Kazakhstan 2006.ogg",
+      "url": "https://commons.wikimedia.org/wiki/File:Kazakhstan_2006.ogg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Kazakhstan_2006.ogg",
+      "title": "Менің Қазақстаным (National Anthem of Kazakhstan), vocal recording, 2006",
+      "performer": "unnamed soloist, Choir of the State Theater for Opera and Ballet & State Symphony Orchestra of the Republic of Kazakhstan, conducted by Aidar Torybaev (music: Shamshi Kaldayakov; words: Zhumeken Nazhimedenov / Nursultan Nazarbayev)",
+      "type": "vocal (soloist + choir + symphony orchestra) — NOT dombra, off-genre for folk",
+      "repertoire_note": "State anthem; useful only for the lyrics-alignment path.",
+      "license": "Public domain — Commons license template {{PD-KZ-exempt}} (LicenseShortName 'Public domain', Copyrighted=False, UsageTerms 'Public domain'). Rationale: official state symbols are not subject to copyright under the Copyright Law of the Republic of Kazakhstan (Art. 8); Commons applies this to the recording as well.",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Kazakhstan_2006.ogg",
+      "license_url": "https://commons.wikimedia.org/wiki/Template:PD-KZ-exempt",
+      "attribution": "Public domain (PD-KZ-exempt), source http://www.kazakh.ru/news/articles/?a=398 via Wikimedia Commons",
+      "original_date": "2006-01",
+      "downloaded_at": "2026-09-13",
+      "size_bytes": 1494862,
+      "sha256": "bfe26d0ba8313fa3147b2fe69082e24122b443703a630087328099f24dd431df",
+      "ffprobe": {
+        "duration_s": 109.68,
+        "audio_codec": "vorbis",
+        "sample_rate": 48000,
+        "channels": 2,
+        "container": "ogg",
+        "video_stream": null
+      },
+      "decode_test": "ffmpeg -f null: OK",
+      "volumedetect": {
+        "mean_dB": -16.6,
+        "max_dB": -0.2
+      },
+      "lyrics_available": true,
+      "lyrics_location": "Time-aligned Kazakh SRT on Commons: https://commons.wikimedia.org/wiki/TimedText:Kazakhstan_2006.ogg.kk.srt (14 cues; NOTE cue 4 has a typo 'дазағым' — canonical 'қазағым'; use the 2012 SRT or https://en.wikipedia.org/wiki/Meni%C5%A3_Qazaqstanym as the canonical text)",
+      "provenance_risk": "license rests on Commons's PD-KZ-exempt determination (state symbol); phonogram rights of the 2006 state recording not separately documented"
+    },
+    {
+      "file": "Kazakhstan National Anthem 2012.ogg",
+      "url": "https://commons.wikimedia.org/wiki/File:Kazakhstan_National_Anthem_2012.ogg",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Kazakhstan_National_Anthem_2012.ogg",
+      "title": "Менің Қазақстаным (National Anthem of Kazakhstan), official vocal recording, 2012",
+      "performer": "Government of Kazakhstan (official recording from president.kz; performers unnamed) — music: Shamshi Kaldayakov; words: Zhumeken Nazhimedenov / Nursultan Nazarbayev",
+      "type": "vocal (choir + orchestra) — NOT dombra, off-genre for folk",
+      "repertoire_note": "Same composition as 'Kazakhstan 2006.ogg' (different recording/edit: 92.1 s vs 109.7 s). Counts as 1 song, 2 recordings.",
+      "license": "Public domain — Commons license template {{PD-KZ-exempt}} (LicenseShortName 'Public domain', Copyrighted=False, UsageTerms 'Public domain'). Rationale: official state symbols are not subject to copyright under the Copyright Law of the Republic of Kazakhstan (Art. 8); Commons applies this to the recording as well.",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:Kazakhstan_National_Anthem_2012.ogg",
+      "license_url": "https://commons.wikimedia.org/wiki/Template:PD-KZ-exempt",
+      "attribution": "Public domain (PD-KZ-exempt), source http://www.president.kz/themes/akorda/media/audio/gimn_rk.mp3 via Wikimedia Commons",
+      "original_date": "2012-08-29",
+      "downloaded_at": "2026-09-13",
+      "size_bytes": 1629104,
+      "sha256": "ccb26a6518f1b2bcf87d091c6b2b29e6a09ad265370b4e7cc264b78b8b7b5a2f",
+      "ffprobe": {
+        "duration_s": 92.05551,
+        "audio_codec": "vorbis",
+        "sample_rate": 44100,
+        "channels": 2,
+        "container": "ogg",
+        "video_stream": null
+      },
+      "decode_test": "ffmpeg -f null: OK",
+      "volumedetect": {
+        "mean_dB": -16.0,
+        "max_dB": 0.0
+      },
+      "lyrics_available": true,
+      "lyrics_location": "Time-aligned Kazakh SRT on Commons: https://commons.wikimedia.org/wiki/TimedText:Kazakhstan_National_Anthem_2012.ogg.kk.srt (16 cues, matches the official text); full text also at https://en.wikipedia.org/wiki/Meni%C5%A3_Qazaqstanym",
+      "provenance_risk": "license rests on Commons's PD-KZ-exempt determination (state symbol); official government file, cleanest chain of the two anthem recordings"
+    }
+  ]
+}

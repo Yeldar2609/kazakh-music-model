@@ -41,8 +41,10 @@ experimental targets, not promises.
   cannot use classifier-free guidance. If adapter results are weak, `acestep-v15-sft` (50 steps, CFG, "Easy")
   is the documented next candidate. We do **not** switch to XL because a GPU is large; the whole pipeline
   (preprocess → train → reload) stays on the same base checkpoint.
-- The planning LM (`acestep-5Hz-lm-*`) is disabled: captions and lyrics are supplied explicitly, so it is
-  not downloaded (saves 3.8 GB) and cannot rewrite our prompts.
+- The planning LM (`acestep-5Hz-lm-1.7B`) is disabled: captions and lyrics are supplied explicitly and the
+  generation script passes `llm_handler=None`, so it cannot rewrite our prompts. Its folder is nevertheless
+  present on disk (3.7 GB): upstream's "main model present?" check requires it, and without it
+  `initialize_service` starts an unpinned whole-repository download (observed tonight on the laptop).
 
 ## Kazakh language handling (verified in source)
 
@@ -58,8 +60,9 @@ experimental targets, not promises.
 ## Training path
 
 - One documented path only: `train.py fixed` LoRA (PEFT), rank 64 / alpha 128, batch 1, grad-accum 4,
-  lr 1e-4, `--save-every 1`. LoKR is faster but cannot be reloaded by the standard loader
-  (`docs/sidestep/Using Your Adapter.md`), so it is out.
+  lr 1e-4, checkpoints every 10 epochs (each epoch dir is ~0.5 GB with optimizer state). LoKR is faster and
+  this commit's loader can read `lokr_weights.safetensors`, but upstream marks LoKR "experimental" and LoRA
+  "stable, recommended" (`docs/sidestep/Training Guide.md`), so LoRA is the safe first path.
 - Checkpoints contain `training_state.pt` → **full resume** is supported via `--resume-from`; `final/` holds
   adapter-only weights for inference.
 - Preprocessing is two GPU passes (VAE+text ~3 GB, DiT encoder ~6 GB) → 5090 step.

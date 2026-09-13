@@ -15,8 +15,9 @@ def main():
     m = read_json(ROOT / a.manifest)["samples"]
     out_dir = ROOT / "data" / "processed"
     for split in sorted({s["split"] for s in m}):
-        rows = [s for s in m if s["split"] == split and s.get("license")]
-        skipped = [s["sample_id"] for s in m if s["split"] == split and not s.get("license")]
+        ok = lambda s: s.get("license") and s.get("license_evidence_url")  # noqa: E731
+        rows = [s for s in m if s["split"] == split and ok(s)]
+        skipped = [s["sample_id"] for s in m if s["split"] == split and not ok(s)]
         samples = []
         for s in rows:
             lyrics = "[Instrumental]" if s["is_instrumental"] else (ROOT / s["lyrics_path"]).read_text(encoding="utf-8").strip()

@@ -1,9 +1,14 @@
 """Shared helpers: project root, ffprobe/ffmpeg wrappers, sha256, provenance lookup. Stdlib only."""
-import csv, hashlib, json, subprocess
+import csv, hashlib, json, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 KAZAKH_LETTERS = "әғқңөұүһіӘҒҚҢӨҰҮҺІ"
+for _s in (sys.stdout, sys.stderr):  # Kazakh text in logs must not crash under cp1252
+    try:
+        _s.reconfigure(encoding="utf-8")
+    except Exception:  # noqa: BLE001
+        pass
 
 
 def sha256(path):
@@ -19,7 +24,7 @@ def ffprobe(path):
     out = subprocess.run(
         ["ffprobe", "-v", "error", "-select_streams", "a:0", "-show_entries",
          "format=duration:stream=sample_rate,channels,codec_name", "-of", "json", str(path)],
-        capture_output=True, text=True, check=True).stdout
+        capture_output=True, text=True, encoding="utf-8", errors="replace", check=True).stdout
     j = json.loads(out)
     st = j["streams"][0]
     return {"duration": float(j["format"]["duration"]), "sample_rate": int(st["sample_rate"]),
@@ -30,7 +35,7 @@ def ffmpeg_stats(path):
     """Peak (dBFS) and RMS (dB) over the whole file via ffmpeg astats. Decoding failure raises."""
     r = subprocess.run(["ffmpeg", "-v", "info", "-nostats", "-i", str(path),
                         "-af", "astats=measure_perchannel=none:measure_overall=Peak_level+RMS_level",
-                        "-f", "null", "-"], capture_output=True, text=True)
+                        "-f", "null", "-"], capture_output=True, text=True, encoding="utf-8", errors="replace")
     if r.returncode != 0:
         raise RuntimeError(r.stderr[-400:])
     peak = rms = None
@@ -51,7 +56,7 @@ def load_source_provenance(raw_path):
     files = data.get("files", []) if isinstance(data, dict) else data
     name = Path(raw_path).name
     for f in files:
-        if Path(f.get("filename") or f.get("path") or "").name == name:
+        if Path(f.get("filename") or f.get("file") or f.get("path") or "").name == name:
             f = dict(f)
             f.setdefault("source_slug", Path(raw_path).parent.name)
             return f

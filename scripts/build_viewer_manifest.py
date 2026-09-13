@@ -136,6 +136,9 @@ def scan_entries(outputs_root: Path, viewer_dir: Path, case_id: str):
             if gen_on is None and sidecar_path.exists():
                 gen_on, gen_src = file_date(sidecar_path), "sidecar file mtime"
             fields = {k: (sidecar.get(k) if sidecar else None) for k in SIDECAR_FIELDS}
+            # adapter is passed through verbatim: {path, scale} plus optional scale_requested / scale_effective.
+            if isinstance(fields.get("adapter"), dict) and fields["adapter"].get("scale") is None:
+                fields["adapter"]["scale"] = fields["adapter"].get("scale_effective", fields["adapter"].get("scale_requested"))
             try:
                 rel = PurePosixPath(Path("..") / wav.relative_to(viewer_dir.parent)).as_posix()
             except ValueError:
