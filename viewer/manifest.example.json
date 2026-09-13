@@ -8,7 +8,11 @@
     "shift": 3.0,
     "guidance_scale": 1.0,
     "duration_seconds": 30,
-    "seeds": [1001, 1002, 1003],
+    "seeds": [
+      1001,
+      1002,
+      1003
+    ],
     "vocal_language": "unknown"
   },
   "pins": {
@@ -16,7 +20,11 @@
     "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
     "checkpoint_repo": "ACE-Step/Ace-Step1.5"
   },
-  "seeds": [1001, 1002, 1003],
+  "seeds": [
+    1001,
+    1002,
+    1003
+  ],
   "cases": [
     {
       "id": "A_dombra_solo",
@@ -32,6 +40,7 @@
           "label": "baseline",
           "seed": 1001,
           "wav": "../outputs/baseline/A_dombra_solo/A_dombra_solo_seed1001.wav",
+          "wav_missing": false,
           "wav_bytes": 5292044,
           "generated_on": "2026-09-12T18:41:07",
           "generated_on_source": "wav file mtime",
@@ -82,6 +91,7 @@
           "label": "baseline",
           "seed": 1001,
           "wav": "../outputs/baseline/C_verse_dombra_led/C_verse_dombra_led_seed1001.wav",
+          "wav_missing": false,
           "wav_bytes": 5292044,
           "generated_on": "2026-09-12T18:52:30",
           "generated_on_source": "wav file mtime",
@@ -109,6 +119,7 @@
           "label": "adapter",
           "seed": 1001,
           "wav": "../outputs/adapter/C_verse_dombra_led/C_verse_dombra_led_seed1001.wav",
+          "wav_missing": false,
           "wav_bytes": 5292044,
           "generated_on": "2026-09-13T09:15:02",
           "generated_on_source": "sidecar.generated_at",
@@ -126,7 +137,10 @@
             "model_variant": "turbo",
             "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
             "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
-            "adapter": { "path": "outputs/training/lora_kz_v1/adapter.safetensors", "scale": 0.8 },
+            "adapter": {
+              "path": "outputs/training/lora_kz_v1/adapter.safetensors",
+              "scale": 0.8
+            },
             "wall_time_s": 45.1,
             "peak_vram_bytes": 9337568256
           },

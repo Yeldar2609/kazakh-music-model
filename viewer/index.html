@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazakh Music Model — saved-output viewer</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --panel-2: #f0efeb;
+    --text: #17181a;
+    --muted: #4f5358;
+    --line: #cfd2d6;
+    --accent: #0b5cad;
+    --accent-text: #ffffff;
+    --banner-bg: #fff2c2;
+    --banner-line: #c99a00;
+    --banner-text: #3d2e00;
+    --warn-bg: #fde8e6;
+    --warn-line: #b3261e;
+    --warn-text: #5a0f0a;
+    --human-bg: #e6f2ea;
+    --human-line: #2b7a4b;
+    --human-text: #123d24;
+    --empty-text: #6a6f75;
+    --focus: #ff8c00;
+  }
+  :root[data-theme="dark"] {
+    --bg: #121316;
+    --panel: #1c1e22;
+    --panel-2: #24272c;
+    --text: #f2f3f4;
+    --muted: #b4b9bf;
+    --line: #3b4048;
+    --accent: #6fb3ff;
+    --accent-text: #0b1420;
+    --banner-bg: #3a2f00;
+    --banner-line: #ffcc33;
+    --banner-text: #ffe680;
+    --warn-bg: #3a1512;
+    --warn-line: #ff7b72;
+    --warn-text: #ffd0cc;
+    --human-bg: #0f2a1a;
+    --human-line: #5fcf8a;
+    --human-text: #c9f2d8;
+    --empty-text: #9aa0a6;
+    --focus: #ffb347;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121316;
+      --panel: #1c1e22;
+      --panel-2: #24272c;
+      --text: #f2f3f4;
+      --muted: #b4b9bf;
+      --line: #3b4048;
+      --accent: #6fb3ff;
+      --accent-text: #0b1420;
+      --banner-bg: #3a2f00;
+      --banner-line: #ffcc33;
+      --banner-text: #ffe680;
+      --warn-bg: #3a1512;
+      --warn-line: #ff7b72;
+      --warn-text: #ffd0cc;
+      --human-bg: #0f2a1a;
+      --human-line: #5fcf8a;
+      --human-text: #c9f2d8;
+      --empty-text: #9aa0a6;
+      --focus: #ffb347;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: system-ui, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--text);
+    background: var(--bg);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 250px 1fr;
+    grid-template-areas: "top top" "side main";
+    height: 100vh;
+  }
+  button, textarea { font: inherit; color: inherit; }
+  button {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  header {
+    grid-area: top;
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+  }
+  header h1 { font-size: 17px; margin: 0; font-weight: 650; white-space: nowrap; }
+  header .src { color: var(--muted); font-size: 13px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  header button { white-space: nowrap; }
+
+  nav {
+    grid-area: side;
+    overflow: auto;
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    padding: 12px 10px;
+  }
+  nav h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 4px 6px 8px; }
+  nav .case {
+    display: block; width: 100%; text-align: left;
+    padding: 10px 10px; margin-bottom: 6px; border-radius: 8px;
+    background: transparent; border: 1px solid transparent;
+  }
+  nav .case:hover { background: var(--panel-2); }
+  nav .case[aria-current="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  nav .case .id { font-weight: 650; font-size: 14px; display: block; }
+  nav .case .sub { font-size: 12px; opacity: .85; display: block; margin-top: 2px; }
+  nav .help { font-size: 12px; color: var(--muted); margin: 14px 6px 0; }
+  nav .help kbd { border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; font-family: inherit; }
+
+  main { grid-area: main; overflow: auto; padding: 16px 20px 40px; }
+
+  .banner {
+    background: var(--banner-bg); color: var(--banner-text);
+    border: 2px solid var(--banner-line); border-radius: 8px;
+    padding: 10px 14px; font-size: 16px; font-weight: 650; margin: 0 0 14px;
+  }
+  .banner small { display: block; font-weight: 400; font-size: 13px; margin-top: 2px; }
+
+  .case-head h2 { margin: 0 0 4px; font-size: 22px; }
+  .case-head .kind { color: var(--muted); font-size: 13px; }
+  .caption-line { margin: 6px 0 10px; font-size: 15px; }
+  .caption-line b { color: var(--muted); font-weight: 600; margin-right: 6px; }
+  .facts {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 14px; align-items: start;
+  }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .card h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  pre.lyrics {
+    margin: 0; white-space: pre-wrap; word-wrap: break-word;
+    font-family: system-ui, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px; line-height: 1.45;
+  }
+  .caveat { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+  dl.settings { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 3px 12px; margin: 0; font-size: 13.5px; }
+  dl.settings dt { color: var(--muted); }
+  dl.settings dd { margin: 0; }
+  dl.settings dd.wide { grid-column: 2 / -1; }
+  code { font-family: ui-monospace, Consolas, "Courier New", monospace; font-size: .92em; }
+
+  .compare { overflow-x: auto; }
+  .grid {
+    display: grid;
+    grid-template-columns: 70px repeat(3, minmax(270px, 1fr));
+    gap: 10px;
+    min-width: 900px;
+    align-items: stretch;
+  }
+  .grid .colhead {
+    font-weight: 650; font-size: 14px; padding: 8px 10px;
+    background: var(--panel-2); border-radius: 8px; border: 1px solid var(--line);
+  }
+  .grid .colhead.human { background: var(--human-bg); color: var(--human-text); border-color: var(--human-line); }
+  .grid .seedlab {
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 12px; font-weight: 650; color: var(--muted); font-size: 13px;
+  }
+  .grid .seedlab code { font-size: 14px; color: var(--text); }
+
+  .player {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .player.human { background: var(--human-bg); border-color: var(--human-line); color: var(--human-text); }
+  .player:focus-visible { outline: 3px solid var(--focus); }
+  .player.playing { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+  .player .title { font-weight: 650; font-size: 14px; }
+  .player .meta { font-size: 12.5px; color: var(--muted); display: grid; grid-template-columns: auto 1fr; gap: 1px 10px; }
+  .player.human .meta { color: inherit; opacity: .9; }
+  .player .meta dt { margin: 0; }
+  .player .meta dd { margin: 0; }
+  .player audio { width: 100%; }
+  .player textarea {
+    width: 100%; min-height: 64px; resize: vertical;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; font-size: 13px;
+  }
+  .player .notelab { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+  .player.human .notelab { color: inherit; }
+  .player .saved { opacity: 0; transition: opacity .3s; }
+  .player .saved.on { opacity: 1; }
+
+  .empty {
+    border: 2px dashed var(--line); border-radius: 10px; padding: 14px 12px;
+    color: var(--empty-text); font-size: 14px; min-height: 90px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+  .warn {
+    background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-line);
+    border-radius: 6px; padding: 6px 8px; font-size: 12.5px; overflow-wrap: anywhere;
+  }
+  .humancell { grid-column: 4; }
+
+  #export {
+    margin-top: 18px;
+  }
+  #export textarea {
+    width: 100%; min-height: 200px; font-family: ui-monospace, Consolas, "Courier New", monospace; font-size: 12.5px;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px;
+  }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .status { font-size: 13px; color: var(--muted); }
+  @media (max-width: 900px) {
+    body { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; grid-template-areas: "top" "side" "main"; }
+    nav { border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kazakh Music Model — saved-output viewer</h1>
+  <span class="src" id="src" title=""></span>
+  <button type="button" id="exportBtn">Export notes as JSON</button>
+  <button type="button" id="importBtn">Import notes JSON</button>
+  <button type="button" id="themeBtn" aria-label="Toggle light/dark theme">Theme</button>
+</header>
+<nav aria-label="Evaluation cases">
+  <h2>Cases</h2>
+  <div id="caseList"></div>
+  <div class="help">
+    <p><kbd>Tab</kbd> to a player, <kbd>Space</kbd> plays / pauses it. Playing one player pauses the others.</p>
+    <p>Nothing autoplays. Notes save to this browser (localStorage) per WAV path.</p>
+  </div>
+</nav>
+<main id="main"></main>
+
+<script src="manifest.js"></script>
+<script>
+"use strict";
+// Inline copy of viewer/manifest.example.json. Used only when manifest.js is absent
+// and manifest.example.json cannot be fetched (Chrome blocks fetch on file://).
+const KMM_EXAMPLE_INLINE = {
+  "_note": "EXAMPLE manifest for layout checks. Same shape as the generated viewer/manifest.json. The wav paths do not exist; the viewer only uses this when manifest.js is absent. Human reference recordings are NOT generated; the viewer labels them separately.",
+  "built_at": "2026-09-13T20:00:00",
+  "outputs_root": "outputs",
+  "settings": {
+    "model_variant": "turbo",
+    "inference_steps": 8,
+    "shift": 3.0,
+    "guidance_scale": 1.0,
+    "duration_seconds": 30,
+    "seeds": [
+      1001,
+      1002,
+      1003
+    ],
+    "vocal_language": "unknown"
+  },
+  "pins": {
+    "engine_revision": "ca1e85fe9430179831e6bc6be790c332190a3866",
+    "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
+    "checkpoint_repo": "ACE-Step/Ace-Step1.5"
+  },
+  "seeds": [
+    1001,
+    1002,
+    1003
+  ],
+  "cases": [
+    {
+      "id": "A_dombra_solo",
+      "kind": "instrumental",
+      "caption": "solo dombra, Kazakh traditional two-string plucked lute, unaccompanied kui, steady strumming and melodic runs, no vocals, no drums, clean studio recording",
+      "lyrics": "[Instrumental]",
+      "lyrics_source": null,
+      "lyrics_reviewed_by_kazakh_speaker": null,
+      "language": "unknown",
+      "instrumental": true,
+      "entries": [
+        {
+          "label": "baseline",
+          "seed": 1001,
+          "wav": "../outputs/baseline/A_dombra_solo/A_dombra_solo_seed1001.wav",
+          "wav_missing": false,
+          "wav_bytes": 5292044,
+          "generated_on": "2026-09-12T18:41:07",
+          "generated_on_source": "wav file mtime",
+          "sidecar_missing": false,
+          "sidecar_error": null,
+          "sidecar": {
+            "case_id": "A_dombra_solo",
+            "caption": "solo dombra, Kazakh traditional two-string plucked lute, unaccompanied kui, steady strumming and melodic runs, no vocals, no drums, clean studio recording",
+            "lyrics": "[Instrumental]",
+            "vocal_language": "unknown",
+            "seed": 1001,
+            "duration": 30,
+            "inference_steps": 8,
+            "shift": 3.0,
+            "model_variant": "turbo",
+            "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
+            "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
+            "adapter": null,
+            "wall_time_s": 41.8,
+            "peak_vram_bytes": 9126805504
+          },
+          "listening_notes": ""
+        }
+      ]
+    },
+    {
+      "id": "B_verse_simple",
+      "kind": "vocal",
+      "caption": "Kazakh folk song, solo male vocal, simple acoustic accompaniment, slow tempo, intimate, clean recording",
+      "lyrics": "[Verse]\nЖелсіз түнде жарық ай,\nСәулесі суда дірілдеп.\nАуылдың жаны терең сай,\nТасыған өзен күрілдеп.\n",
+      "lyrics_source": "Abai Qunanbaiuly, 'Желсіз түнде жарық ай' (1888), public domain (author died 1904)",
+      "lyrics_reviewed_by_kazakh_speaker": false,
+      "language": "unknown",
+      "instrumental": false,
+      "entries": []
+    },
+    {
+      "id": "C_verse_dombra_led",
+      "kind": "vocal",
+      "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
+      "lyrics": "[Verse]\nЖелсіз түнде жарық ай,\nСәулесі суда дірілдеп.\nАуылдың жаны терең сай,\nТасыған өзен күрілдеп.\n",
+      "lyrics_source": "Abai Qunanbaiuly, 'Желсіз түнде жарық ай' (1888), public domain (author died 1904)",
+      "lyrics_reviewed_by_kazakh_speaker": false,
+      "language": "unknown",
+      "instrumental": false,
+      "entries": [
+        {
+          "label": "baseline",
+          "seed": 1001,
+          "wav": "../outputs/baseline/C_verse_dombra_led/C_verse_dombra_led_seed1001.wav",
+          "wav_missing": false,
+          "wav_bytes": 5292044,
+          "generated_on": "2026-09-12T18:52:30",
+          "generated_on_source": "wav file mtime",
+          "sidecar_missing": false,
+          "sidecar_error": null,
+          "sidecar": {
+            "case_id": "C_verse_dombra_led",
+            "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
+            "lyrics": "[Verse]\nЖелсіз түнде жарық ай,\nСәулесі суда дірілдеп.\nАуылдың жаны терең сай,\nТасыған өзен күрілдеп.\n",
+            "vocal_language": "unknown",
+            "seed": 1001,
+            "duration": 30,
+            "inference_steps": 8,
+            "shift": 3.0,
+            "model_variant": "turbo",
+            "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
+            "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
+            "adapter": null,
+            "wall_time_s": 44.2,
+            "peak_vram_bytes": 9126805504
+          },
+          "listening_notes": ""
+        },
+        {
+          "label": "adapter",
+          "seed": 1001,
+          "wav": "../outputs/adapter/C_verse_dombra_led/C_verse_dombra_led_seed1001.wav",
+          "wav_missing": false,
+          "wav_bytes": 5292044,
+          "generated_on": "2026-09-13T09:15:02",
+          "generated_on_source": "sidecar.generated_at",
+          "sidecar_missing": false,
+          "sidecar_error": null,
+          "sidecar": {
+            "case_id": "C_verse_dombra_led",
+            "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
+            "lyrics": "[Verse]\nЖелсіз түнде жарық ай,\nСәулесі суда дірілдеп.\nАуылдың жаны терең сай,\nТасыған өзен күрілдеп.\n",
+            "vocal_language": "unknown",
+            "seed": 1001,
+            "duration": 30,
+            "inference_steps": 8,
+            "shift": 3.0,
+            "model_variant": "turbo",
+            "engine_commit": "ca1e85fe9430179831e6bc6be790c332190a3866",
+            "checkpoint_revision": "19671f406d603126926c1b7e2adc169acbcade22",
+            "adapter": {
+              "path": "outputs/training/lora_kz_v1/adapter.safetensors",
+              "scale": 0.8
+            },
+            "wall_time_s": 45.1,
+            "peak_vram_bytes": 9337568256
+          },
+          "listening_notes": "Example note (from a previous manifest.json). Dombra attack sounds closer to a real pluck than the baseline."
+        }
+      ]
+    }
+  ]
+};
+
+const LABELS = {
+  baseline: "Pretrained ACE-Step turbo (no adaptation)",
+  adapter: "ACE-Step turbo + our LoRA adapter",
+  human_reference: "Human recording (reference, NOT generated)"
+};
+const EMPTY = {
+  baseline: "No baseline output saved yet",
+  adapter: "No adapter output — training not run",
+  human_reference: "No human reference recording saved"
+};
+const LANG_TEXT = { unknown: "unknown (Kazakh — not a supported ACE-Step language code)" };
+const NOTE_PREFIX = "kmm_notes::";
+
+const $ = (sel, el = document) => el.querySelector(sel);
+function h(tag, attrs = {}, ...children) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null) continue;
+    if (k === "class") el.className = v;
+    else if (k === "text") el.textContent = v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v);
+  }
+  for (const c of children.flat()) if (c != null) el.append(c);
+  return el;
+}
+function short(hash) { return hash ? String(hash).slice(0, 7) : "—"; }
+function fmtDate(iso) {
+  if (!iso) return "unknown date";
+  const d = new Date(iso);
+  if (isNaN(d)) return String(iso);
+  return d.toLocaleString(undefined, { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+function fmtBytes(b) { return b == null ? "—" : (b / 1073741824).toFixed(2) + " GB"; }
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+function lsRemove(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+let MANIFEST = null, SOURCE = "", currentId = null;
+
+async function loadManifest() {
+  if (window.KMM_MANIFEST) return { m: window.KMM_MANIFEST, source: "manifest.js (built " + (window.KMM_MANIFEST.built_at || "?") + ")" };
+  try {
+    const r = await fetch("manifest.example.json");
+    if (r.ok) return { m: await r.json(), source: "EXAMPLE manifest (manifest.example.json) — manifest.js not found; run scripts/build_viewer_manifest.py" };
+  } catch (e) { /* file:// cannot fetch; fall through */ }
+  return { m: KMM_EXAMPLE_INLINE, source: "EXAMPLE manifest (inline copy) — manifest.js not found; run scripts/build_viewer_manifest.py" };
+}
+
+function renderCaseList() {
+  const list = $("#caseList");
+  list.replaceChildren();
+  for (const c of MANIFEST.cases) {
+    const counts = {};
+    for (const e of c.entries) counts[e.label] = (counts[e.label] || 0) + 1;
+    const sub = Object.keys(counts).length
+      ? Object.entries(counts).map(([k, v]) => `${k.replace("_reference", "")} ×${v}`).join(", ")
+      : "no saved outputs";
+    list.append(h("button", { type: "button", class: "case", "aria-current": String(c.id === currentId), onclick: () => selectCase(c.id) },
+      h("span", { class: "id", text: c.id }),
+      h("span", { class: "sub", text: sub })));
+  }
+}
+
+function selectCase(id) {
+  currentId = id;
+  lsSet("kmm_last_case", id);
+  renderCaseList();
+  renderCase(MANIFEST.cases.find(c => c.id === id));
+}
+
+function banner(c) {
+  const gen = c.entries.filter(e => e.label !== "human_reference" && e.generated_on);
+  if (!gen.length) {
+    return h("div", { class: "banner", role: "note" }, "PRERECORDED VIEWER — no saved generated outputs for this case yet. Nothing is generated live; this page only plays files already on disk.");
+  }
+  const dates = gen.map(e => e.generated_on).sort();
+  const first = fmtDate(dates[0]), last = fmtDate(dates[dates.length - 1]);
+  const when = first === last ? first : `${first} – ${last}`;
+  const srcs = [...new Set(gen.map(e => e.generated_on_source))].join(", ");
+  return h("div", { class: "banner", role: "note" },
+    `PRERECORDED — generated earlier on ${when}, played from saved files. Nothing is generated live.`,
+    h("small", { text: `Date source: ${srcs}. Each player shows its own timestamp.` }));
+}
+
+function renderCase(c) {
+  const main = $("#main");
+  main.replaceChildren();
+  if (!c) { main.append(h("p", { text: "No cases in manifest." })); return; }
+  const s = MANIFEST.settings || {};
+  const pins = MANIFEST.pins || {};
+
+  main.append(banner(c));
+  main.append(h("div", { class: "case-head" },
+    h("h2", { text: c.id }),
+    h("div", { class: "kind", text: `${c.kind || (c.instrumental ? "instrumental" : "vocal")} · language: ${LANG_TEXT[c.language] || c.language}` })));
+  main.append(h("p", { class: "caption-line" }, h("b", { text: "Caption" }), c.caption || ""));
+
+  const lyricsCard = h("div", { class: "card" },
+    h("h3", { text: "Lyrics (exact prompt text)" }),
+    h("pre", { class: "lyrics", lang: "kk", text: c.lyrics || "" }));
+  if (c.lyrics_source) lyricsCard.append(h("div", { class: "caveat", text: "Source: " + c.lyrics_source }));
+  if (c.lyrics_reviewed_by_kazakh_speaker === false) lyricsCard.append(h("div", { class: "caveat", text: "Spelling/diacritics NOT yet confirmed by a Kazakh speaker." }));
+
+  const settings = h("dl", { class: "settings" });
+  const rows = [
+    ["Vocal language", LANG_TEXT[c.language] || c.language],
+    ["Model variant", s.model_variant],
+    ["Inference steps", s.inference_steps],
+    ["Shift", s.shift],
+    ["Guidance scale", s.guidance_scale],
+    ["Duration", s.duration_seconds != null ? s.duration_seconds + " s" : null],
+    ["Seeds", (MANIFEST.seeds || []).join(", ")],
+    ["Pinned engine", pins.engine_revision ? short(pins.engine_revision) : null],
+    ["Pinned checkpoint", pins.checkpoint_repo ? `${pins.checkpoint_repo} @ ${short(pins.checkpoint_revision)}` : null],
+  ];
+  for (const [k, v] of rows) {
+    if (v == null || v === "") continue;
+    settings.append(h("dt", { text: k }), h("dd", { class: k === "Vocal language" ? "wide" : null, text: String(v) }));
+  }
+  main.append(h("div", { class: "facts" }, lyricsCard, h("div", { class: "card" }, h("h3", { text: "Prompt & settings (shared by all runs)" }), settings)));
+
+  // Comparison grid
+  const seeds = [...new Set([...(MANIFEST.seeds || []), ...c.entries.filter(e => e.label !== "human_reference" && e.seed != null).map(e => e.seed)])].sort((a, b) => a - b);
+  const grid = h("div", { class: "grid", role: "table", "aria-label": "Side-by-side players" });
+  grid.append(h("div", {}),
+    h("div", { class: "colhead", text: LABELS.baseline }),
+    h("div", { class: "colhead", text: LABELS.adapter }),
+    h("div", { class: "colhead human", text: LABELS.human_reference }));
+  const humans = c.entries.filter(e => e.label === "human_reference");
+  const rowsN = Math.max(seeds.length, 1);
+  const seedList = seeds.length ? seeds : [null];
+  seedList.forEach((seed, i) => {
+    grid.append(h("div", { class: "seedlab" }, seed == null ? "—" : h("span", {}, "seed ", h("code", { text: String(seed) }))));
+    for (const label of ["baseline", "adapter"]) {
+      const es = c.entries.filter(e => e.label === label && e.seed === seed);
+      grid.append(es.length ? h("div", {}, es.map(e => playerCard(c, e, pins))) : h("div", { class: "empty", text: EMPTY[label] }));
+    }
+    if (i === 0) {
+      const cell = h("div", { class: "humancell", style: `grid-row: span ${rowsN}` });
+      if (humans.length) cell.append(...humans.map(e => playerCard(c, e, pins)));
+      else cell.append(h("div", { class: "empty", style: "height:100%", text: EMPTY.human_reference }));
+      grid.append(cell);
+    }
+  });
+  main.append(h("div", { class: "compare" }, grid));
+
+  main.append(h("div", { id: "export" }));
+}
+
+function playerCard(c, e, pins) {
+  const sc = e.sidecar || {};
+  const isHuman = e.label === "human_reference";
+  const card = h("div", { class: "player" + (isHuman ? " human" : ""), tabindex: "0", "data-wav": e.wav });
+  card.append(h("div", { class: "title", text: LABELS[e.label] || e.label }));
+
+  const warns = [];
+  if (e.wav_missing) warns.push("WAV file missing on disk — sidecar found but no audio: " + e.wav);
+  if (e.sidecar_missing && !isHuman) warns.push("No JSON sidecar — settings for this file are unknown.");
+  if (e.sidecar_error) warns.push("Sidecar could not be read: " + e.sidecar_error);
+  if (!isHuman && sc.engine_commit && pins.engine_revision && sc.engine_commit !== pins.engine_revision) warns.push("Engine commit differs from pinned " + short(pins.engine_revision));
+  if (!isHuman && sc.checkpoint_revision && pins.checkpoint_revision && sc.checkpoint_revision !== pins.checkpoint_revision) warns.push("Checkpoint revision differs from pinned " + short(pins.checkpoint_revision));
+  for (const w of warns) card.append(h("div", { class: "warn", text: w }));
+
+  const meta = h("dl", { class: "meta" });
+  const add = (k, v) => { if (v != null && v !== "") meta.append(h("dt", { text: k }), h("dd", { text: String(v) })); };
+  if (isHuman) {
+    add("What", "Human performance, not model output");
+    add("File", e.wav.split("/").pop());
+    add("Recorded/added", `${fmtDate(e.generated_on)} (${e.generated_on_source || "?"})`);
+  } else {
+    add("Seed", e.seed != null ? e.seed : "unknown");
+    add("Model", sc.model_variant ? `ACE-Step 1.5 ${sc.model_variant}` : "unknown");
+    add("Engine commit", short(sc.engine_commit));
+    add("Checkpoint rev", short(sc.checkpoint_revision));
+    add("Adapter", e.label === "adapter"
+      ? (sc.adapter ? `scale ${sc.adapter.scale} · ${String(sc.adapter.path || "").split("/").pop()}` : "unknown (missing in sidecar)")
+      : "none");
+    add("Steps / shift", (sc.inference_steps != null ? sc.inference_steps : "?") + " / " + (sc.shift != null ? sc.shift : "?"));
+    add("Duration", sc.duration != null ? sc.duration + " s" : null);
+    add("Generated on", `${fmtDate(e.generated_on)} (${e.generated_on_source || "?"})`);
+    add("Wall time", sc.wall_time_s != null ? sc.wall_time_s + " s" : null);
+    add("Peak VRAM", sc.peak_vram_bytes != null ? fmtBytes(sc.peak_vram_bytes) : null);
+  }
+  card.append(meta);
+
+  if (!e.wav_missing) {
+    const audio = h("audio", { controls: "", preload: "metadata", src: e.wav });
+    const err = h("div", { class: "warn", hidden: "" });
+    audio.addEventListener("error", () => { err.hidden = false; err.textContent = "Could not load audio at " + e.wav + " (file not present on this machine?)"; });
+    audio.addEventListener("play", () => {
+      document.querySelectorAll("audio").forEach(a => { if (a !== audio) a.pause(); });
+      card.classList.add("playing");
+    });
+    audio.addEventListener("pause", () => card.classList.remove("playing"));
+    audio.addEventListener("ended", () => card.classList.remove("playing"));
+    card.append(audio, err);
+  }
+
+  const key = NOTE_PREFIX + e.wav;
+  const stored = lsGet(key);
+  const ta = h("textarea", { placeholder: "Listening notes…", "aria-label": "Listening notes for " + e.wav });
+  ta.value = stored != null ? stored : (e.listening_notes || "");
+  const saved = h("span", { class: "saved", text: "saved" });
+  const lab = h("div", { class: "notelab" }, h("span", { text: "Listening notes" + (stored == null && e.listening_notes ? " (from manifest)" : "") }), saved);
+  let t = null;
+  ta.addEventListener("input", () => {
+    if (ta.value) lsSet(key, ta.value); else lsRemove(key);
+    saved.classList.add("on");
+    clearTimeout(t); t = setTimeout(() => saved.classList.remove("on"), 900);
+  });
+  card.append(lab, ta);
+  return card;
+}
+
+// Space toggles the focused player card (not when typing in a textarea or using native controls).
+document.addEventListener("keydown", (ev) => {
+  if (ev.key !== " " && ev.code !== "Space") return;
+  const t = ev.target;
+  if (!(t instanceof HTMLElement) || !t.classList.contains("player")) return;
+  const audio = t.querySelector("audio");
+  if (!audio) return;
+  ev.preventDefault();
+  if (audio.paused) audio.play().catch(() => {}); else audio.pause();
+});
+
+function collectNotes() {
+  const out = [];
+  for (const c of MANIFEST.cases) for (const e of c.entries) {
+    const v = lsGet(NOTE_PREFIX + e.wav);
+    const note = v != null ? v : (e.listening_notes || "");
+    if (note) out.push({ case: c.id, label: e.label, seed: e.seed, wav: e.wav, listening_notes: note });
+  }
+  return out;
+}
+
+function showExport() {
+  const box = $("#export");
+  const json = JSON.stringify({ exported_at: new Date().toISOString(), source: SOURCE, notes: collectNotes() }, null, 2);
+  const ta = h("textarea", { readonly: "", "aria-label": "Exported notes JSON" });
+  ta.value = json;
+  const status = h("span", { class: "status" });
+  box.replaceChildren(
+    h("div", { class: "row" },
+      h("strong", { text: "Notes export" }),
+      h("button", { type: "button", onclick: async () => {
+        try { await navigator.clipboard.writeText(json); status.textContent = "Copied to clipboard."; }
+        catch (err) { ta.focus(); ta.select(); status.textContent = "Clipboard blocked — text selected, press Ctrl+C."; }
+      }, text: "Copy" }),
+      h("button", { type: "button", onclick: () => box.replaceChildren(), text: "Close" }),
+      status,
+      h("span", { class: "status", text: "Save this as a file and pass it to scripts/build_viewer_manifest.py --notes <file> to bake notes into manifest.json." })),
+    ta);
+  ta.focus(); ta.select();
+  box.scrollIntoView({ block: "nearest" });
+}
+
+function showImport() {
+  const box = $("#export");
+  const ta = h("textarea", { placeholder: "Paste JSON produced by 'Export notes as JSON' here", "aria-label": "Import notes JSON" });
+  const status = h("span", { class: "status" });
+  box.replaceChildren(
+    h("div", { class: "row" },
+      h("strong", { text: "Notes import" }),
+      h("button", { type: "button", class: "primary", onclick: () => {
+        try {
+          let data = JSON.parse(ta.value);
+          if (data && data.notes) data = data.notes;
+          let n = 0;
+          if (Array.isArray(data)) for (const e of data) { if (e.wav && e.listening_notes) { lsSet(NOTE_PREFIX + e.wav, e.listening_notes); n++; } }
+          else if (data && typeof data === "object") for (const [k, v] of Object.entries(data)) { if (v) { lsSet(NOTE_PREFIX + k, String(v)); n++; } }
+          status.textContent = `Imported ${n} note(s).`;
+          if (currentId) renderCase(MANIFEST.cases.find(c => c.id === currentId));
+        } catch (err) { status.textContent = "Not valid JSON: " + err.message; }
+      }, text: "Apply" }),
+      h("button", { type: "button", onclick: () => box.replaceChildren(), text: "Close" }),
+      status),
+    ta);
+  ta.focus();
+  box.scrollIntoView({ block: "nearest" });
+}
+
+function applyTheme(t) {
+  if (t) document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme");
+}
+$("#themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = cur ? (cur === "dark" ? "light" : "dark") : (sysDark ? "light" : "dark");
+  applyTheme(next); lsSet("kmm_theme", next);
+});
+$("#exportBtn").addEventListener("click", showExport);
+$("#importBtn").addEventListener("click", showImport);
+
+(async function init() {
+  applyTheme(lsGet("kmm_theme"));
+  const { m, source } = await loadManifest();
+  MANIFEST = m; SOURCE = source;
+  $("#src").textContent = source; $("#src").title = source;
+  const last = lsGet("kmm_last_case");
+  const first = (MANIFEST.cases || [])[0];
+  selectCase(MANIFEST.cases.some(c => c.id === last) ? last : (first ? first.id : null));
+})();
+</script>
+</body>
+</html>

@@ -23,8 +23,9 @@ cp configs/paths.env.example .env.local      # set KMM_CHECKPOINTS, UV_PROJECT_E
 cd upstream/ACE-Step-1.5 && uv sync --python 3.12
 uv run python ../../scripts/diagnose_gpu.py  # real bf16 matmul + torchaudio load; RESULT: OK required
 ```
-Weights: `C:\kmm\venv-prep\Scripts\python.exe C:\kmm\scripts\download_checkpoints.py <dest>` (pinned revision, three
-components only, writes `CHECKSUMS.json`) — or copy the verified `checkpoints` folder.
+Weights: copy the verified `checkpoints` folder (9.4 GB, `CHECKSUMS.json` inside). Fresh download: `uv run --with huggingface_hub[hf_xet] scripts/download_checkpoints.py <dest>`
+fetches the pinned revision, including the unused LM folder that upstream's init insists on (else it auto-downloads the
+whole repo unpinned — see `docs/TOMORROW_RUNBOOK.md` step 0), and writes `CHECKSUMS.json`.
 
 ## Verified tonight (CPU laptop, RTX 3050 Ti 4 GB)
 - Upstream docs/source read; language handling, trainer flags, adapter reload path confirmed in code.

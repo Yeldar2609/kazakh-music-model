@@ -13,8 +13,8 @@
     "revision": "19671f406d603126926c1b7e2adc169acbcade22",
     "revision_date": "2026-02-03",
     "components": ["acestep-v15-turbo", "vae", "Qwen3-Embedding-0.6B"],
-    "skipped": ["acestep-5Hz-lm-1.7B (planning LM, disabled for this experiment)"],
-    "approx_bytes": 6340000000,
+    "also_present_but_unused": ["acestep-5Hz-lm-1.7B (planning LM; auto-downloaded by initialize_service on 2026-09-13 because the upstream main-model check requires it; kept so init never triggers a network download; never loaded)"],
+    "approx_bytes": 10100000000,
     "model_variant": "turbo",
     "inference_steps": 8,
     "shift": 3.0

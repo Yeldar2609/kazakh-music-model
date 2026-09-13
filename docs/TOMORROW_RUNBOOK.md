@@ -15,7 +15,7 @@ Legend: `PS>` Windows PowerShell, `$` Linux bash. Paths are relative to the proj
 
 Copy **two folders**, never the venv:
 1. Project folder `Kazak Music Model` (code, docs, configs, `data/`, `outputs/`; `upstream/` is included — it is the pinned clone).
-2. Weights folder `C:\kmm\checkpoints` (6.0 GB; `CHECKSUMS.json` inside, verified against Hugging Face LFS sha256).
+2. Weights folder `C:\kmm\checkpoints` (9.4 GB; `CHECKSUMS.json` inside, all five weight files verified against Hugging Face LFS sha256). It includes the unused `acestep-5Hz-lm-1.7B` folder on purpose: upstream's "main model present?" check requires it, and without it `initialize_service` starts an unpinned whole-repo download (that is exactly what happened on the laptop tonight). Keep the folder; never load the LM.
 
 LocalSend is installed on this Desktop and works across Windows/Linux/mac. A USB drive also works.
 On the destination create `.env.local` from `configs/paths.env.example` with that machine's paths.
@@ -60,10 +60,11 @@ Expected: `gpu : NVIDIA GeForce RTX 5090 … capability sm_120`, arch list conta
 ## 4. Baseline generation with the unchanged pretrained model (5–10 min) — SAVE BEFORE ANY TRAINING
 
 ```
-PS> cd ..\.. ; uv run --project upstream\ACE-Step-1.5 python scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\baseline --checkpoints C:\kmm\checkpoints
+PS> cd ..\.. ; py -3.12 scripts\generate_cases.py --dry-run
+PS> C:\kmm\venv-acestep\Scripts\python.exe scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\baseline --checkpoints C:\kmm\checkpoints
 $  cd ../.. ; uv run --project upstream/ACE-Step-1.5 python scripts/generate_cases.py --cases configs/eval_cases.json --out outputs/baseline --checkpoints /path/to/checkpoints
 ```
-(`--dry-run` first prints the resolved cases without loading anything.) 3 cases × 3 seeds × 30 s, turbo 8 steps shift 3.0, LM disabled, quantization off.
+(`--dry-run` prints the resolved cases without importing torch.) 3 cases × 3 seeds × 30 s, turbo 8 steps shift 3.0, LM disabled, quantization off. The script refuses to start if any of the three required component folders lacks weights, and it neutralises upstream's auto-download check so nothing is fetched from the network. A one-time log line "Model code mismatch detected … Auto-syncing" is benign (engine `.py` files copied into the checkpoint dir). Details: `docs/MODEL_INTERFACE.md`.
 Expected: `outputs/baseline/<case>/<case>_seed<seed>.wav` + `.json` sidecar for all 9; first load ~1–2 min, then seconds per clip.
 Listen to one of each case immediately (any player). A_dombra_solo must be instrumental; B/C must contain vocals.
 - CUDA OOM (should not happen on 32 GB) → add `--offload-to-cpu`.
@@ -79,7 +80,7 @@ Prerequisites (CPU, done tonight or now): `crop_plan.csv` filled → `build_mani
 PS> scripts\preprocess_dataset.cmd data\processed\dataset_train.json C:\kmm\work\tensors_train
 $  scripts/preprocess_dataset.sh data/processed/dataset_train.json /path/kmm/work/tensors_train
 ```
-(wrapper = `uv run train.py fixed --checkpoint-dir <ckpt> --model-variant turbo --preprocess --audio-dir data/processed --dataset-json … --tensor-output …`, see `docs/MODEL_INTERFACE.md`).
+(wrapper = `uv run python -m acestep.training_v2.cli.train_fixed --plain --checkpoint-dir <ckpt> --model-variant turbo --preprocess --dataset-json … --tensor-output …` run inside `upstream/ACE-Step-1.5`. The module entry is deliberate: `train.py fixed --preprocess` rejects the call because `--dataset-dir/--output-dir` are required there. See `docs/MODEL_INTERFACE.md`.)
 Expected: two passes logged (VAE+text encoder, then DiT encoder), one `.pt` per sample in the tensor dir, count = number of samples. Do the same for `dataset_val.json` → `tensors_val` (used only for listening, never trained on).
 - "Audio file from JSON not found" → `audio_path` is relative to the JSON's folder (`data/processed`); rerun export.
 - OOM in pass 2 → `--max-duration 60` (our crops are ≤ 40 s anyway).
@@ -91,20 +92,22 @@ Smoke run, 1 epoch, saves every epoch:
 PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train outputs\training\smoke 1
 $  scripts/train_adapter.sh /path/kmm/work/tensors_train outputs/training/smoke 1
 ```
-Expected in the log: dataset size, `loss` values that are finite (not `nan`/`inf`), `grad_norm` > 0, step time per optimizer step, then `outputs/training/smoke/final/adapter_config.json` + `adapter_model.safetensors`, and `checkpoints/epoch_1/` with `training_state.pt`. Note **step time** and **peak VRAM** (`nvidia-smi` in a second terminal, or the TensorBoard `runs/`).
+(wrapper = `uv run python train.py --yes --plain fixed --checkpoint-dir … --model-variant turbo --dataset-dir … --output-dir … --epochs N --save-every 1 --batch-size 1 --gradient-accumulation 4 --lr 1e-4 --rank 64 --alpha 128 --adapter-type lora --shift 3.0 --num-inference-steps 8`; `--yes --plain` must come BEFORE `fixed`, the wrapper does this.)
+Expected in the log: dataset size, `loss` values that are finite (not `nan`/`inf`), `grad_norm` > 0, step time per optimizer step, then `outputs/training/smoke/final/adapter_config.json` + `adapter_model.safetensors`, and `checkpoints/epoch_1_loss_0.XXXX/` (the trainer appends the loss to the folder name) with `training_state.pt`. Note **step time** and **peak VRAM** (`nvidia-smi` in a second terminal, or the TensorBoard `runs/`).
 Validate the artefact: `py -3.12 scripts/check_adapter.py outputs/training/smoke/final` → prints tensor count/shapes, exit 0.
 
 Pilot budget: optimizer steps per epoch = ceil(N_samples / 4). Choose epochs so that (epochs × steps/epoch × measured step time) ≤ 45 min, leaving time for adapter generation. Start there, e.g. with 30 clips at ~1 s/step: 200 epochs ≈ 8 steps × 200 × 1 s ≈ 27 min. Defaults `--save-every 1` protect the work. Do **not** copy the tutorial's 500–800 epochs blindly.
 ```
 PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train outputs\training\pilot 200
 ```
-Resume after interruption: add `--resume-from outputs/training/pilot/checkpoints/epoch_N` (full resume: adapter + optimizer + scheduler state).
+Resume after interruption: add `--resume-from outputs/training/pilot/checkpoints/epoch_N_loss_X.XXXX` (tab-complete the real name; full resume: adapter + optimizer + scheduler state).
 Windows note: DataLoader workers are forced to 0 (upstream behaviour) — expected, not an error.
 
 ## 7. Adapter reload + matched comparison (5–10 min)
 
 ```
-PS> uv run --project upstream\ACE-Step-1.5 python scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\adapter --checkpoints C:\kmm\checkpoints --adapter outputs\training\pilot\final --adapter-scale 1.0
+PS> py -3.12 scripts\check_adapter.py outputs\training\pilot\final
+PS> C:\kmm\venv-acestep\Scripts\python.exe scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\adapter --checkpoints C:\kmm\checkpoints --adapter outputs\training\pilot\final --adapter-scale 1.0
 ```
 Same cases, seeds, duration, steps, shift as step 4; only the adapter differs. Expected: `✅` load message in the log, 9 WAVs + sidecars with `adapter: {path, scale}`. Optionally a second pass with `--adapter-scale 0.5 --out outputs/adapter_s05` (record the change).
 - "LoRA loading is not supported when quantization is active" → the script initialises with `quantization=None`; if you changed that, revert.
