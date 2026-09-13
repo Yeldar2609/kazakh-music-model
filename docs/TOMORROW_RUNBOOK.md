@@ -1,0 +1,132 @@
+# Tomorrow's GPU runbook (RTX 5090 machines) — Mon 14 Sep 2026
+
+Every step here is **prepared, awaiting 5090 validation** unless marked VERIFIED. Run steps in order on ONE
+machine first. Only after step 6 works may a second machine run an independent job (e.g. baseline generation
+there, training here). GPUs on separate machines never pool memory.
+
+Time plan (fill in): GPU access starts __:__ ; presentation __:__ ; **hard stop for GPU work = presentation − 2 h**.
+Reserve the last 90–120 min for export, playback check in the viewer, rehearsal.
+
+Legend: `PS>` Windows PowerShell, `$` Linux bash. Paths are relative to the project folder `Kazak Music Model`.
+
+---
+
+## 0. Transfer (from tonight's laptop)
+
+Copy **two folders**, never the venv:
+1. Project folder `Kazak Music Model` (code, docs, configs, `data/`, `outputs/`; `upstream/` is included — it is the pinned clone).
+2. Weights folder `C:\kmm\checkpoints` (6.0 GB; `CHECKSUMS.json` inside, verified against Hugging Face LFS sha256).
+
+LocalSend is installed on this Desktop and works across Windows/Linux/mac. A USB drive also works.
+On the destination create `.env.local` from `configs/paths.env.example` with that machine's paths.
+
+Expected: `configs/pins.json` present; `upstream/ACE-Step-1.5` at commit `ca1e85f` (`git -C upstream/ACE-Step-1.5 rev-parse HEAD`).
+If `upstream/` did not transfer: run the `clone_command` from `configs/pins.json`.
+
+## 1. Detect the machine (2 min) — do not assume OS, VRAM, admin
+
+```
+PS> nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv ; nvidia-smi | findstr "CUDA Version"
+$  nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv ; nvidia-smi | grep "CUDA Version"
+PS> py -3.12 --version ; uv --version ; ffmpeg -version | Select-Object -First 1 ; git --version
+$  python3 --version ; uv --version ; ffmpeg -version | head -1 ; git --version
+```
+Expected: RTX 5090, 32 GB, driver ≥ 570 and CUDA ≥ 12.8 in the banner (Blackwell needs cu128 wheels), Python 3.11 or 3.12, uv, ffmpeg, git.
+- No uv → Windows `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`; Linux `curl -LsSf https://astral.sh/uv/install.sh | sh` (user-local, no admin).
+- No Python 3.12 → `uv python install 3.12` (user-local).
+- Linux without ffmpeg shared libs: torchaudio/torchcodec loading will fail in step 3; install ffmpeg via the package manager or ask the admin.
+- Check free disk ≥ 25 GB (`Get-PSDrive C` / `df -h .`) and RAM (`systeminfo | findstr Memory` / `free -g`).
+
+## 2. Environment (10–20 min, network)
+
+```
+PS> $env:UV_PROJECT_ENVIRONMENT="C:\kmm\venv-acestep"; cd upstream\ACE-Step-1.5; uv sync --python 3.12
+$  export UV_PROJECT_ENVIRONMENT=/opt/kmm/venv-acestep   # or ~/kmm/venv-acestep ; cd upstream/ACE-Step-1.5 && uv sync --python 3.12
+```
+`uv.lock` pins torch 2.7.1+cu128 (Windows) / 2.10.0+cu128 (Linux x86_64). Both cu128 wheels carry sm_120 (Blackwell) kernels.
+Expected: ends with "Installed N packages", no "error". Failure "no matching distribution torch==…+cu128" → OS/arch not covered by the lock (e.g. aarch64 uses cu130) — stop and report; do not hand-edit pins.
+
+## 3. GPU proof (1 min) — imports alone are not enough
+
+```
+PS> uv run python ..\..\scripts\diagnose_gpu.py
+$  uv run python ../../scripts/diagnose_gpu.py
+```
+Expected: `gpu : NVIDIA GeForce RTX 5090 … capability sm_120`, arch list contains `sm_120`, a bf16 4096² matmul ×10 in tens of ms with `finite=True`, `torchaudio.load: shape (1, 48000)`, `RESULT: OK`.
+- `RESULT: FAIL … lacks kernels for sm_120` → wrong torch wheel; re-check step 2 used the project `uv.lock`.
+- `torchaudio.load failed` → missing ffmpeg libraries (Linux) — fix before any preprocessing.
+- `cuda.is_available() False` → driver too old or wrong device; `nvidia-smi` must show CUDA ≥ 12.8.
+
+## 4. Baseline generation with the unchanged pretrained model (5–10 min) — SAVE BEFORE ANY TRAINING
+
+```
+PS> cd ..\.. ; uv run --project upstream\ACE-Step-1.5 python scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\baseline --checkpoints C:\kmm\checkpoints
+$  cd ../.. ; uv run --project upstream/ACE-Step-1.5 python scripts/generate_cases.py --cases configs/eval_cases.json --out outputs/baseline --checkpoints /path/to/checkpoints
+```
+(`--dry-run` first prints the resolved cases without loading anything.) 3 cases × 3 seeds × 30 s, turbo 8 steps shift 3.0, LM disabled, quantization off.
+Expected: `outputs/baseline/<case>/<case>_seed<seed>.wav` + `.json` sidecar for all 9; first load ~1–2 min, then seconds per clip.
+Listen to one of each case immediately (any player). A_dombra_solo must be instrumental; B/C must contain vocals.
+- CUDA OOM (should not happen on 32 GB) → add `--offload-to-cpu`.
+- Silence / NaN audio → record it, keep the file (failed outputs are evidence), try another seed; do not delete.
+
+**Checkpoint reached: outcome 2 (pretrained generation) is now demonstrable from saved audio.** Run `py -3.12 scripts/build_viewer_manifest.py` and open `viewer/index.html`.
+
+## 5. Dataset preprocessing (GPU, 5–15 min for ≤40 clips)
+
+Prerequisites (CPU, done tonight or now): `crop_plan.csv` filled → `build_manifest.py` → `validate_dataset.py` prints `RESULT: OK` → `export_dataset_json.py` wrote `data/processed/dataset_train.json` and `dataset_val.json`.
+
+```
+PS> scripts\preprocess_dataset.cmd data\processed\dataset_train.json C:\kmm\work\tensors_train
+$  scripts/preprocess_dataset.sh data/processed/dataset_train.json /path/kmm/work/tensors_train
+```
+(wrapper = `uv run train.py fixed --checkpoint-dir <ckpt> --model-variant turbo --preprocess --audio-dir data/processed --dataset-json … --tensor-output …`, see `docs/MODEL_INTERFACE.md`).
+Expected: two passes logged (VAE+text encoder, then DiT encoder), one `.pt` per sample in the tensor dir, count = number of samples. Do the same for `dataset_val.json` → `tensors_val` (used only for listening, never trained on).
+- "Audio file from JSON not found" → `audio_path` is relative to the JSON's folder (`data/processed`); rerun export.
+- OOM in pass 2 → `--max-duration 60` (our crops are ≤ 40 s anyway).
+
+## 6. One real optimizer step, then a bounded pilot (measure first)
+
+Smoke run, 1 epoch, saves every epoch:
+```
+PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train outputs\training\smoke 1
+$  scripts/train_adapter.sh /path/kmm/work/tensors_train outputs/training/smoke 1
+```
+Expected in the log: dataset size, `loss` values that are finite (not `nan`/`inf`), `grad_norm` > 0, step time per optimizer step, then `outputs/training/smoke/final/adapter_config.json` + `adapter_model.safetensors`, and `checkpoints/epoch_1/` with `training_state.pt`. Note **step time** and **peak VRAM** (`nvidia-smi` in a second terminal, or the TensorBoard `runs/`).
+Validate the artefact: `py -3.12 scripts/check_adapter.py outputs/training/smoke/final` → prints tensor count/shapes, exit 0.
+
+Pilot budget: optimizer steps per epoch = ceil(N_samples / 4). Choose epochs so that (epochs × steps/epoch × measured step time) ≤ 45 min, leaving time for adapter generation. Start there, e.g. with 30 clips at ~1 s/step: 200 epochs ≈ 8 steps × 200 × 1 s ≈ 27 min. Defaults `--save-every 1` protect the work. Do **not** copy the tutorial's 500–800 epochs blindly.
+```
+PS> scripts\train_adapter.cmd C:\kmm\work\tensors_train outputs\training\pilot 200
+```
+Resume after interruption: add `--resume-from outputs/training/pilot/checkpoints/epoch_N` (full resume: adapter + optimizer + scheduler state).
+Windows note: DataLoader workers are forced to 0 (upstream behaviour) — expected, not an error.
+
+## 7. Adapter reload + matched comparison (5–10 min)
+
+```
+PS> uv run --project upstream\ACE-Step-1.5 python scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\adapter --checkpoints C:\kmm\checkpoints --adapter outputs\training\pilot\final --adapter-scale 1.0
+```
+Same cases, seeds, duration, steps, shift as step 4; only the adapter differs. Expected: `✅` load message in the log, 9 WAVs + sidecars with `adapter: {path, scale}`. Optionally a second pass with `--adapter-scale 0.5 --out outputs/adapter_s05` (record the change).
+- "LoRA loading is not supported when quantization is active" → the script initialises with `quantization=None`; if you changed that, revert.
+- "expected PEFT LoRA directory containing adapter_config.json" → point at `…/final` or `…/checkpoints/epoch_N`, not at a file.
+
+Intermediate checkpoints are inference-ready too: compare `epoch_50` vs `final` if time allows.
+
+## 8. Listening + demo build (last 90–120 min, no GPU needed)
+
+```
+PS> py -3.12 scripts\build_viewer_manifest.py ; start viewer\index.html
+```
+Human review with a Kazakh speaker: dombra likeness, recognisable words + pronunciation, lyric adherence, coherence/artifacts, adapter helps/harms. Write notes in the viewer, export JSON, save into `outputs/listening_notes.json`.
+Update `PROJECT_STATUS.md` (which of the 4 outcomes were reached) and `HANDOFF_TO_CHATGPT.md`.
+
+## Recovery cheat-sheet
+
+| Symptom | Likely cause | Action |
+|---|---|---|
+| `fatal: permission denied` on clone | SSH key / protected folder | use the HTTPS URL from `configs/pins.json`, clone into a user-writable folder |
+| `python` prints 3.8 / opens Store (Windows) | Store stub on PATH | use `py -3.12` or `uv run python` |
+| Kazakh letters show as `?` or `\u04d9` | non-UTF-8 default | `PYTHONUTF8=1` (wrappers set it), never `ensure_ascii=True` |
+| Long-path errors (Windows, no admin) | MAX_PATH | keep work dirs short (`C:\kmm\work`), not inside deep OneDrive paths |
+| Training "completes" with 0 steps | tensor dir empty / wrong path | `ls` the tensor dir; rerun preprocessing |
+| Adapter output identical to baseline | `set_use_lora` not applied or scale 0 | check the `✅` load line and sidecar `adapter` field |
