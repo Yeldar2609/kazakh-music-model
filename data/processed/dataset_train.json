@@ -3,7 +3,7 @@
     "name": "kmm_train",
     "custom_tag": "",
     "tag_position": "prepend",
-    "created_at": "2026-09-13T23:49:21.529785",
+    "created_at": "2026-09-13T23:53:02.794392",
     "num_samples": 9,
     "all_instrumental": false,
     "genre_ratio": 0
@@ -155,7 +155,7 @@
       "bpm": null,
       "keyscale": "",
       "timesignature": "",
-      "duration": 40.9,
+      "duration": 39.85,
       "language": "unknown",
       "is_instrumental": false,
       "custom_tag": "",

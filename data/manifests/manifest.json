@@ -283,8 +283,8 @@
       "allowed_uses": null,
       "group_id": "wikimedia_commons/anthem_menin_kazakhstanym",
       "crop_start_s": 48.0,
-      "crop_end_s": 88.9,
-      "duration_s": 40.9,
+      "crop_end_s": 87.85,
+      "duration_s": 39.85,
       "sample_rate": 48000,
       "channels": 2,
       "kind": "vocal",
@@ -294,7 +294,7 @@
       "caption": "Kazakh anthem, solo vocal with choir and symphony orchestra, majestic slow march, Kazakh lyrics, 2006 concert recording",
       "lyrics_path": "data/lyrics/crops/an06_02.txt",
       "lyrics_has_kazakh_letters": true,
-      "sha256": "328f402fada0093034cf1707a0b5b284a8de2c15fc70cd868da81cee52c0a898",
+      "sha256": "fded1b790cf02b1885161191feb8975c14fc845a3be757dd1d8f0e12feb41211",
       "split": "train",
       "notes": "SRT cues 7-12"
     }

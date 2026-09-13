@@ -15,7 +15,10 @@
 - Windows CUDA env at `C:\kmm\venv-acestep` (torch 2.7.1+cu128, has sm_120 kernels); GPU diagnostic passes on the RTX 3050 Ti.
 - Data tooling tested on synthetic and real audio: crop → manifest → validate (leakage/dupes/lyrics/Kazakh letters/licenses) → ACE-Step dataset JSON.
 - Real pilot dataset (Wikimedia Commons, licenses recorded in `data/manifests/sources_wikimedia_commons.SOURCE.json`):
-  - 11 crops, **7.0 min**, from **3 independent recordings/groups** (5 files, but the two anthem recordings are one song → one group): 5 dombra crops (train), 2 dombra crops (val, separate recording), 4 anthem vocal crops (train) with crop-specific Kazakh transcripts cut on subtitle cue times.
+  - 5 files downloaded (11.1 min raw), 4 used in crops: **4 recordings of 3 compositions**; 11 crops, **7.0 min**.
+    Training split = 3 recordings of 2 compositions (one hobbyist's dombra recording → 5 crops; two anthem recordings → 4 vocal crops
+    with crop-specific Kazakh transcripts cut on subtitle cue times). Validation = 1 separate dombra recording → 2 crops.
+    Crops of one recording are counted as one source, never as independent data.
   - No Kazakh singing *with dombra and lyrics* exists in the set; the yurt field recording (human, no transcript) is kept only as a human reference in the viewer.
 - Scripts: `generate_cases.py` (dry-run tested), `check_adapter.py` (tested on fixtures), `preprocess_dataset.{cmd,sh}`, `train_adapter.{cmd,sh}` (argument handling tested with a shim; flags verified against upstream `args.py`), viewer builder + page (rendered and checked at 1280×720).
 - Read-only review done; blocker (output layout vs viewer) and high findings fixed.

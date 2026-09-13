@@ -9,7 +9,8 @@ Reserve the last 90–120 min for export, playback check in the viewer, rehearsa
 
 Legend: `PS>` Windows PowerShell, `$` Linux bash. Paths are relative to the project folder `Kazak Music Model`.
 `py -3.12` = the Windows Python launcher; if it is absent, every `py -3.12 scripts/x.py` also works as
-`C:\kmm\venv-acestep\Scripts\python.exe scripts\x.py` (Windows) or `uv run --project upstream/ACE-Step-1.5 python scripts/x.py` (any OS).
+`C:\kmm\venv-acestep\Scripts\python.exe scripts\x.py` (Windows) or `$UV_PROJECT_ENVIRONMENT/bin/python scripts/x.py` (Linux).
+Prefer the venv interpreter over `uv run --project …`: the latter re-syncs into `upstream/ACE-Step-1.5/.venv` if the env var is not exported.
 PowerShell 5.1 has no `&&`: run chained commands as separate lines.
 
 **Data state:** as of Sunday night the pilot dataset exists and validates (11 crops, 7.0 min, 3 recording groups; 9 train / 2 val;
@@ -26,7 +27,10 @@ Copy **two folders**, never the venv:
 2. Weights folder `C:\kmm\checkpoints` (9.4 GB; `CHECKSUMS.json` inside, all five weight files verified against Hugging Face LFS sha256). It includes the unused `acestep-5Hz-lm-1.7B` folder on purpose: upstream's "main model present?" check requires it, and without it `initialize_service` starts an unpinned whole-repo download (that is exactly what happened on the laptop tonight). Keep the folder; never load the LM.
 
 LocalSend is installed on this Desktop and works across Windows/Linux/mac. A USB drive also works.
-On the destination create `.env.local` from `configs/paths.env.example` with that machine's paths.
+On the destination **overwrite** the copied `.env.local` (it carries the laptop's `C:\kmm\...` paths) with that machine's paths from
+`configs/paths.env.example`. On Linux use e.g. `KMM_CHECKPOINTS=/home/<you>/kmm/checkpoints`, `UV_PROJECT_ENVIRONMENT=/home/<you>/kmm/venv-acestep`.
+The wrappers read `.env.local`; plain `uv run …` commands do NOT, so in every new shell also `export UV_PROJECT_ENVIRONMENT=…`
+(PowerShell: `$env:UV_PROJECT_ENVIRONMENT="…"`) or uv will silently build a second venv under `upstream/ACE-Step-1.5/.venv`.
 
 Expected: `configs/pins.json` present; `upstream/ACE-Step-1.5` at commit `ca1e85f` (`git -C upstream/ACE-Step-1.5 rev-parse HEAD`).
 If `upstream/` did not transfer: run the `clone_command` from `configs/pins.json`.
@@ -70,7 +74,7 @@ Expected: `gpu : NVIDIA GeForce RTX 5090 … capability sm_120`, arch list conta
 ```
 PS> cd ..\.. ; py -3.12 scripts\generate_cases.py --dry-run
 PS> C:\kmm\venv-acestep\Scripts\python.exe scripts\generate_cases.py --cases configs\eval_cases.json --out outputs\baseline --checkpoints C:\kmm\checkpoints
-$  cd ../.. ; uv run --project upstream/ACE-Step-1.5 python scripts/generate_cases.py --cases configs/eval_cases.json --out outputs/baseline --checkpoints /path/to/checkpoints
+$  cd ../.. ; "$UV_PROJECT_ENVIRONMENT/bin/python" scripts/generate_cases.py --cases configs/eval_cases.json --out outputs/baseline --checkpoints /path/to/checkpoints
 ```
 (`--dry-run` prints the resolved cases without importing torch.) 3 cases × 3 seeds × 30 s, turbo 8 steps shift 3.0, LM disabled, quantization off. The script refuses to start if any of the three required component folders lacks weights, and it neutralises upstream's auto-download check so nothing is fetched from the network. A one-time log line "Model code mismatch detected … Auto-syncing" is benign (engine `.py` files copied into the checkpoint dir). Details: `docs/MODEL_INTERFACE.md`.
 Expected: `outputs/baseline/<case>/<case>_seed<seed>.wav` + `.json` sidecar for all 9; first load ~1–2 min, then seconds per clip.
