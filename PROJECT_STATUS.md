@@ -1,13 +1,26 @@
-# Project status — updated 2026-09-14 00:05 (Sunday night, laptop)
+# Project status — updated 2026-09-14 11:55 (Monday, RTX 5060 8 GB desktop)
 
 ## The four outcomes
 
 | # | Outcome | Status | Evidence |
 |---|---------|--------|----------|
-| 1 | Infrastructure and data prepared | **Reached (small dataset)** | env synced + `diagnose_gpu.py` RESULT: OK on the laptop; weights sha256-verified; `validate_dataset.py` RESULT: OK on 11 crops |
-| 2 | Generation with the existing pretrained model | **Partially reached** | one 10 s dombra clip generated on the laptop (INT8 + CPU offload, not the 5090 settings): `outputs/baseline_laptop_smoke/`. The 9-clip fixed-case baseline is *prepared, awaiting 5090* |
-| 3 | Adapter trained, saved, reloaded | **Not started** | scripts + runbook prepared; needs the 5090 |
-| 4 | Human-reviewed improvement | **Not started** | needs outcome 3 + a Kazakh listener |
+| 1 | Infrastructure and data prepared | **Reached (small dataset)** | GPU machine rebuilt from GitHub: weights sha256 5/5, raw sources `RESULT: OK`, `diagnose_gpu.py` RESULT: OK (RTX 5060, sm_120), `validate_dataset.py` RESULT: OK (11 crops, 7.0 min, 3 recordings) |
+| 2 | Generation with the existing pretrained model | **Reached** | 9/9 clips `outputs/baseline/` (3 cases × 3 seeds, 30 s, turbo 8 steps shift 3.0, no quantization, CPU offload), ~4.3 s/clip, peak 5.8 GB. **Not yet listened to.** |
+| 3 | Adapter trained, saved, reloaded | **Reached (pilot)** | LoRA r64/α128, 200 epochs = 600 steps, 10 m 49 s, peak 5.0 GiB, epoch loss 1.09 → 0.71 (training evidence only). `outputs/training/pilot/final` passes `check_adapter.py`; reloaded for 9/9 matched clips in `outputs/adapter/` with upstream `lora_loaded/use_lora: true`, scale 1.0 |
+| 4 | Human-reviewed improvement | **Not started** | viewer has 18 clips (baseline vs adapter); needs a Kazakh listener |
+
+## Monday 14 Sep — GPU run on the RTX 5060 (8 GB, not the 5090)
+- Machine: Windows 11, RTX 5060 8 GB, driver 610.47, 32 GB RAM. Installed user-local: uv, Python 3.12 (via uv), ffmpeg 9 shared (winget).
+  No `py` launcher: use `C:\kmm\venv-acestep\Scripts\python.exe`.
+- 8 GB adjustments and the path-safety fix are in `docs/DECISIONS.md` (2026-09-14 entry). Training settings stayed the planned
+  rank 64 + `--offload-encoder`; generation adds `--offload-to-cpu`.
+- New `scripts/sidestep_train.py`: both `train_adapter` wrappers now go through it (upstream rejected tensor dirs outside its clone).
+  Caveat: upstream's CLI exits 0 even when training fails; read the "Training Complete / TRAINING FAILED" banner.
+- Wikimedia returned HTTP 429 on the first raw fetch; a rerun after 90 s fetched the rest.
+- Logs: `C:\kmm\work\*.log`. Pilot checkpoints every 25 epochs in `C:\kmm\work\pilot\checkpoints\` (epoch 25…200).
+- Dataset is still the 11-crop pilot set; step 5a (RTRK triage) needs a listener and was not done.
+- The 9 adapter clips differ clearly from baseline at equal seeds (waveform correlation 0.07–0.41). That shows the adapter is
+  active, **not** that it is better. With 9 training clips (5 dombra crops of one recording + 4 anthem crops) overfitting is expected.
 
 ## Completed and tested tonight
 - Upstream pinned and read: ACE-Step-1.5 @ `ca1e85fe`, weights @ `19671f40` (`configs/pins.json`, `configs/checkpoint_checksums.json`).
@@ -43,7 +56,7 @@
 - Provenance calls: PD-KZ-exempt covers the anthem composition; Commons applies it to the phonogram too. CC BY-SA on `Moon and stars` (val only, not trained on).
 
 ## GPU steps still untested (prepared, awaiting 5090 validation)
-All of `docs/TOMORROW_RUNBOOK.md` steps 2–7 on the 5090: env sync on that OS, `diagnose_gpu.py`, 9-clip baseline via `generate_cases.py`, preprocessing (two GPU passes), one real optimizer step, pilot training, adapter reload + matched regeneration. Only `initialize_service` + one INT8 generation has ever run (on the laptop).
+Superseded 2026-09-14: runbook steps 0–4 and 5–7 all ran on the RTX 5060 (see above). Still untested: step 5a (Whisper transcription drafts), `--resume-from`, the Linux `.sh` wrappers.
 
 ## Blockers / risks
 - Dataset is tiny and off-genre for vocals (anthem with orchestra). Intelligible Kazakh singing is a target, not an expectation.
@@ -51,9 +64,8 @@ All of `docs/TOMORROW_RUNBOOK.md` steps 2–7 on the 5090: env sync on that OS, 
 - Presentation hour and GPU window not yet known → the 2 h cutoff in the runbook is unfilled.
 
 ## Next action
-1. Transfer project folder (now ~1.6 GB with RTRK raw audio) + `C:\kmm\checkpoints` to the 5090 machine (runbook step 0).
-2. Run runbook steps 1–4; listen to the baseline.
-3. Step 5a: triage the RTRK files by ear, draft + review transcripts for a few terme/songs, expand `crop_plan.csv`, re-validate.
-4. Steps 5–7: preprocess, smoke train, pilot, adapter comparison.
+1. Listen in `viewer/index.html`: baseline vs adapter for A/B/C (runbook step 8), write notes, export to `outputs/listening_notes.json`.
+2. Optional if time: adapter at `--adapter-scale 0.5`, or an earlier checkpoint (`C:\kmm\work\pilot\checkpoints\epoch_75_…`), to check overfitting.
+3. Step 5a (RTRK triage by ear → more crops) and retrain; one retrain on this GPU ≈ 3.2 s/epoch × clips/9.
 Open ask: request access to the gated `yeshpanovrustem/kazakh_songs_asr` (Kazakh songs with verbatim transcripts) with the
 founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics material directly.

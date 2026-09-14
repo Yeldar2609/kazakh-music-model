@@ -29,7 +29,8 @@ shift 3
 cd "$ROOT/upstream/ACE-Step-1.5"
 echo "[train_adapter] checkpoints=$KMM_CHECKPOINTS env=${UV_PROJECT_ENVIRONMENT:-<uv default>} epochs=$EPOCHS"
 # --yes --plain are ROOT-level flags and must come before the `fixed` subcommand.
-exec uv run python train.py --yes --plain fixed \
+# sidestep_train.py runs upstream train.py with the path-safety root set to the tensor dir.
+exec uv run python "$ROOT/scripts/sidestep_train.py" --yes --plain fixed \
   --checkpoint-dir "$KMM_CHECKPOINTS" --model-variant turbo \
   --dataset-dir "$TENSOR_DIR" --output-dir "$OUT_DIR" \
   --epochs "$EPOCHS" --save-every 10 \

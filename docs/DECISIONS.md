@@ -67,6 +67,25 @@ experimental targets, not promises.
   adapter-only weights for inference.
 - Preprocessing is two GPU passes (VAE+text ~3 GB, DiT encoder ~6 GB) → 5090 step.
 
+## 2026-09-14: the GPU machine is an RTX 5060 8 GB, not a 5090
+
+The owner confirmed the run happens on a Windows 11 PC with an RTX 5060 (8 GB VRAM, sm_120, driver 610.47, 32 GB RAM).
+Model variant is unchanged (`acestep-v15-turbo`, same pinned weights, sha256 re-verified 5/5 on this machine).
+Only memory settings change:
+- **Generation:** `--offload-to-cpu` (components not in use sit in RAM), quantization stays **off** so the same
+  process can load a LoRA. Steps/shift/seeds/duration are unchanged; the sidecar records `offload_to_cpu: true`.
+  Measured: 9/9 baseline clips, ~4.3 s per 30 s clip, peak 5.8 GB allocated.
+- **Training:** the planned settings are kept (LoRA rank 64 / alpha 128, AdamW, batch 1, grad-accum 4, lr 1e-4,
+  gradient checkpointing on by default) with one addition, `--offload-encoder`. Measured 1-epoch smoke runs on
+  the 9-clip train set: rank 16 + upstream `vram_8gb` preset → 4.7 GiB peak; rank 64 + `--offload-encoder` →
+  **5.0 GiB peak**, 3.7 s/epoch, finite loss. So rank 64 fits and the lower-capacity preset is not needed.
+  Note: `adamw8bit` silently falls back to plain AdamW because `bitsandbytes` is not in the pinned `uv.lock`;
+  we do not add it.
+- **Path-safety launcher:** upstream `acestep/training/path_safety.py` only accepts tensor dirs under the working
+  directory (the upstream clone), so a tensor dir in `KMM_WORK` failed with "Path escapes safe root" and 0 steps
+  (and the CLI still exited 0). `scripts/sidestep_train.py` calls upstream's own `set_safe_root(<dataset-dir>)`
+  and then runs `train.py` unchanged; both `train_adapter` wrappers use it. Upstream code is not modified.
+
 ## Data rules (see README)
 
 Split by original recording before cropping; one group never spans splits. Vocal crops carry only the words

@@ -24,7 +24,7 @@
       "caption": "solo dombra, two-string plucked lute, unaccompanied, Kyrgyz folk tune Boz salkyn adapted to dombra, amateur home recording, no vocals, no drums",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "78fc03bd8e918cf26d5a763173bb9e3acd8f48e6be34d7e554ba1049940ad2e6",
+      "sha256": "bb55f2a60fd71f506410061fee9a356934d85eeaaccd39bd5353160c5ff4c4ca",
       "split": "train",
       "notes": "hobbyist performer (not Kazakh); Kyrgyz repertoire on dombra"
     },
@@ -51,7 +51,7 @@
       "caption": "solo dombra, two-string plucked lute, unaccompanied, Kyrgyz folk tune Boz salkyn adapted to dombra, amateur home recording, no vocals, no drums",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "5958eae776f7bc57cea92aa64996a3c8aa8183baf692b999d9188803c9295115",
+      "sha256": "adce81823c78cc4c881296fb96fe39b0014162639c9728e63371f1a8fd3351a5",
       "split": "train",
       "notes": "crop 2 of same recording"
     },
@@ -78,7 +78,7 @@
       "caption": "solo dombra, two-string plucked lute, unaccompanied, Kyrgyz folk tune Boz salkyn adapted to dombra, amateur home recording, no vocals, no drums",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "a7d8d899ba8748099922d73b8d5aec1b43ee2d1d83e27f4ed15661db07e92d2e",
+      "sha256": "db8fc65cd46c01a8840abf3047a4b102b963ad28f787d25c919f7708d4cf6ff0",
       "split": "train",
       "notes": "crop 3 of same recording"
     },
@@ -105,7 +105,7 @@
       "caption": "solo dombra, two-string plucked lute, unaccompanied, Kyrgyz folk tune Boz salkyn adapted to dombra, amateur home recording, no vocals, no drums",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "dd4471e0950359a8a3c9a461eb641b66128f2f5a697a8cb273ab1aa24442343a",
+      "sha256": "5f0a211868b29738faee31ef554d5e4e183f20a43dbd1f0401bad5d5d96314d4",
       "split": "train",
       "notes": "crop 4 of same recording"
     },
@@ -132,7 +132,7 @@
       "caption": "solo dombra, two-string plucked lute, unaccompanied, Kyrgyz folk tune Boz salkyn adapted to dombra, amateur home recording, no vocals, no drums",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "aeb1e02c559402b942a26b4edb963828902480f083113ba3c5221e4c39d3cf2d",
+      "sha256": "18c2ba3cc0e29406368580d78d016633abf68a1db240edbc350dcea3310e719b",
       "split": "train",
       "notes": "crop 5 of same recording"
     },
@@ -159,7 +159,7 @@
       "caption": "dombra, Kazakh two-string plucked lute, folklore video recording, no vocals",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "37d90d9fff2f43c568e54dc2ebf09fff45ec6a0100426605cf99cb0cc76eab6b",
+      "sha256": "e1efb1f9499a9fabf655c4b7431f7f376e71672d8bc90666c22af8ae33e5c548",
       "split": "val",
       "notes": "content NOT yet verified by ear (may include backing track); held-out validation recording"
     },
@@ -186,7 +186,7 @@
       "caption": "dombra, Kazakh two-string plucked lute, folklore video recording, no vocals",
       "lyrics_path": null,
       "lyrics_has_kazakh_letters": false,
-      "sha256": "6847e65448b5d9ca4832715a1770b2324ea048eec73aad4a3090e049e1e85a04",
+      "sha256": "47dd8805eac329c9bd8fcaf420d533a98d06b2c55d7ef6d1e626f9dffbe1da8f",
       "split": "val",
       "notes": "crop 2 of same recording; held-out"
     },
@@ -213,7 +213,7 @@
       "caption": "Kazakh anthem, mixed choir with symphony orchestra, majestic slow march, Kazakh lyrics, official studio recording",
       "lyrics_path": "data/lyrics/crops/an12_01.txt",
       "lyrics_has_kazakh_letters": true,
-      "sha256": "80eb4f792402cc9bf57273b27761c4ed0c5e37524536bc6d965d5166c3367713",
+      "sha256": "00bf75dadebb118ae650c159ec611bbf93e50f2895ec0966eabfce1a820f93c7",
       "split": "train",
       "notes": "SRT cues 1-8 (verse 1 + chorus); off-genre for folk but clean Kazakh singing with aligned lyrics"
     },
@@ -240,7 +240,7 @@
       "caption": "Kazakh anthem, mixed choir with symphony orchestra, majestic slow march, Kazakh lyrics, official studio recording",
       "lyrics_path": "data/lyrics/crops/an12_02.txt",
       "lyrics_has_kazakh_letters": true,
-      "sha256": "1921e60293bd22dff703b33dc2915978d0160cf3cbf57124023c8130897af5a7",
+      "sha256": "65c3f41980dc1394badf9c3702af80c82609f34ffa648d4f07577802fa0f61aa",
       "split": "train",
       "notes": "SRT cues 9-16 (verse 2 + chorus)"
     },
@@ -267,7 +267,7 @@
       "caption": "Kazakh anthem, solo vocal with choir and symphony orchestra, majestic slow march, Kazakh lyrics, 2006 concert recording",
       "lyrics_path": "data/lyrics/crops/an06_01.txt",
       "lyrics_has_kazakh_letters": true,
-      "sha256": "702b74a6bdb6826597422a42fba53e5ff6aaefe0547347e10201259778359ed8",
+      "sha256": "e66c8bdb9a76e9cd1f79b89383446f9a23a288bdc6884e573052a9d619ff0583",
       "split": "train",
       "notes": "SRT cues 1-6; 2006 SRT typo in cue 4 corrected (дазағым -> қазағым) pending review"
     },
@@ -294,7 +294,7 @@
       "caption": "Kazakh anthem, solo vocal with choir and symphony orchestra, majestic slow march, Kazakh lyrics, 2006 concert recording",
       "lyrics_path": "data/lyrics/crops/an06_02.txt",
       "lyrics_has_kazakh_letters": true,
-      "sha256": "fded1b790cf02b1885161191feb8975c14fc845a3be757dd1d8f0e12feb41211",
+      "sha256": "f4f60eca47e22fde5286bb9bf9d2972935ea14dfb5808e702d60994d43a5df70",
       "split": "train",
       "notes": "SRT cues 7-12"
     }
