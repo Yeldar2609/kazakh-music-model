@@ -28,6 +28,14 @@
 - Scripts: `generate_cases.py` (dry-run tested), `check_adapter.py` (tested on fixtures), `preprocess_dataset.{cmd,sh}`, `train_adapter.{cmd,sh}` (argument handling tested with a shim; flags verified against upstream `args.py`), viewer builder + page (rendered and checked at 1280×720).
 - Read-only review done; blocker (output layout vs viewer) and high findings fixed.
 
+- **Round-2 data search (2026-09-14 morning, Codex round 1 + Claude sub-agents):** inventories in `docs/DATA_SOURCES_CODEX.md`,
+  `docs/DATA_LEADS_ROUND2.md`, `docs/DATA_REPOS_ROUND2.md`. Outcome: no new clean solo-dombra corpus and no sung-Kazakh-with-lyrics
+  corpus exists in open sources; RTRK remains the dataset. Added as licensed references only: official anthem recording (PD, 3.2 min),
+  two Zhambyl museum films (CC BY-SA, 18.7 + 7.7 min, quiet, content unheard, `segments.csv` lists candidate ranges).
+  "Master of Dombra" stays excluded (uncredited performer). **45 candidate lyric texts** for the RTRK sung files in
+  `data/lyrics/candidates/` (14/15 songs, 8/20 terme, generic lullaby text ×10), all `UNVERIFIED` until checked against the recording.
+- Repo: https://github.com/Yeldar2609/kazakh-music-model (private). Clone + `fetch_raw_sources.py` + `download_checkpoints.py` rebuild everything.
+
 ## Requires human review
 - All Kazakh transcripts (`data/lyrics/crops/*.txt`, `data/lyrics/eval_verse_abai.txt`): spelling and the 2006 typo fix `дазағым→қазағым`. `reviewed_by_kazakh_speaker: false`.
 - `Moon and stars` (val dombra): listen to confirm it is dombra without a backing track.
