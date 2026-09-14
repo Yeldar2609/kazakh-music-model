@@ -86,6 +86,33 @@ Only memory settings change:
   (and the CLI still exited 0). `scripts/sidestep_train.py` calls upstream's own `set_safe_root(<dataset-dir>)`
   and then runs `train.py` unchanged; both `train_adapter` wrappers use it. Upstream code is not modified.
 
+## 2026-09-14 (afternoon): dataset v2 = pilot set + 59 RTRK kui
+
+- The owner triaged all 116 RTRK files by ear (`data/manifests/rtrk_triage.csv`, via `viewer/triage.html`).
+  Kept as dombra: 59 kui dombra solo (no vocals), 18 terme + 9 folk-composer songs dombra+voice.
+- **Added now:** only the 59 dombra-solo kui, as 111 instrumental 36 s crops (`scripts/plan_rtrk_crops.py`: two crops per
+  file at ~20 % / ~58 %, one if shorter than 82 s or no room; windows below −40 dBFS RMS moved on). Caption is the
+  runbook's fixed kui caption; no titles, BPM or key are invented.
+- **Excluded on purpose:** 10 files marked "orchestra" (2 kui, 2 songs, 6 lullabies); `kui` marked dombra solo *with* vocals
+  (ambiguous); one terme marked dombra solo without vocals (off-category); all 27 dombra+voice files until a Kazakh speaker
+  corrects crop-specific words (Whisper drafts in `data/lyrics/drafts/` are unreviewed and do not qualify).
+- Validation: 2 kui recordings (`kui_010`, `kui_058`, seed-42 pick) + the existing `Moon and stars`. Each RTRK file is its own
+  group_id; no kui title occurs twice among the kept files.
+- Result: 122 crops, 73.6 min, 62 independent recordings (116 train / 6 val); `validate_dataset.py` RESULT: OK.
+  The set is now ~96 % instrumental dombra, so the vocal cases (B/C) may drift toward instrumental output; that is a known
+  risk of this adapter, to be checked by ear, not a bug.
+- Licence reminder: RTRK is CC BY-NC 4.0 → the v2 adapter is non-commercial research/demo only and is not released.
+
+## 2026-09-14 (evening): dataset v3 = same 59 kui, used densely
+
+- Owner's listening verdict on v2: audibly better than baseline, still clearly synthetic. Decision: keep improving on the
+  instrumental side while vocal data waits for a Kazakh speaker.
+- v2 used only two 36 s windows per kui (67 min of the 145 min kept). v3 tiles each recording end to end
+  (`plan_rtrk_crops.py --dense`, 36 s crops 2 s apart, same silence rule, same val recordings): 195 crops, 117 min of kui.
+  Full set: 206 crops, 124.0 min, **still 62 independent recordings** — more minutes, not more sources; reported as such.
+  The v2 plan is kept as `data/manifests/crop_plan_v2.csv`.
+- Training: same recipe (r64, lr 1e-4, accum 4), 40 epochs ≈ 2000 steps (v2's loss went flat after ~870 steps).
+
 ## Data rules (see README)
 
 Split by original recording before cropping; one group never spans splits. Vocal crops carry only the words

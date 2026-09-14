@@ -28,7 +28,8 @@ from pathlib import Path, PurePosixPath
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-LABEL_DIRS = ["baseline", "adapter", "human_reference"]
+# adapter = pilot LoRA (9 clips, 3 recordings); adapter_kui_v2 = LoRA on dataset v2 (+59 RTRK kui), see docs/DECISIONS.md
+LABEL_DIRS = ["baseline", "adapter", "adapter_kui_v2", "adapter_kui_v3", "human_reference"]
 SIDECAR_FIELDS = [
     "case_id", "caption", "lyrics", "vocal_language", "seed", "duration",
     "inference_steps", "shift", "model_variant", "engine_commit",

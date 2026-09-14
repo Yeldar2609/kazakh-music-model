@@ -162,9 +162,9 @@
   .compare { overflow-x: auto; }
   .grid {
     display: grid;
-    grid-template-columns: 70px repeat(3, minmax(270px, 1fr));
+    grid-template-columns: 70px repeat(5, minmax(240px, 1fr));
     gap: 10px;
-    min-width: 900px;
+    min-width: 1300px;
     align-items: stretch;
   }
   .grid .colhead {
@@ -315,12 +315,17 @@ const KMM_EXAMPLE_INLINE = {
 
 const LABELS = {
   baseline: "Pretrained ACE-Step turbo (no adaptation)",
-  adapter: "ACE-Step turbo + our LoRA adapter",
+  adapter: "ACE-Step turbo + pilot LoRA (7 min, 3 recordings)",
+  adapter_kui_v2: "ACE-Step turbo + LoRA v2 (74 min, 62 recordings)",
+  adapter_kui_v3: "ACE-Step turbo + LoRA v3 (124 min, same 62 recordings)",
   human_reference: "Human recording (reference, NOT generated)"
 };
+const ADAPTER_LABELS = ["adapter", "adapter_kui_v2", "adapter_kui_v3"];
 const EMPTY = {
   baseline: "No baseline output saved yet",
   adapter: "No adapter output — training not run",
+  adapter_kui_v2: "No v2 adapter output saved yet",
+  adapter_kui_v3: "No v3 adapter output saved yet",
   human_reference: "No human reference recording saved"
 };
 const LANG_TEXT = { unknown: "unknown (Kazakh — not a supported ACE-Step language code)" };
@@ -346,7 +351,8 @@ function adapterText(a) {
   let t = "scale " + (eff != null ? eff : "?");
   if (a.scale_effective != null) t += " (effective)";
   if (req != null && eff != null && Number(req) !== Number(eff)) t += `, requested ${req}`;
-  const name = String(a.path || "").split(/[\/]/).pop();
+  // show "<run>/final" so the pilot and v2 adapters are distinguishable
+  const name = String(a.path || "").split(/[\\/]/).filter(Boolean).slice(-2).join("/");
   return name ? `${t} · ${name}` : t;
 }
 function short(hash) { return hash ? String(hash).slice(0, 7) : "—"; }
@@ -447,13 +453,15 @@ function renderCase(c) {
   grid.append(h("div", {}),
     h("div", { class: "colhead", text: LABELS.baseline }),
     h("div", { class: "colhead", text: LABELS.adapter }),
+    h("div", { class: "colhead", text: LABELS.adapter_kui_v2 }),
+    h("div", { class: "colhead", text: LABELS.adapter_kui_v3 }),
     h("div", { class: "colhead human", text: LABELS.human_reference }));
   const humans = c.entries.filter(e => e.label === "human_reference");
   const rowsN = Math.max(seeds.length, 1);
   const seedList = seeds.length ? seeds : [null];
   seedList.forEach((seed, i) => {
     grid.append(h("div", { class: "seedlab" }, seed == null ? "—" : h("span", {}, "seed ", h("code", { text: String(seed) }))));
-    for (const label of ["baseline", "adapter"]) {
+    for (const label of ["baseline", ...ADAPTER_LABELS]) {
       const es = c.entries.filter(e => e.label === label && e.seed === seed);
       grid.append(es.length ? h("div", {}, es.map(e => playerCard(c, e, pins))) : h("div", { class: "empty", text: EMPTY[label] }));
     }
@@ -494,7 +502,7 @@ function playerCard(c, e, pins) {
     add("Model", sc.model_variant ? `ACE-Step 1.5 ${sc.model_variant}` : "unknown");
     add("Engine commit", short(sc.engine_commit));
     add("Checkpoint rev", short(sc.checkpoint_revision));
-    add("Adapter", e.label === "adapter" ? adapterText(sc.adapter) : "none");
+    add("Adapter", ADAPTER_LABELS.includes(e.label) ? adapterText(sc.adapter) : "none");
     add("Steps / shift", (sc.inference_steps != null ? sc.inference_steps : "?") + " / " + (sc.shift != null ? sc.shift : "?"));
     add("Duration", sc.duration != null ? sc.duration + " s" : null);
     add("Generated on", `${fmtDate(e.generated_on)} (${e.generated_on_source || "?"})`);

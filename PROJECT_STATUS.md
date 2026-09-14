@@ -7,7 +7,9 @@
 | 1 | Infrastructure and data prepared | **Reached (small dataset)** | GPU machine rebuilt from GitHub: weights sha256 5/5, raw sources `RESULT: OK`, `diagnose_gpu.py` RESULT: OK (RTX 5060, sm_120), `validate_dataset.py` RESULT: OK (11 crops, 7.0 min, 3 recordings) |
 | 2 | Generation with the existing pretrained model | **Reached** | 9/9 clips `outputs/baseline/` (3 cases × 3 seeds, 30 s, turbo 8 steps shift 3.0, no quantization, CPU offload), ~4.3 s/clip, peak 5.8 GB. **Not yet listened to.** |
 | 3 | Adapter trained, saved, reloaded | **Reached (pilot)** | LoRA r64/α128, 200 epochs = 600 steps, 10 m 49 s, peak 5.0 GiB, epoch loss 1.09 → 0.71 (training evidence only). `outputs/training/pilot/final` passes `check_adapter.py`; reloaded for 9/9 matched clips in `outputs/adapter/` with upstream `lora_loaded/use_lora: true`, scale 1.0 |
-| 4 | Human-reviewed improvement | **Not started** | viewer has 18 clips (baseline vs adapter); needs a Kazakh listener |
+| 3b | Adapter v2 on the expanded dataset | **Reached (trained + reloaded)** | dataset v2 = 122 crops / 73.6 min / 62 recordings (+59 RTRK kui, triaged by ear). LoRA r64, 60 epochs = 1740 steps, 39 m 21 s, peak 5.0 GiB, epoch loss 1.12 → 0.72 (flat from epoch 30). `outputs/training/kui_v2/final` passes `check_adapter.py`; 9/9 matched clips in `outputs/adapter_kui_v2/`, `use_lora: true`, hash `53fa15cc` |
+| 3c | Adapter v3 (same 62 recordings, dense crops) | **Reached (trained + reloaded)** | dataset v3 = 206 crops / 124.0 min / 62 recordings. LoRA r64, 40 epochs = 2000 steps, 44 m 33 s, peak 5.0 GiB, epoch loss 1.03 → 0.71 (flat from epoch 10). `outputs/training/kui_v3/final` OK; 9/9 clips `outputs/adapter_kui_v3/`, hash `033d0f57`. v3 clips correlate 0.63–0.86 with v2 at equal seeds: a refinement of v2, not a new direction |
+| 4 | Human-reviewed improvement | **Owner impression only** | owner: v2 "a bit better than the original, still sounds like AI". Viewer has 36 clips (baseline / pilot / v2 / v3); per-clip notes and a Kazakh listener still needed |
 
 ## Monday 14 Sep — GPU run on the RTX 5060 (8 GB, not the 5090)
 - Machine: Windows 11, RTX 5060 8 GB, driver 610.47, 32 GB RAM. Installed user-local: uv, Python 3.12 (via uv), ffmpeg 9 shared (winget).
@@ -63,9 +65,26 @@ Superseded 2026-09-14: runbook steps 0–4 and 5–7 all ran on the RTX 5060 (se
 - Tomorrow's OS and network are unknown; the weights folder must travel with the project (9.4 GB) so nothing is downloaded.
 - Presentation hour and GPU window not yet known → the 2 h cutoff in the runbook is unfilled.
 
+## Monday 14 Sep, afternoon — dataset v2 and adapter v2
+- Machine survived the planned reset intact (USB backup `D:\KMM_backup_2026-09-14` was not needed; `RESTORE.md` is on it).
+- Owner triaged all 116 RTRK files in `viewer/triage.html` (new; data from `scripts/build_triage_page_data.py`).
+- `scripts/plan_rtrk_crops.py` added 111 kui crops; build → validate `RESULT: OK` → export. Decisions and exclusions in
+  `docs/DECISIONS.md` (2026-09-14 afternoon). Tensors `C:\kmm\work\tensors_train_v2` (116) / `tensors_val_v2` (6).
+- Whisper large-v3 drafts for all 45 sung RTRK files in `data/lyrics/drafts/` (run with `--no-vad`: VAD dropped singing).
+  44/45 have text; `an_001` is a hallucination loop. All UNREVIEWED: not usable for training until a Kazakh speaker corrects them.
+- v2 checkpoints every 10 epochs in `C:\kmm\work\kui_v2\checkpoints\`; logs `C:\kmm\work\train_kui_v2.log`.
+- The v2 set is ~96 % instrumental dombra: listen whether B/C still sing (risk noted in DECISIONS).
+- **First listening note (project owner, not yet a Kazakh-speaker review), 2026-09-14:** "this version is a bit better
+  relative to the original version … It definitely still sounds like AI but it is getting better." Counts toward outcome 4 as
+  an informal owner impression only; per-clip notes and a Kazakh speaker are still needed.
+
+- **v3 (evening):** dense tiling of the same kui (`plan_rtrk_crops.py --dense`); tensors `C:\kmm\work\tensors_train_v3` (197);
+  checkpoints `C:\kmm\work\kui_v3\checkpoints\` every 10 epochs. Loss curve flat after epoch 10 → the instrumental side is
+  saturating on 59 recordings; the next real gain needs *new* sources or vocal data, not more epochs.
+
 ## Next action
-1. Listen in `viewer/index.html`: baseline vs adapter for A/B/C (runbook step 8), write notes, export to `outputs/listening_notes.json`.
-2. Optional if time: adapter at `--adapter-scale 0.5`, or an earlier checkpoint (`C:\kmm\work\pilot\checkpoints\epoch_75_…`), to check overfitting.
-3. Step 5a (RTRK triage by ear → more crops) and retrain; one retrain on this GPU ≈ 3.2 s/epoch × clips/9.
+1. Listen in `viewer/index.html` (baseline / pilot / v2 / v3 per seed), write per-clip notes, export to `outputs/listening_notes.json`.
+2. Vocal data: a Kazakh speaker corrects drafts for a few of the 27 dombra+voice files (18 terme, 9 songs) → vocal crops → retrain v3.
+3. Optional: v2 at `--adapter-scale 0.5`, or checkpoint `epoch_30`, if v2 overpowers the vocal prompts.
 Open ask: request access to the gated `yeshpanovrustem/kazakh_songs_asr` (Kazakh songs with verbatim transcripts) with the
 founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics material directly.

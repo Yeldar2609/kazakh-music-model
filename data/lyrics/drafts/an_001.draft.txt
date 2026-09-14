@@ -1,0 +1,4 @@
+# DRAFT (faster-whisper large-v3, lang=kk, vad=False, audio 68.1s) - NOT REVIEWED. Correct by ear before use.
+   0.00	  29.98	Құлтарға Құлтарға
+  30.00	  59.98	Жақанға жалын өліп келіп түріп түріп түріп түріп түріп түріп,
+  60.00	  89.98	Әріңіздер, әріңіздер!
