@@ -20,9 +20,25 @@ Steps 1–4 (env + baseline) never depend on the dataset.
 
 ---
 
-## 0. Transfer (from tonight's laptop)
+## 0. Transfer (from tonight's laptop) — or clone from GitHub
 
-Copy **two folders**, never the venv:
+**GitHub path (chosen):** the repo holds code, docs, configs, manifests, lyrics and the exported dataset JSONs; audio, weights,
+`upstream/` and the venv are NOT in git and are rebuilt by scripts:
+```
+git clone https://github.com/Yeldar2609/kazakh-music-model.git "Kazak Music Model"
+cd "Kazak Music Model"
+git clone https://github.com/ace-step/ACE-Step-1.5.git upstream/ACE-Step-1.5
+git -C upstream/ACE-Step-1.5 checkout ca1e85fe9430179831e6bc6be790c332190a3866
+cp configs/paths.env.example .env.local                     # then edit paths for this machine
+uv run --with "huggingface_hub[hf_xet]" scripts/download_checkpoints.py <KMM_CHECKPOINTS>   # 9.4 GB, pinned + checksummed
+uv run --with "huggingface_hub[hf_xet]" scripts/fetch_raw_sources.py                        # ~1.6 GB raw audio, sha256-verified
+py -3.12 scripts/build_manifest.py ; py -3.12 scripts/validate_dataset.py ; py -3.12 scripts/export_dataset_json.py
+```
+(`py -3.12` → `python3` on Linux.) `fetch_raw_sources.py` re-downloads every file listed in `data/manifests/sources_*.SOURCE.json`
+(Wikimedia Commons, RTRK via Hugging Face, Codex-found Commons files) and refuses files whose sha256 differs from the record.
+Expected: `data/raw/` has 4 source folders, 123 audio files; validation prints `RESULT: OK` for the 11-crop pilot set.
+
+**Copy path (alternative):** copy **two folders**, never the venv:
 1. Project folder `Kazak Music Model` (code, docs, configs, `data/`, `outputs/`; `upstream/` is included — it is the pinned clone).
 2. Weights folder `C:\kmm\checkpoints` (9.4 GB; `CHECKSUMS.json` inside, all five weight files verified against Hugging Face LFS sha256). It includes the unused `acestep-5Hz-lm-1.7B` folder on purpose: upstream's "main model present?" check requires it, and without it `initialize_service` starts an unpinned whole-repo download (that is exactly what happened on the laptop tonight). Keep the folder; never load the LM.
 

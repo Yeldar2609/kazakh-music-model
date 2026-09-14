@@ -1,0 +1,814 @@
+[
+ {
+  "title": "Байжұма",
+  "type": "kui",
+  "language": "kk",
+  "duration": 151.4,
+  "file_name": "kui/kui_001.wav"
+ },
+ {
+  "title": "Абыл",
+  "type": "kui",
+  "language": "kk",
+  "duration": 177.0,
+  "file_name": "kui/kui_002.wav"
+ },
+ {
+  "title": "Ақжелең",
+  "type": "kui",
+  "language": "kk",
+  "duration": 88.9,
+  "file_name": "kui/kui_003.wav"
+ },
+ {
+  "title": "Ақшолпан",
+  "type": "kui",
+  "language": "kk",
+  "duration": 157.9,
+  "file_name": "kui/kui_004.wav"
+ },
+ {
+  "title": "Жігер",
+  "type": "kui",
+  "language": "kk",
+  "duration": 224.1,
+  "file_name": "kui/kui_005.wav"
+ },
+ {
+  "title": "Ақжібек",
+  "type": "kui",
+  "language": "kk",
+  "duration": 165.1,
+  "file_name": "kui/kui_006.wav"
+ },
+ {
+  "title": "Көгентүп",
+  "type": "kui",
+  "language": "kk",
+  "duration": 129.2,
+  "file_name": "kui/kui_007.wav"
+ },
+ {
+  "title": "Қара жорға",
+  "type": "kui",
+  "language": "kk",
+  "duration": 95.8,
+  "file_name": "kui/kui_008.wav"
+ },
+ {
+  "title": "Бұлбұл",
+  "type": "kui",
+  "language": "kk",
+  "duration": 149.6,
+  "file_name": "kui/kui_010.wav"
+ },
+ {
+  "title": "Былқылдақ",
+  "type": "kui",
+  "language": "kk",
+  "duration": 58.6,
+  "file_name": "kui/kui_012.wav"
+ },
+ {
+  "title": "Дайрабай",
+  "type": "kui",
+  "language": "kk",
+  "duration": 135.3,
+  "file_name": "kui/kui_013.wav"
+ },
+ {
+  "title": "Дүние-ғапыл",
+  "type": "kui",
+  "language": "kk",
+  "duration": 201.3,
+  "file_name": "kui/kui_014.wav"
+ },
+ {
+  "title": "Жайнаған",
+  "type": "kui",
+  "language": "kk",
+  "duration": 200.1,
+  "file_name": "kui/kui_015.wav"
+ },
+ {
+  "title": "Жалғызаяқ",
+  "type": "kui",
+  "language": "kk",
+  "duration": 145.3,
+  "file_name": "kui/kui_016.wav"
+ },
+ {
+  "title": "Жалғызаяқ",
+  "type": "kui",
+  "language": "kk",
+  "duration": 158.9,
+  "file_name": "kui/kui_017.wav"
+ },
+ {
+  "title": "Жезкиік (1-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 175.4,
+  "file_name": "kui/kui_018.wav"
+ },
+ {
+  "title": "Жұман (1-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 205.7,
+  "file_name": "kui/kui_020.wav"
+ },
+ {
+  "title": "Кертолғау (Сүгір)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 141.6,
+  "file_name": "kui/kui_021.wav"
+ },
+ {
+  "title": "Еңбек ері",
+  "type": "kui",
+  "language": "kk",
+  "duration": 114.1,
+  "file_name": "kui/kui_022.wav"
+ },
+ {
+  "title": "Кертолғау (1-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 156.0,
+  "file_name": "kui/kui_023.wav"
+ },
+ {
+  "title": "Кертолғау (2-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 174.4,
+  "file_name": "kui/kui_024.wav"
+ },
+ {
+  "title": "Көкіл",
+  "type": "kui",
+  "language": "kk",
+  "duration": 167.5,
+  "file_name": "kui/kui_025.wav"
+ },
+ {
+  "title": "Кісен ашқан",
+  "type": "kui",
+  "language": "kk",
+  "duration": 148.4,
+  "file_name": "kui/kui_026.wav"
+ },
+ {
+  "title": "Кішкентай",
+  "type": "kui",
+  "language": "kk",
+  "duration": 219.0,
+  "file_name": "kui/kui_027.wav"
+ },
+ {
+  "title": "Қайғылы қара",
+  "type": "kui",
+  "language": "kk",
+  "duration": 167.9,
+  "file_name": "kui/kui_029.wav"
+ },
+ {
+  "title": "Қарқарау",
+  "type": "kui",
+  "language": "kk",
+  "duration": 96.0,
+  "file_name": "kui/kui_030.wav"
+ },
+ {
+  "title": "Қосалқа (2-ші түрі)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 128.9,
+  "file_name": "kui/kui_032.wav"
+ },
+ {
+  "title": "Қайран шешем",
+  "type": "kui",
+  "language": "kk",
+  "duration": 125.8,
+  "file_name": "kui/kui_033.wav"
+ },
+ {
+  "title": "Қызыл қайың",
+  "type": "kui",
+  "language": "kk",
+  "duration": 125.6,
+  "file_name": "kui/kui_034.wav"
+ },
+ {
+  "title": "Ноғайлының босқаны",
+  "type": "kui",
+  "language": "kk",
+  "duration": 99.5,
+  "file_name": "kui/kui_036.wav"
+ },
+ {
+  "title": "Нұрғазарын",
+  "type": "kui",
+  "language": "kk",
+  "duration": 133.6,
+  "file_name": "kui/kui_037.wav"
+ },
+ {
+  "title": "Саранжап",
+  "type": "kui",
+  "language": "kk",
+  "duration": 64.9,
+  "file_name": "kui/kui_039.wav"
+ },
+ {
+  "title": "Секіртпе",
+  "type": "kui",
+  "language": "kk",
+  "duration": 51.5,
+  "file_name": "kui/kui_040.wav"
+ },
+ {
+  "title": "Соқыр Есжан",
+  "type": "kui",
+  "language": "kk",
+  "duration": 123.0,
+  "file_name": "kui/kui_041.wav"
+ },
+ {
+  "title": "Сылқылдақ",
+  "type": "kui",
+  "language": "kk",
+  "duration": 134.8,
+  "file_name": "kui/kui_042.wav"
+ },
+ {
+  "title": "Топан",
+  "type": "kui",
+  "language": "kk",
+  "duration": 133.9,
+  "file_name": "kui/kui_043.wav"
+ },
+ {
+  "title": "Қара қасқа ат",
+  "type": "kui",
+  "language": "kk",
+  "duration": 212.8,
+  "file_name": "kui/kui_044.wav"
+ },
+ {
+  "title": "Шалқыма (1-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 131.4,
+  "file_name": "kui/kui_045.wav"
+ },
+ {
+  "title": "Шалқыма (2-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 212.6,
+  "file_name": "kui/kui_046.wav"
+ },
+ {
+  "title": "Ыңғайтөк",
+  "type": "kui",
+  "language": "kk",
+  "duration": 126.8,
+  "file_name": "kui/kui_049.wav"
+ },
+ {
+  "title": "Ілме",
+  "type": "kui",
+  "language": "kk",
+  "duration": 92.6,
+  "file_name": "kui/kui_050.wav"
+ },
+ {
+  "title": "Өтті-кетті",
+  "type": "kui",
+  "language": "kk",
+  "duration": 162.6,
+  "file_name": "kui/kui_051.wav"
+ },
+ {
+  "title": "Домалатпай",
+  "type": "kui",
+  "language": "kk",
+  "duration": 132.9,
+  "file_name": "kui/kui_052.wav"
+ },
+ {
+  "title": "Торы ат",
+  "type": "kui",
+  "language": "kk",
+  "duration": 141.2,
+  "file_name": "kui/kui_053.wav"
+ },
+ {
+  "title": "Қара төс",
+  "type": "kui",
+  "language": "kk",
+  "duration": 138.7,
+  "file_name": "kui/kui_054.wav"
+ },
+ {
+  "title": "Әсемқоңыр",
+  "type": "kui",
+  "language": "kk",
+  "duration": 173.7,
+  "file_name": "kui/kui_055.wav"
+ },
+ {
+  "title": "Бірінші май",
+  "type": "kui",
+  "language": "kk",
+  "duration": 128.0,
+  "file_name": "kui/kui_056.wav"
+ },
+ {
+  "title": "Қоңыр",
+  "type": "kui",
+  "language": "kk",
+  "duration": 144.2,
+  "file_name": "kui/kui_057.wav"
+ },
+ {
+  "title": "Ел айырылған",
+  "type": "kui",
+  "language": "kk",
+  "duration": 186.1,
+  "file_name": "kui/kui_058.wav"
+ },
+ {
+  "title": "Ақжарма",
+  "type": "kui",
+  "language": "kk",
+  "duration": 203.3,
+  "file_name": "kui/kui_059.wav"
+ },
+ {
+  "title": "Аққу",
+  "type": "kui",
+  "language": "kk",
+  "duration": 183.8,
+  "file_name": "kui/kui_060.wav"
+ },
+ {
+  "title": "Аман бол, шешем, аман бол",
+  "type": "kui",
+  "language": "kk",
+  "duration": 137.3,
+  "file_name": "kui/kui_061.wav"
+ },
+ {
+  "title": "Аңшының зары",
+  "type": "kui",
+  "language": "kk",
+  "duration": 146.8,
+  "file_name": "kui/kui_062.wav"
+ },
+ {
+  "title": "Балбырауын",
+  "type": "kui",
+  "language": "kk",
+  "duration": 105.9,
+  "file_name": "kui/kui_063.wav"
+ },
+ {
+  "title": "Ерден",
+  "type": "kui",
+  "language": "kk",
+  "duration": 162.5,
+  "file_name": "kui/kui_064.wav"
+ },
+ {
+  "title": "Жастық шақ",
+  "type": "kui",
+  "language": "kk",
+  "duration": 95.1,
+  "file_name": "kui/kui_065.wav"
+ },
+ {
+  "title": "Қосалқа",
+  "type": "kui",
+  "language": "kk",
+  "duration": 199.7,
+  "file_name": "kui/kui_066.wav"
+ },
+ {
+  "title": "Жолаушының жолды қоңыры (қыздың тартқаны)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 129.8,
+  "file_name": "kui/kui_067.wav"
+ },
+ {
+  "title": "Заман-ай (2-нұсқа)",
+  "type": "kui",
+  "language": "kk",
+  "duration": 130.5,
+  "file_name": "kui/kui_068.wav"
+ },
+ {
+  "title": "Көкейкесті",
+  "type": "kui",
+  "language": "kk",
+  "duration": 154.4,
+  "file_name": "kui/kui_069.wav"
+ },
+ {
+  "title": "Қаншайым",
+  "type": "kui",
+  "language": "kk",
+  "duration": 97.9,
+  "file_name": "kui/kui_070.wav"
+ },
+ {
+  "title": "Құдаша",
+  "type": "kui",
+  "language": "kk",
+  "duration": 160.7,
+  "file_name": "kui/kui_071.wav"
+ },
+ {
+  "title": "Қырмызы қосбасар",
+  "type": "kui",
+  "language": "kk",
+  "duration": 101.8,
+  "file_name": "kui/kui_072.wav"
+ },
+ {
+  "title": "Назқоңыр",
+  "type": "kui",
+  "language": "kk",
+  "duration": 210.7,
+  "file_name": "kui/kui_073.wav"
+ },
+ {
+  "title": "Сал күрең",
+  "type": "kui",
+  "language": "kk",
+  "duration": 107.3,
+  "file_name": "kui/kui_074.wav"
+ },
+ {
+  "title": "Сән-ау",
+  "type": "kui",
+  "language": "kk",
+  "duration": 158.4,
+  "file_name": "kui/kui_075.wav"
+ },
+ {
+  "title": "Сылқылдақ",
+  "type": "kui",
+  "language": "kk",
+  "duration": 142.7,
+  "file_name": "kui/kui_076.wav"
+ },
+ {
+  "title": "Он алтыншы жыл",
+  "type": "kui",
+  "language": "kk",
+  "duration": 179.8,
+  "file_name": "kui/kui_077.wav"
+ },
+ {
+  "title": "Телқоңыр",
+  "type": "kui",
+  "language": "kk",
+  "duration": 185.2,
+  "file_name": "kui/kui_078.wav"
+ },
+ {
+  "title": "Тоғыз тарау",
+  "type": "kui",
+  "language": "kk",
+  "duration": 173.4,
+  "file_name": "kui/kui_079.wav"
+ },
+ {
+  "title": "Терісқақпай",
+  "type": "kui",
+  "language": "kk",
+  "duration": 129.6,
+  "file_name": "kui/kui_080.wav"
+ },
+ {
+  "title": "Басып елді калың нулы",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 67.5,
+  "file_name": "zhyr_terme/terme_029.wav"
+ },
+ {
+  "title": "Әлшүкір, әуел барып білдің әліп",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 72.1,
+  "file_name": "zhyr_terme/terme_094.wav"
+ },
+ {
+  "title": "Шырын тіл, шырайлы жүз болсаң балдай",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 73.5,
+  "file_name": "zhyr_terme/terme_036.wav"
+ },
+ {
+  "title": "Жамиғи қазақ бір туған",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 75.0,
+  "file_name": "zhyr_terme/terme_009.wav"
+ },
+ {
+  "title": "Бір кеңес (Асыл ер өзiн биiк санамайды)",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 81.5,
+  "file_name": "zhyr_terme/terme_260.wav"
+ },
+ {
+  "title": "Әмманың ажал-тағдыр мұрасындай",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 84.4,
+  "file_name": "zhyr_terme/terme_261.wav"
+ },
+ {
+  "title": "Аллаға",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 85.9,
+  "file_name": "zhyr_terme/terme_150.wav"
+ },
+ {
+  "title": "Не жетпейді",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 87.6,
+  "file_name": "zhyr_terme/terme_032.wav"
+ },
+ {
+  "title": "Балқы Базар термесі",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 90.2,
+  "file_name": "zhyr_terme/terme_028.wav"
+ },
+ {
+  "title": "Жеріңді сұра, шырақ, танымаған",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 90.8,
+  "file_name": "zhyr_terme/terme_227.wav"
+ },
+ {
+  "title": "Арғымақтың баласы",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 91.7,
+  "file_name": "zhyr_terme/terme_045.wav"
+ },
+ {
+  "title": "Қамын ойла халқыңның",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 94.0,
+  "file_name": "zhyr_terme/terme_145.wav"
+ },
+ {
+  "title": "Сағымқожаның термесі",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 95.2,
+  "file_name": "zhyr_terme/terme_034.wav"
+ },
+ {
+  "title": "Екінші толғау",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 96.1,
+  "file_name": "zhyr_terme/terme_013.wav"
+ },
+ {
+  "title": "Шайырлардың сомасы",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 96.8,
+  "file_name": "zhyr_terme/terme_062.wav"
+ },
+ {
+  "title": "Көроғлы дастанынан үзінді",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 97.3,
+  "file_name": "zhyr_terme/terme_267.wav"
+ },
+ {
+  "title": "Терме",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 97.5,
+  "file_name": "zhyr_terme/terme_085.wav"
+ },
+ {
+  "title": "Кереге, уық тапқанмен",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 99.9,
+  "file_name": "zhyr_terme/terme_264.wav"
+ },
+ {
+  "title": "Не жаман",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 100.8,
+  "file_name": "zhyr_terme/terme_039.wav"
+ },
+ {
+  "title": "Әбубәкір Кердерінің термесі",
+  "type": "zhyr_terme",
+  "language": "kk",
+  "duration": 101.5,
+  "file_name": "zhyr_terme/terme_015.wav"
+ },
+ {
+  "title": "Балқадиша",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 68.1,
+  "file_name": "an_kompozitor/an_001.wav"
+ },
+ {
+  "title": "Шилі өзен",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 116.2,
+  "file_name": "an_kompozitor/an_002.wav"
+ },
+ {
+  "title": "Елигай",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 130.6,
+  "file_name": "an_kompozitor/an_003.wav"
+ },
+ {
+  "title": "Жариям айдай",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 148.7,
+  "file_name": "an_kompozitor/an_004.wav"
+ },
+ {
+  "title": "Ақкербез",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 130.2,
+  "file_name": "an_kompozitor/an_005.wav"
+ },
+ {
+  "title": "Нақ-нақ",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 154.0,
+  "file_name": "an_kompozitor/an_006.wav"
+ },
+ {
+  "title": "Ақ ерке (1-түрі)",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 128.7,
+  "file_name": "an_kompozitor/an_007.wav"
+ },
+ {
+  "title": "Балқурай",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 208.6,
+  "file_name": "an_kompozitor/an_008.wav"
+ },
+ {
+  "title": "Адасқақ",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 180.8,
+  "file_name": "an_kompozitor/an_009.wav"
+ },
+ {
+  "title": "Ақбаян",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 166.5,
+  "file_name": "an_kompozitor/an_010.wav"
+ },
+ {
+  "title": "Әдемі қыз",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 94.2,
+  "file_name": "an_kompozitor/an_011.wav"
+ },
+ {
+  "title": "Қараторғай",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 65.0,
+  "file_name": "an_kompozitor/an_012.wav"
+ },
+ {
+  "title": "Харарау",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 78.5,
+  "file_name": "an_kompozitor/an_013.wav"
+ },
+ {
+  "title": "Желсіз түнде жарық ай",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 185.8,
+  "file_name": "an_kompozitor/an_014.wav"
+ },
+ {
+  "title": "Ойланшы өзің",
+  "type": "an_kompozitor",
+  "language": "kk",
+  "duration": 102.1,
+  "file_name": "an_kompozitor/an_015.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 157.7,
+  "file_name": "besik/besik_001.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 208.8,
+  "file_name": "besik/besik_002.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 238.8,
+  "file_name": "besik/besik_003.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 185.5,
+  "file_name": "besik/besik_004.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 143.5,
+  "file_name": "besik/besik_005.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 179.2,
+  "file_name": "besik/besik_006.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 104.2,
+  "file_name": "besik/besik_007.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 222.3,
+  "file_name": "besik/besik_008.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 158.1,
+  "file_name": "besik/besik_009.wav"
+ },
+ {
+  "title": "Бесік жыры",
+  "type": "besik",
+  "language": "kk",
+  "duration": 140.1,
+  "file_name": "besik/besik_011.wav"
+ }
+]
