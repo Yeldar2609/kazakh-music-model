@@ -9,14 +9,18 @@ until you can say them without notes. Every fact here has a file behind it (sect
 
 | # | Outcome | Status | Evidence |
 |---|---------|--------|----------|
-| 1 | Infrastructure and data prepared | **Reached, small scale** | pinned engine + weights with checksums; validated 11-crop dataset; 116 archive files staged for triage |
-| 2 | Generation with the existing pretrained model | **Partial** | one 10-second dombra clip on a 4 GB laptop GPU (INT8, CPU offload). The nine-clip fixed-case baseline on the RTX 5090 is prepared, not yet run |
-| 3 | Adapter trained, saved, reloaded | **Not started** | scripts and runbook prepared, verified against upstream source, never executed on a GPU |
-| 4 | Human-reviewed improvement | **Not started** | needs outcome 3 plus a Kazakh listener |
+| 1 | Infrastructure and data prepared | **Reached, small scale** | GPU machine rebuilt from GitHub by script: weights sha256 5/5, raw audio re-fetched and verified, `diagnose_gpu.py` OK (sm_120), validated 11-crop dataset; 116 archive files staged for triage |
+| 2 | Generation with the existing pretrained model | **Reached** | 9/9 baseline clips (3 cases × 3 seeds, 30 s, turbo 8 steps, shift 3.0, no quantization) on the GPU machine, ~4 s per clip. Not yet judged by ear |
+| 3 | Adapter trained, saved, reloaded | **Reached (pilot)** | LoRA rank 64, 200 epochs = 600 optimizer steps, 10 min 49 s, peak 5.0 GiB; epoch loss 1.09 → 0.71 (training evidence only, not quality); adapter passes `check_adapter.py`; reloaded for 9/9 matched clips with upstream's `lora_loaded/use_lora: true` |
+| 4 | Human-reviewed improvement | **Not started** | 18 clips wait in the viewer; needs a Kazakh listener |
 
-Never say "we trained a model" or "our model". Say: **"an ACE-Step-based prototype: we built and verified the
-pipeline and the dataset; adapter training is prepared, not executed."** If the researcher pushes, the honest sentence is:
-"Only one thing has ever run against the model, a 10-second instrumental smoke test on my laptop."
+**Hardware, exactly:** the GPU machine identified itself as an **NVIDIA RTX 5060 with 8 GB**, not a 5090 with 32 GB. All GPU
+steps ran with memory offload flags and fit in 8 GB. Say "an 8 GB RTX 5060" if asked; never claim the 5090.
+
+Never say "we trained a model" or "our model". Say: **"an ACE-Step-based prototype: the pretrained model is unchanged;
+we trained a small LoRA adapter on nine licensed clips and compared it against the same base model with matched seeds."**
+If the researcher pushes: "The adapter is demonstrably active (its outputs differ from baseline at equal seeds, waveform
+correlation 0.07–0.41), but nobody has yet judged whether it is better. With nine clips, overfitting is the expected result."
 
 ---
 
@@ -30,7 +34,9 @@ crop-specific transcripts, a validator that rejects silent, duplicated, unlicens
 into the trainer's format. I wrote the generation, training and comparison scripts against the actual upstream source,
 and a runbook that proves the GPU works before any model runs. The dataset today is small: eleven validated crops from
 four recordings, plus 265 minutes from the Kazakh state broadcaster's archive that still need listening and transcript
-review. The model has generated one instrumental clip so far. Training is the next step, on the 5090."
+review. On an 8 GB RTX 5060 the pipeline ran end to end: nine baseline clips from the unchanged model, an 11-minute
+LoRA pilot on the nine training clips, and nine matched clips with the adapter loaded. What is not done is the listening:
+whether the adapter helped, harmed, or just memorised, is an open question I will answer by ear with a Kazakh speaker."
 
 ## 3. The 3-minute version (spoken)
 
@@ -266,15 +272,14 @@ myself." Tools: Claude Code with sub-agents for the build; Codex for the web-sca
 
 ---
 
-## 12. Next steps, in order (on the 5090)
+## 12. Next steps, in order (runbook steps 0–7 are done on the RTX 5060)
 
-1. Clone the repo; runbook step 0 rebuilds weights and raw audio by script.
-2. Step 1: hardware and tool check (`nvidia-smi`, driver ≥ 570, CUDA ≥ 12.8).
-3. Step 2–3: env sync, `diagnose_gpu.py` must print `RESULT: OK` with `sm_120`.
-4. Step 4: nine-clip baseline. Listen. **This alone upgrades outcome 2 to "reached".**
-5. Step 5a: ear triage of RTRK, transcript review, expand the crop plan, re-validate.
-6. Steps 5–7: preprocess, 1-epoch smoke, sized pilot, adapter reload, matched comparison.
-7. Listening notes in the viewer; update `PROJECT_STATUS.md`.
+1. Step 8: open `viewer/index.html`, listen to baseline vs adapter for cases A/B/C, write notes, export them to
+   `outputs/listening_notes.json`. This is what turns outcome 4 from "not started" into a result, positive or negative.
+2. Overfitting check if time allows: regenerate with `--adapter-scale 0.5`, or load an earlier checkpoint (epoch 75).
+3. Step 5a: ear triage of the RTRK archive, transcript review, expand the crop plan, re-validate, retrain (one retrain on
+   this GPU ≈ 3 s per epoch per nine clips).
+4. Update `PROJECT_STATUS.md` with the listening verdict.
 
 ## 13. Where each claim's evidence lives
 
