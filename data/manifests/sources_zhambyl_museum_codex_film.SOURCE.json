@@ -1,0 +1,61 @@
+{
+  "source": "Zhambyl Museum via Wikimedia Commons",
+  "source_slug": "zhambyl_museum_codex_film",
+  "source_url": "https://commons.wikimedia.org/wiki/File:%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2_%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8B_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC.webm",
+  "license": "Creative Commons Attribution-Share Alike 4.0",
+  "allowed_uses": "CC BY-SA 4.0: share/adapt with attribution, license link, modification notice and ShareAlike for adaptations. Attribute Zhambyl museum. Raw archival reference; musical segments require content review by ear before any training use.",
+  "noncommercial_restriction": false,
+  "files": [
+    {
+      "filename": "Жамбыл Жабаев туралы фильм.webm",
+      "url": "https://commons.wikimedia.org/wiki/File:%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2_%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8B_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC.webm",
+      "download_url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2_%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8B_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC.webm",
+      "title": "Жамбыл Жабаев туралы фильм",
+      "performer": "Unidentified performers (film about Zhambyl Zhabaev); donor/recording author per Commons: Zhambyl museum",
+      "license": "Creative Commons Attribution-Share Alike 4.0",
+      "license_short": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2_%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8B_%D1%84%D0%B8%D0%BB%D1%8C%D0%BC.webm",
+      "license_evidence_revision_url": "https://commons.wikimedia.org/w/index.php?oldid=1185035712",
+      "license_evidence_wikitext": "=={{int:filedesc}}==\n{{Information\n|description={{ru|1=Фильм про Жамбыла Жабаева}}\n{{en|1=Film about Zhambyl Zhabaev}}\n|date=2025-08-10\n|source=Zhambyl museum\n|author=Zhambyl museum\n|permission={{PermissionTicket|id=2025081310002993|user=Lvova}}\n|other versions=\n}}\n\n=={{int:license-header}}==\n{{cc-by-sa 4.0}}\n\n[[Category:Videos from Kazakhstan]]\n[[Category:Zhambyl museum]]\n[[Category:Files Uploaded by User:Sofiemama]]\n[[Category:Content donated by Zhambyl Museum]]",
+      "permission_evidence": "Commons VRT permission confirmed, ticket 2025081310002993 (same ticket as the sibling archival recording); PermissionTicket added by VRT member Lvova 2025-08-15; category 'Items with VRTS permission confirmed'. Private correspondence not accessed. Rendered notice: 'The Wikimedia Foundation has received an e-mail confirming that the copyright holder has approved publication under the terms mentioned on this page.'",
+      "group_id": "zhambyl_museum_codex/archival_compilation_172158642",
+      "grouping_note": "Kept in the SAME conservative group as the sibling archival recording (pageid 172158642) because the prior audit flagged that this film may repeat the archival footage and the sibling SOURCE.json requires overlapping museum footage to stay in one group until provenance is resolved. Do not count as an independent performance source.",
+      "downloaded_at": "2026-09-14T04:06:53Z",
+      "download_log": "curl -A 'KazakMusicModel-leads/0.1' from upload.wikimedia.org: HTTP 200, 416712804 bytes, 22.1 s; local size and SHA1 match Commons imageinfo",
+      "sha256": "ffd7646c2a5629706841a9944c89bdf2e0b88480524a2e863b706dc5ac70a6f3",
+      "source_sha1": "35b6031a90297ff3df3b4a59cf851bb1546f7e92",
+      "source_sha1_verified": true,
+      "size_bytes": 416712804,
+      "commons_pageid": 172167671,
+      "commons_uploader": "Sofiemama",
+      "commons_upload_timestamp": "2025-08-10T09:10:05Z",
+      "ffprobe": {
+        "duration": 460.611,
+        "sample_rate": 44100,
+        "channels": 2,
+        "codec": "vorbis"
+      },
+      "video": {
+        "width": 720,
+        "height": 540,
+        "mime": "video/webm"
+      },
+      "decode_test": "ffmpeg -xerror full audio decode to null: exit 0; no errors",
+      "volumedetect_db": {
+        "mean_volume": -40.0,
+        "max_volume": -15.3
+      },
+      "audio_quality_note": "Very quiet transfer: mean -40.0 dBFS, peak -15.3 dBFS (about 22 dB quieter than the sibling archival file). Needs gain normalisation before any use; low level may also mean a high noise floor. Not measured by ear.",
+      "segments_file": "segments.csv",
+      "lyrics_available": false,
+      "lyrics_location": null,
+      "type": "speech / possible vocal+dombra (documentary; content unverified by ear)",
+      "verified_by_ear": false,
+      "training_ready": false,
+      "provenance_risk": "low (VRT-reviewed institutional donation under CC BY-SA 4.0); content risk: unknown whether the film contains third-party broadcast material or repeats the sibling archival recording",
+      "decision": "FETCHED",
+      "decision_reason": "Licensed museum donation with VRT-confirmed permission; fetched as a raw reference for human segment selection. Excluded from automatic training intake."
+    }
+  ]
+}

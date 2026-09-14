@@ -1,0 +1,10 @@
+# title: Арғымақтың баласы | category: zhyr_terme | source: https://kk.wikipedia.org/wiki/Қазтуған_Сүйінішұлы | licence: CC BY-SA 4.0 (kk.wikipedia article text); underlying poem public domain (Қазтуған жырау, 15th century) | match: UNVERIFIED — must be checked against the recording by a Kazakh speaker
+# alternates: Махамбет Өтемісұлы (d. 1846) also has a short poem 'Арғымақтың баласы' (public domain): https://stan.kz/makhambet-otemisulynyn-olenderi/ ; the recording may be either
+# note: Only the fragment quoted in the Wikipedia article is available; double spaces in the wikitext were collapsed to single spaces.
+
+Арғымақтың баласы
+Арыған сайын тың жортар
+Арқамнан қосым қалар деп,
+Ақ дария толқын күшейтер.
+Құйрығын күн шалмаған балығым,
+Ортамнан ойран салар деп

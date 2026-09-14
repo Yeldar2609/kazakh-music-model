@@ -1,0 +1,28 @@
+# title: Желсіз түнде жарық ай | category: an_kompozitor | source: https://wikisource.org/wiki/Желсіз_түнде_жарық_ай | licence: public domain (Абай Құнанбайұлы died 1904); Wikisource text | match: UNVERIFIED — must be checked against the recording by a Kazakh speaker
+# alternates: author index: https://wikisource.org/wiki/Абай_Құнанбайұлы
+# note: Differs from the from-memory draft data/lyrics/eval_verse_abai.txt in punctuation only (line 3: 'Ауылдың жаны - терең сай,').
+
+Желсіз түнде жарық ай,
+Сәулесі суда дірілдеп,
+Ауылдың жаны - терең сай,
+Тасыған өзен күрілдеп.
+
+Қалың ағаш жапырағы
+Сыбырласып өзді-өзі,
+Көрінбей жердің, топырағы,
+Құлпырған жасыл жер жүзі.
+
+Тау жаңғырып, ән қосып
+Үрген ит пен айтаққа.
+Келмеп пе едің жол тосып
+Жолығуға аулаққа?
+
+Таймаңдамай тамылжып,
+Бір суынып, бір ысып
+Дем ала алмай дамыл қып,
+Елең қағып, бос шошып.
+
+Сөз айта алмай бөгеліп,
+Дүрсіл қағып жүрегі,
+Тұрмап па еді сүйеніп,
+Тамаққа кіріп иегі?
