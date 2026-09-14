@@ -1,0 +1,47 @@
+{
+  "source": "Wikimedia Commons — historical Kazakh anthem",
+  "source_slug": "commons_historical_anthem_codex",
+  "source_url": "https://commons.wikimedia.org/wiki/File:%D2%9A%D0%B0%D0%B7%D0%B0%D2%9B%D1%81%D1%82%D0%B0%D0%BD_%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%D1%81%D1%8B%D0%BD%D1%8B%D2%A3_%D0%9C%D0%B5%D0%BC%D0%BB%D0%B5%D0%BA%D0%B5%D1%82%D1%82%D1%96%D0%BA_%D3%98%D0%BD%D2%B1%D1%80%D0%B0%D0%BD%D1%8B.ogg",
+  "license": "Public domain",
+  "allowed_uses": "Public domain according to Wikimedia Commons PD-KZ-exempt determination; retained as research reference. Commons applies the designation to this phonogram; that determination is not an independent legal audit. No new lyric-conditioned training approval is implied.",
+  "noncommercial_restriction": false,
+  "files": [
+    {
+      "filename": "Қазақстан Республикасының Мемлекеттік Әнұраны.ogg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/97/%D2%9A%D0%B0%D0%B7%D0%B0%D2%9B%D1%81%D1%82%D0%B0%D0%BD_%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%D1%81%D1%8B%D0%BD%D1%8B%D2%A3_%D0%9C%D0%B5%D0%BC%D0%BB%D0%B5%D0%BA%D0%B5%D1%82%D1%82%D1%96%D0%BA_%D3%98%D0%BD%D2%B1%D1%80%D0%B0%D0%BD%D1%8B.ogg",
+      "title": "Қазақстан Республикасының Мемлекеттік Әнұраны",
+      "performer": "Government of Kazakhstan; individual soloists/choir/orchestra not named",
+      "license": "Public domain",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:%D2%9A%D0%B0%D0%B7%D0%B0%D2%9B%D1%81%D1%82%D0%B0%D0%BD_%D0%A0%D0%B5%D1%81%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D0%BA%D0%B0%D1%81%D1%8B%D0%BD%D1%8B%D2%A3_%D0%9C%D0%B5%D0%BC%D0%BB%D0%B5%D0%BA%D0%B5%D1%82%D1%82%D1%96%D0%BA_%D3%98%D0%BD%D2%B1%D1%80%D0%B0%D0%BD%D1%8B.ogg",
+      "group_id": "commons_historical_anthem_codex/anthem_1992_2006_41321023",
+      "downloaded_at": "2026-09-14T02:44:58.750158+00:00",
+      "sha256": "b2cc158e69ecd96e81477a5a3e912400bdaa2b11f829b0205d5b4dfaab576834",
+      "ffprobe": {
+        "duration": 193.332245,
+        "sample_rate": 44100,
+        "channels": 2,
+        "codec": "vorbis"
+      },
+      "lyrics_available": false,
+      "lyrics_location": null,
+      "type": "vocal",
+      "size_bytes": 8047542,
+      "license_url": "https://commons.wikimedia.org/wiki/Template:PD-KZ-exempt",
+      "license_evidence_revision_url": "https://commons.wikimedia.org/w/index.php?oldid=265665540",
+      "license_evidence_wikitext": "=={{int:filedesc}}==\n{{Information\n|description={{en|1=Vocal recording of the National Anthem of Kazakhstan from 1992 to 2006}}\n|date={{between|1992|2006}}\n|source=http://www.hymn.ru/index-en.html\n|author=Government of Kazakhstan\n|permission=\n|other versions=\n}}\n\n=={{int:license-header}}==\n{{PD-KZ-exempt}}\n\n\n[[Category:National anthems of Kazakhstan]]",
+      "source_sha1": "af464395b8a9d95f17ac0f7a8adcbddf96645a55",
+      "source_sha1_verified": true,
+      "decode_test": "ffmpeg -xerror full audio decode to null: exit 0; no errors",
+      "volumedetect_db": {
+        "mean_volume": -17.2,
+        "max_volume": 0.0
+      },
+      "verified_by_ear": false,
+      "training_ready": false,
+      "decision": "FETCHED",
+      "decision_reason": "Complete historical Kazakh vocal anthem, off-genre choir/orchestra. No recording-specific transcript found; retained raw as a vocal reference, not ready for lyric-conditioned training.",
+      "grouping_note": "One original recording; no crops made. Distinct hash from all pre-existing originals.",
+      "lyrics_reference_only": "https://en.wikipedia.org/wiki/State_Anthem_of_the_Republic_of_Kazakhstan ; composition text exists, sung verses/repeats NOT verified; no transcript attached."
+    }
+  ]
+}

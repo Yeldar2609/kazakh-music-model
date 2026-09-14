@@ -1,0 +1,47 @@
+{
+  "source": "Zhambyl Museum via Wikimedia Commons",
+  "source_slug": "zhambyl_museum_codex",
+  "source_url": "https://commons.wikimedia.org/wiki/File:%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2%D1%82%D1%8B%D2%A3_%D0%BC%D2%B1%D1%80%D0%B0%D2%93%D0%B0%D1%82%D1%82%D1%8B%D2%9B_%D0%B1%D0%B5%D0%B9%D0%BD%D0%B5%D0%B6%D0%B0%D0%B7%D0%B1%D0%B0%D1%81%D1%8B.webm",
+  "license": "Creative Commons Attribution-Share Alike 4.0",
+  "allowed_uses": "CC BY-SA 4.0: share/adapt with attribution, license link, modification notice and ShareAlike for adaptations. Attribute Zhambyl museum. Raw archival reference; musical segments require content review.",
+  "noncommercial_restriction": false,
+  "files": [
+    {
+      "filename": "Жамбыл Жабаевтың мұрағаттық бейнежазбасы.webm",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/26/%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2%D1%82%D1%8B%D2%A3_%D0%BC%D2%B1%D1%80%D0%B0%D2%93%D0%B0%D1%82%D1%82%D1%8B%D2%9B_%D0%B1%D0%B5%D0%B9%D0%BD%D0%B5%D0%B6%D0%B0%D0%B7%D0%B1%D0%B0%D1%81%D1%8B.webm",
+      "title": "Жамбыл Жабаевтың мұрағаттық бейнежазбасы",
+      "performer": "Unidentified performers; footage depicts Zhambyl Zhabaev; donor/recording author: Zhambyl museum",
+      "license": "Creative Commons Attribution-Share Alike 4.0",
+      "license_evidence_url": "https://commons.wikimedia.org/wiki/File:%D0%96%D0%B0%D0%BC%D0%B1%D1%8B%D0%BB_%D0%96%D0%B0%D0%B1%D0%B0%D0%B5%D0%B2%D1%82%D1%8B%D2%A3_%D0%BC%D2%B1%D1%80%D0%B0%D2%93%D0%B0%D1%82%D1%82%D1%8B%D2%9B_%D0%B1%D0%B5%D0%B9%D0%BD%D0%B5%D0%B6%D0%B0%D0%B7%D0%B1%D0%B0%D1%81%D1%8B.webm",
+      "group_id": "zhambyl_museum_codex/archival_compilation_172158642",
+      "downloaded_at": "2026-09-14T02:44:58.750158+00:00",
+      "sha256": "3259036880afaff9d21486fb24464a06e12b955803b88c184edb99edd4f1c124",
+      "ffprobe": {
+        "duration": 1123.57,
+        "sample_rate": 44100,
+        "channels": 2,
+        "codec": "vorbis"
+      },
+      "lyrics_available": false,
+      "lyrics_location": null,
+      "type": "speech / possible vocal+dombra (mixed documentary; unverified by ear)",
+      "size_bytes": 135192207,
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "license_evidence_revision_url": "https://commons.wikimedia.org/w/index.php?oldid=1185035714",
+      "license_evidence_wikitext": "=={{int:filedesc}}==\n{{Information\n|description={{ru|1=Архивное видео Жамбыла Жабаева}}\n{{en|1=Archival video of Zhambyl Zhabaev}}\n{{kk|1=Жамбыл Жабаевтың мұрағаттық бейнежазбасы}}\n|date=2025-08-10\n|source=Zhambyl museum\n|author=Zhambyl museum\n|permission={{PermissionTicket|id=2025081310002993|user=Lvova}}\n|other versions=\n}}\n\n=={{int:license-header}}==\n{{cc-by-sa 4.0}}\n\n[[Category:Videos from Kazakhstan]]\n[[Category:Zhambyl museum]]\n[[Category:Files Uploaded by User:Sofiemama]]\n[[Category:Content donated by Zhambyl Museum]]",
+      "source_sha1": "3fba0ef13c88986dd5f0bf6ae2d6f480f645b43a",
+      "source_sha1_verified": true,
+      "decode_test": "ffmpeg -xerror full audio decode to null: exit 0; no errors",
+      "volumedetect_db": {
+        "mean_volume": -18.3,
+        "max_volume": 0.0
+      },
+      "verified_by_ear": false,
+      "training_ready": false,
+      "decision": "FETCHED",
+      "decision_reason": "Complete licensed archival documentary; sampled frames show dombra players, museum displays and broadcast segments. Mixed content, NOT a verified clean solo or continuous vocal+dombra performance. Retained raw for listening/segment selection, excluded from automatic training intake.",
+      "grouping_note": "One conservative source group for this entire compilation. Underlying performances and repeated archival excerpts are not enumerated; future overlapping museum footage must stay in this group until provenance is resolved.",
+      "permission_evidence": "Commons VRT permission confirmed, ticket 2025081310002993; public PermissionTicket statement inspected. Private correspondence not accessed."
+    }
+  ]
+}
