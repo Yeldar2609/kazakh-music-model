@@ -12,15 +12,19 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--adapter", type=Path)
+    ap.add_argument("--adapter-scale", type=float, default=1.0)
     ap.add_argument("--checkpoints", default="C:/kmm/checkpoints")
     ap.add_argument("--cases", type=Path, default=ROOT / "configs/assignment2_eval_cases.json")
     a = ap.parse_args()
+    if not 0 <= a.adapter_scale <= 1 or (not a.adapter and a.adapter_scale != 1):
+        ap.error("Adapter scale must be between 0 and 1 and requires an adapter")
     if a.out.exists():
         ap.error("Use a new output directory")
     import torch
     from acestep.handler import AceStepHandler
     from acestep.inference import GenerationParams, GenerationConfig, generate_music
     from peft import PeftModel
+    from peft.tuners.lora.layer import LoraLayer
 
     class LocalHandler(AceStepHandler):
         def _load_main_model_from_checkpoint(self, *, model_checkpoint_path, **kwargs):
@@ -43,12 +47,20 @@ def main():
         offload_to_cpu=True, offload_dit_to_cpu=False, quantization=None)
     if not ok:
         raise RuntimeError(status)
+    scaled_layers = 0
     if a.adapter:
         handler.model.decoder = PeftModel.from_pretrained(handler.model.decoder, str(a.adapter))
         handler.model.decoder.eval()
+        for layer in handler.model.decoder.modules():
+            if isinstance(layer, LoraLayer):
+                layer.set_scale("default", a.adapter_scale)
+                expected = a.adapter_scale * layer.lora_alpha["default"] / layer.r["default"]
+                assert abs(layer.scaling["default"] - expected) < 1e-10
+                scaled_layers += 1
+        assert scaled_layers > 0, "No adapter layers were scaled"
         handler.lora_loaded = True
         handler.use_lora = True
-        handler.lora_scale = 1.0
+        handler.lora_scale = a.adapter_scale
     a.out.mkdir(parents=True)
     case_config = json.loads(a.cases.read_text(encoding="utf-8"))
     cases = case_config["cases"]
@@ -69,6 +81,8 @@ def main():
         record = {"case": case["id"], "caption": case["caption"], "lyrics": lyrics,
                   "seed": 1001, "duration_seconds": duration, "steps": 8, "shift": 3.0,
                   "quantization": "NF4", "adapter": str(a.adapter) if a.adapter else None,
+                  "adapter_scale": a.adapter_scale if a.adapter else 0,
+                  "scaled_lora_layers": scaled_layers,
                   "seconds": time.time() - start, "files": [x.get("path") for x in result.audios],
                   "human_reviewed": False}
         (a.out / (case["id"] + ".json")).write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")

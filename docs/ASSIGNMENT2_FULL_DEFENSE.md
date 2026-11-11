@@ -70,10 +70,12 @@ before revealing checkpoint identities. I assess clear words, melody, phrasing,
 accompaniment, and glitches. The demonstration verse has no exact-line overlap
 with the training transcripts, but its wording still needs native-speaker review.
 
-**Fill after listening:** I preferred sample ___ in the ___ row because ___.
-At approximately ___ seconds I heard ___. The identity reveal shows ___. The
-remaining weakness is ___. This is a listener observation on these examples,
-not proof of a general improvement across all Kazakh music.
+**First listening result:** I selected sample A in the simple-vocal row. The
+identity reveal showed the pretrained reference. On this example, I preferred
+the original model over all three full-strength trained checkpoints. My priority
+for further improvement is melody and accompaniment. This is one listener's
+preference on one case, not proof about every prompt. A follow-up compares lighter
+adapter strengths. Add a specific audible observation and timestamp during rehearsal.
 
 ## 5:20–6:10 | Show the implementation
 

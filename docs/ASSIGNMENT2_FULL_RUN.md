@@ -40,8 +40,16 @@ The final adapter matches checkpoint 3,088. Aggregate evidence and adapter hashe
 are in `assignment2_full_results.json`.
 
 Status: training and all 12 matched audio examples completed on 11 November.
-The runner's `COMPLETE.json` confirms completion. Listening preference remains
-undetermined; no audible improvement is claimed.
+The runner's `COMPLETE.json` confirms completion. The owner selected sample A
+in the simple-vocal row, which maps to the pretrained reference. Thus the
+full-strength trained checkpoints did not win this one listener comparison.
+The owner wants better melody and accompaniment. No audible improvement from
+training is established. A follow-up generated all three cases with the final
+adapter at 25% and 50% strength, holding prompts, lyrics, seed and duration fixed.
+All 192 LoRA layers were scaled and checked against alpha/rank times the chosen
+factor. Its separate page is `outputs/assignment2-lighter-2026-11-11/index.html`.
+It compares pretrained, 25%, 50% and 100% versions with matched playback RMS.
+This is an inference-strength comparison, not another training run.
 
 Offline comparison: `outputs/assignment2-full-2026-11-11/index.html`. The page
 contains the pretrained reference and checkpoints 772, 1,544 and 3,088, with
@@ -87,3 +95,17 @@ The listening-page builder checks all 12 WAVs are finite, non-silent and 30 seco
 long, verifies matched generation settings, and rejects identical audio across
 checkpoints. Its verification file records audio checksums and training counts.
 These are integrity checks, not evidence that the music sounds good.
+
+After the reproduction commands above, build its original comparison with:
+
+```powershell
+& $python scripts/build_checkpoint_listening.py --run $run --out outputs/assignment2-reproduction
+```
+
+The builder verifies completion and unique sample coverage directly from the
+training log, so the separate local orchestration wrapper is not required.
+For the strength follow-up, generate into fresh audio_scale_025 and audio_scale_050
+folders using `--adapter-scale 0.25` and `--adapter-scale 0.5` respectively, with
+the final adapter and the same full evaluation config. Then run the builder with
+`--variants audio_pretrained audio_scale_025 audio_scale_050 audio_step_3088`
+and a new output directory. Rating storage is separate for each variant set.

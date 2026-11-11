@@ -109,3 +109,9 @@ founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics ma
 - Listening copies use matched RMS levels and shuffled A-D labels per row. Originals remain unchanged. Offline playback, pause-on-other-play, rating persistence, export payload and desktop/mobile layout checks passed.
 - Slides updated in page://page_6e44bb30eee88191b6f5bb1a6b13710a. Seven-minute guide: docs/ASSIGNMENT2_FULL_DEFENSE.md. Full-run measurements: docs/assignment2_full_results.json.
 - Owner's checkpoint preference is pending. No audible improvement has been established; do not pick the winner by loss.
+
+## First full-run listening feedback
+- Owner chose A in the B_verse_simple row. Verified mapping: audio_pretrained, not a trained checkpoint.
+- Requested improvement: better melody and accompaniment. Full-strength adaptation did not win this one-case comparison.
+- Follow-up: final adapter at 0.25 and 0.5 strength, same prompts/lyrics/seed/duration, matched playback RMS. Preserve the original comparison and all original audio.
+- Full training code and documentation were pushed to GitHub in 3c077b0 and a302028; follow-up changes are being prepared.
