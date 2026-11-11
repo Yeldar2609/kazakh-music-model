@@ -8,6 +8,21 @@ independent preparation for a research collaboration; nothing here is a claim of
 **Four outcomes, reported separately** (see `docs/DECISIONS.md`): infrastructure+data prepared · pretrained
 generation works · adapter trained and reloaded · human-reviewed improvement. Current state: `PROJECT_STATUS.md`.
 
+## Assignment 2, November 2026
+
+The 4 GB laptop now supports NF4 adapter training. A small pilot reduced held-out
+flow loss, but the owner judged its music poor. The follow-up completed training
+on all 2,316 eligible Kazakh Songs ASR training clips in 66.3 minutes and generated
+12 matched audio examples. The offline page compares the pretrained reference
+with three checkpoints. Listener preference remains open.
+
+- [Full-run status and reproduction](docs/ASSIGNMENT2_FULL_RUN.md)
+- [Seven-minute presentation guide](docs/ASSIGNMENT2_FULL_DEFENSE.md)
+- [Historical pilot measurements](docs/ASSIGNMENT2_RESULTS.md)
+
+Restricted source recordings and transcripts stay outside the repository. The
+offline listening demo contains generated examples only.
+
 ## Pinned foundation
 - Engine: `ace-step/ACE-Step-1.5` @ `ca1e85fe…` (2026-08-29), MIT. Weights: HF `ACE-Step/Ace-Step1.5` @ `19671f40…`
   (turbo DiT 4.6 GB + VAE 0.3 GB + Qwen3-Embedding-0.6B 1.1 GB, plus the 3.7 GB planning LM folder which is present
@@ -28,7 +43,7 @@ Weights: copy the verified `checkpoints` folder (9.4 GB, `CHECKSUMS.json` inside
 fetches the pinned revision, including the unused LM folder that upstream's init insists on (else it auto-downloads the
 whole repo unpinned — see `docs/TOMORROW_RUNBOOK.md` step 0), and writes `CHECKSUMS.json`.
 
-## Verified tonight (CPU laptop, RTX 3050 Ti 4 GB)
+## Historical initial laptop checks (superseded by current status above)
 - Upstream docs/source read; language handling, trainer flags, adapter reload path confirmed in code.
 - Weights downloaded, sha256 verified against Hugging Face LFS.
 - `scripts/validate_dataset.py --selftest` (Kazakh letters round-trip), a synthetic end-to-end run (leakage + duplicate

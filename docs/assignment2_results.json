@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-11",
+  "dataset": "yeshpanovrustem/kazakh_songs_asr",
+  "revision": "af4b5d48283b0a9e42ce302c72b1cb38fa2c7bf2",
+  "full_preparation": {
+    "train": {
+      "samples": 2316,
+      "songs": 152,
+      "seconds": 12608.121904761905
+    },
+    "val": {
+      "samples": 334,
+      "songs": 22,
+      "seconds": 1870.0687528344672
+    },
+    "test": {
+      "samples": 327,
+      "songs": 21,
+      "seconds": 1670.7337868480727
+    }
+  },
+  "pilot": {
+    "train": {
+      "count": 64,
+      "seconds": 345.7799546485261,
+      "sample_ids": [
+        "003ebf24afb8431e4a56ad6f2e823d2718dae0205eac2597d2082ed0d1cece8f",
+        "0083f883ec62c99dfa5f8b07bbd6a80513ec328df3ad103ed05a1b78ff56ee61",
+        "00b1bec0075eaec23d0c0aed9cf97414492169914b34176940f0695a98b818b0",
+        "00bf188f42b9758459b7aee20ad788f59d3e706abc1d791596005bf937f63134",
+        "00d0d572d9b494bbf37caa4578a0605d8456db6366f4fb68e30682bb284f3729",
+        "0157f7cf3fcf4ca922578faf7d35105285fca74f6a2be7166b9e5e75cc50d404",
+        "01b48028b4bce1b9d845516070e3d19798c032c470bf63468351bb8be55d2bff",
+        "01ca73b6abf808cf99ef5529ed43cae7df8f83854c65bbe4c2865c9c28696fc9",
+        "02141eae6f738f3e83ab9ac9f6e8bb2e3b7f30bba8f32706d36217cd2c164fa0",
+        "02249515e5e22c1691ba7849fadc7745f1bf91352d18e449ab4dfd07d1d4c305",
+        "0245d46e77ae8bbdc294523a621b8ed9a35cfc3daf6e46bf5e04e1413436a740",
+        "026a7978650ede0beb3011f00446798273e84c1bd9398d6177f26da84477e2f5",
+        "02ff8d3259f59f74299ea7d58ab7b40d2237a0c54298a3d08a8e1faf22f663f8",
+        "031e6730193aec2b49bd8789737c82e811b5e00b2db13a62d2240d2d20a9b7e3",
+        "037d398f6913a24afa930746401287d4ebd9edd7327fb55d70c2862b65ae43dc",
+        "03b172d5613abfabaeeedbff2eed6f3156245b23aa5f597bde2ddea85f88dbef",
+        "03fd77b6bf19d2f3ef2d5a3947db38ad1eb60a14ca4daa5d39510b986ad39e6b",
+        "0476d2147908cc3025225612bb97d7956a73a2d0979f964b5503e81e44fa3d43",
+        "047f636bef9e27696aa12bf7e1d9bc59a769bd7e32a417e68c80cec691d98134",
+        "04971111853b842c5f7f78464cfbb2c77de6e0b57df127b820d98e60fafe0275",
+        "0555c57881c39bb3c2bb1d61fa215508c59569be874523749785f61bac7c1d8c",
+        "05651fffc2a8cc1c2ec7316e021eb54056b93f9ed693fa84f6a9567491db58a5",
+        "058713a6cd0f2db3b85ab3655510fec322185a297a5c9d19b3b374b4f9060fb4",
+        "05ec08da196de7703253e417cdf0952c630a08d0392ccb623d1cdff080623c3d",
+        "06d1babee6db0284f22d1b8f416b1872a3285d530624c64404cacfde454425a7",
+        "076b605cee0e8d935b2414643d9b320370ac9146fa02748e232d4db1b7f604fa",
+        "0772c551fc7ba329d5928fedc76838c7b41ebbb66e6add760e4b3eddfdd09e57",
+        "07a2ae6c308906da0c4d39c06b58783790963307a23598931c110533705cb532",
+        "07b840e98aa0767cc6cf6a582aa03610ec76d72abe5ca81af8f5d93f6771751f",
+        "07c48464afc543d1e01d3dff76c499f1d98c3957b70611635ae8ed7e02929d12",
+        "07f9dfc8bfb9ffe5d0cf87157db1ee1d3ae3b51d94adcc432a6b24924ca0a929",
+        "07faf9dafc3ea20e5857ca2edea908edc6f46749a8556408e6c4f24687f2a246",
+        "0891eddbba3261f142bbf219be0e225ddcfeee4f327c766976a81f285f2fa082",
+        "092f52cea56bf46326cbd42ed70fd10b12f9becfec2809a75ceb01ce164c8751",
+        "0984ca00d76a69d66a6f63c6678db72421c3d3188b4af0209506b86cc544db13",
+        "09ce5e5fd9b7fef0dc357f0f0045f723cbc5952b82d7cd287dc182177f18bec5",
+        "0a2b0521cb4e84acdc41cc1c7e5716080d63668a2985f7a8e33d7d1aedfe92fa",
+        "0a56a44b28b38e6e26c781dbcb2de1b07612514e265e73ab8435084cc7972e09",
+        "0a5b52bfb2542fc7955fa7f1f057999a5b7dc918dbcea72f553c9293c964c314",
+        "0a6293caa79521a3a7573125f56222be349ea5bae89bc0d4b9c33f5d81fa1b9c",
+        "0aa246fc2edd320643ebfa2e79e1e8c50714324cde9f77c16b3fbbac273f1f4c",
+        "0acc9d67ce558e3a5ba9000b4d749487b47f534775bbd66e73e800fa961cfb2f",
+        "0afccb5817ee555d23be20a079eff897f1fc8bc38c1dae13d72cf6576bf275b6",
+        "0b0fc24395f3724b1647309c020b492a672551adb9a33940f9fc2f96b85c6948",
+        "0b528ddb08a7510eb714003e0bc61652f204638116fbb0e616db587315d3fba2",
+        "0b98aab6ca9ef5f466bc7e8006174d1d99a8cb19a6514a8244b71c4212969712",
+        "0bae5ce731e3c5c66df59685f9082a587a9cec9d146854f4aa1758b5a4899d76",
+        "0bb1784574f9842e6fc7f65a3290ca23bab5c72097511655e740c6e12fc9788e",
+        "0bc7700955fcec47bba747439f322d6fd46dff05365cef4e8f009e8aaa6b4c8c",
+        "0bf76b012f35e1f57598725b0a026abc2c97702108f8050e2da55c8342b9c987",
+        "0c16bf0ed70094339ffe47f3541c27ed3c3869cc18e34c66e58edd9c549e45fe",
+        "0c1e883d49c55cedf31dfbc0bf00030f85bb28412fdc6455792e6cf32edfb8b9",
+        "0c628af440eee7caa7edf3733d6638f0cf4e4fb8c1a89a488c18b5cd102ccac6",
+        "0c9095fbde96ee6d3a105edb9d2b6576ba798e93554f0731dfccb4688ad5b365",
+        "0ccee4d0aa5f6c6361cfad0f007258ee31dbbc25e3c487cef81da33b3a6b4f40",
+        "0ce5cb5f1b688d14ea91ed45ea15959826d951b16d7cc50f471f4f1c8d3f6b31",
+        "0d396144266f0be64a7a638bb9dbd657532292650ce430f7c31dd476ae201608",
+        "0d5260ffe9aaf400ec55e62f3844bff9ea68df8d077024410be22542139875ed",
+        "0d5291408d0d0f5d5915af590e18478a534fbfe54930f7bbc12eef2db6aa8cfb",
+        "0dc6884ce283db199e6ed112794457d2a14a2c71ac28e77b890c9556abf0cb34",
+        "0e84594dd86bf9cf3a168864baff49fb702335a0a49b1a8e84f46dc8c559280d",
+        "0ec5bcc28511b0a840ffdab2f5b767127d051449ddfddcdeb063bade5959c5e9",
+        "0f029529b6febd3ae52a9a5afb6794cf248851f4104f4b4f14b7d7adda17436e",
+        "0f12d0e7291447fdce768888bb473ad7b6ffe7e23733a1ebb4932c74d57aa953"
+      ],
+      "song_count": 40,
+      "artist_count": 18
+    },
+    "val": {
+      "count": 16,
+      "seconds": 85.36947845804988,
+      "sample_ids": [
+        "020f2103b259125872d51c32c8d725530b6622bdc8dd504c0e6e23249c30cd60",
+        "02e1af1491a8f2fb00fea5721d6e7716b46e6f4bd8875aea9a2cd850645f1ebb",
+        "02e63c646b34d0734f6e4df5a7036bdfd41c0deeffb210271a47f49790ff3e47",
+        "08de5a223e66509e94a2c7fe0664790aef3e657fec45bca519df076930207d00",
+        "0965162d858b305a569c9c384b911e201ce4d415c1b44d6b3c481ee824b1ada8",
+        "0b3474ded6fbdc9fd4ff51e3704a0411bc9180009147dce8409cfb59212ed068",
+        "0b889fac229b3ef317329d32427f71d7c2615f90faf651b5599ab856da827789",
+        "0bbad567c3b85ae9a416ff3507728d95d78ff408992c27f3c153fef08347300e",
+        "0c99ee7aae56608df3f473f5a0e276080aa4f792947904008a0a007c1fa227cf",
+        "0e28679019556918842144eea169b45cf5cc3ee0d1f23208c602084e63c2ac6a",
+        "0f107819e3de5db71d2dddfb172fb84de8279e4a60d16e13d24f59b8273e1d5b",
+        "0feba2e48d58aeef730200e6010fa1d437833be46fdd94273d61e972bfc5684f",
+        "10feb1a8955d01360845bdbce378eab672ccf617f271231b31dcb8f2b5a1a818",
+        "14c39e1745ec812a418ba002389eb68c0b49dccf36b013f112b12ab45c41fa03",
+        "151c1cfafd04405a4c1bb32e7c2ed2e17022f3c4c912550408b411019cb00ef5",
+        "157ffa7ae65c92c78d98bfd5267174cb73d1034937e494b0fefcaf0fe7b3f59c"
+      ],
+      "song_count": 10,
+      "artist_count": 7
+    },
+    "test": {
+      "count": 16,
+      "seconds": 81.68780045351474,
+      "sample_ids": [
+        "03d729fa111922c6ccc986a2fb790939a9ee0bc1765cfe161a8e168a31a5411c",
+        "048144674e89d8171401d6e7f17e14e22856fad6126b9a4115abfa155b5df81f",
+        "0693c53e3d2188241aa819c2a31cfb6e6f4aa2f57cc3de7f6948959f4d68dfd4",
+        "072a3728c20daa4162653bd1630110e35aaba3adfe99e34b553f2b74cae6fdb7",
+        "0787b090c5df86c95c89b4aee2059351ce02689e93ca5e5586a85735266d82fc",
+        "07abe68663a8885b1ee3f16f4507bfb8b9dde159e0d14c6fe345082ec9e330c4",
+        "07e1ff8a2f3176d899786755b7150e234414d2f2145bfd42d986c9281b0bfebd",
+        "084c41b9b6ad798a068ea914f0755f34c1401361c8dd6ea5b96a8f54a08a98ea",
+        "08a09b53b9cb6f555afe06b9b87dc714194748a3244a85ed12a6793b9755de6f",
+        "08b33e090e812de47a6cc40cca32b03e886db5ae9b603d98c839fad6d4310899",
+        "0a77aa4c01ca14e4f2f04c2a1bf35f194c9647995c7e768412effb4f5c9c41ef",
+        "0d4530842de38194af6e267efc5ae88bee889bf8d694627b1844a157bde1d509",
+        "0db42eede88a53422a1bf512f19c1bfed6bb1398ef23a83fe169815f60d31c5c",
+        "0ee6c3f19de2472f58d71166c6d69af005b56f20149a226433f4b5d404b5c412",
+        "12a42b38923acef9117e4fabb968193cab1cad6ab5d5c6d65d2903a657061b1e",
+        "1355683cf97d7aca60aa42d6bd53e48266dc10d6c963fc23a7c44a8c2bd4851c"
+      ],
+      "song_count": 8,
+      "artist_count": 6
+    }
+  },
+  "training": {
+    "original": {
+      "step": 100,
+      "loss": 0.7344921231269836,
+      "seconds": 294.69822001457214,
+      "peak_vram_mib": 1465,
+      "adapter_sha256": "00e29e9361db3fc189c40c8fbea27abbc05e809484a678939ffb4127fdc2c193"
+    },
+    "enriched": {
+      "step": 100,
+      "loss": 0.9189372062683105,
+      "seconds": 205.54379868507385,
+      "peak_vram_mib": 1462,
+      "adapter_sha256": "dda41e65ecac6cf5565def801ef29f3c95fecb3f6b050b845510e89cd0b80ad8"
+    }
+  },
+  "evaluation": {
+    "val": [
+      {
+        "model": "pretrained",
+        "mean_flow_loss": 1.2978389784693718
+      },
+      {
+        "model": "original",
+        "mean_flow_loss": 1.1072565205395222
+      },
+      {
+        "model": "enriched",
+        "mean_flow_loss": 0.9849297925829887
+      }
+    ],
+    "test": [
+      {
+        "model": "pretrained",
+        "mean_flow_loss": 1.3847887367010117
+      },
+      {
+        "model": "original",
+        "mean_flow_loss": 1.2145043313503265
+      },
+      {
+        "model": "enriched",
+        "mean_flow_loss": 1.0336975865066051
+      }
+    ]
+  },
+  "human_reviewed": true,
+  "human_review_kind": "Informal project-owner feedback, not a structured native-speaker evaluation",
+  "owner_feedback": "This music is terrible.",
+  "audible_improvement_established": false
+}

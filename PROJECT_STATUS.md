@@ -88,3 +88,24 @@ Superseded 2026-09-14: runbook steps 0–4 and 5–7 all ran on the RTX 5060 (se
 3. Optional: v2 at `--adapter-scale 0.5`, or checkpoint `epoch_30`, if v2 overpowers the vocal prompts.
 Open ask: request access to the gated `yeshpanovrustem/kazakh_songs_asr` (Kazakh songs with verbatim transcripts) with the
 founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics material directly.
+
+## 2026-11-11: Assignment 2 completed pilot
+- Verified access and all six SHA256-checked Kazakh Songs ASR shards; full preparation retained 2,977 clips. Restricted data stays at C:/kmm/assignment2.
+- Local NF4/rank-8 adapter training works on the 4 GB RTX 3050 Ti. Original and enriched runs each completed 100 updates and saved adapters; peak GPU allocation about 1.43 GiB.
+- Enriched held-out flow loss 1.033698 versus original 1.214504, a 14.9% reduction on 16 clips from eight songs. This is not a pronunciation or music-quality measurement.
+- Nine matched 15-second final WAVs, offline demo and ZIP: outputs/assignment2-2026-11-11. Presentation: page://page_6e44bb30eee88191b6f5bb1a6b13710a.
+- New demonstration verse avoids exact-line overlap with selected training data. Human listening and Kazakh wording review remain open.
+- Read docs/ASSIGNMENT2_RESULTS.md and docs/ASSIGNMENT2_DEFENSE.md. Code and documentation are local working-tree changes, not pushed.
+
+## 2026-11-11: full-data follow-up requested
+- Owner feedback: pilot music sounds terrible; lower loss is not a quality success.
+- Full run started at C:/kmm/assignment2/full_v1: 2316 distinct new clips plus 772 original-data updates, learning rate 0.00002, checkpoint listening comparisons planned. Assignment due 12 November.
+- Read docs/ASSIGNMENT2_FULL_RUN.md. Do not report completion or improved sound before evidence and listening.
+
+## 2026-11-11: full-data run completed
+- 3,088 updates completed in 3,977.16 seconds (66.29 minutes), peak allocated GPU memory 1,462 MiB.
+- Coverage audit: all 2,316 intended new training IDs exactly once, zero validation/test IDs, 772 original-data updates over nine crops. Four valid distinct checkpoints; final matches step 3,088.
+- Twelve stereo 48 kHz, 30-second examples: pretrained and checkpoints 772, 1,544, 3,088 across three prompts. Offline listening page: outputs/assignment2-full-2026-11-11/index.html.
+- Listening copies use matched RMS levels and shuffled A-D labels per row. Originals remain unchanged. Offline playback, pause-on-other-play, rating persistence, export payload and desktop/mobile layout checks passed.
+- Slides updated in page://page_6e44bb30eee88191b6f5bb1a6b13710a. Seven-minute guide: docs/ASSIGNMENT2_FULL_DEFENSE.md. Full-run measurements: docs/assignment2_full_results.json.
+- Owner's checkpoint preference is pending. No audible improvement has been established; do not pick the winner by loss.
