@@ -115,3 +115,9 @@ founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics ma
 - Requested improvement: better melody and accompaniment. Full-strength adaptation did not win this one-case comparison.
 - Follow-up: final adapter at 0.25 and 0.5 strength, same prompts/lyrics/seed/duration, matched playback RMS. Preserve the original comparison and all original audio.
 - Full training code and documentation were pushed to GitHub in 3c077b0 and a302028; follow-up changes are being prepared.
+
+## Assignment 2 delivery
+- Lighter-adapter code and results pushed in 251fc14. Six additional generated clips verified, with 192 adapter layers scaled correctly for each run.
+- Shareable package: outputs/assignment2-full-2026-11-11.zip (126.4 MiB), containing both offline comparisons and the full-run defense notes. ZIP integrity passed; 24 playback copies represent 18 distinct source generations.
+- Presentation updated and rendered after owner feedback. All generation processes finished; the temporary sleep-prevention request ended.
+- The lighter-strength listening question remains pending. Do not record a winner for that comparison without the owner's response.
