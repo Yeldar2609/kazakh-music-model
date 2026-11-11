@@ -15,8 +15,10 @@ flow loss, but the owner judged its music poor. The follow-up completed training
 on all 2,316 eligible Kazakh Songs ASR training clips in 66.3 minutes and generated
 12 matched audio examples. The offline page compares the pretrained reference
 with three checkpoints. The owner preferred the pretrained reference on the
-simple-vocal case and requested better melody and accompaniment. A follow-up tests
-lighter adapter strengths; no audible improvement from training is established.
+simple-vocal case and requested better melody and accompaniment. In the strength
+follow-up, the owner preferred the final trained adapter at 25% strength over the
+reference, 50%, and 100% versions for that case. This is a positive one-listener,
+one-prompt preference, not a general musical-quality or pronunciation benchmark.
 
 - [Full-run status and reproduction](docs/ASSIGNMENT2_FULL_RUN.md)
 - [Seven-minute presentation guide](docs/ASSIGNMENT2_FULL_DEFENSE.md)

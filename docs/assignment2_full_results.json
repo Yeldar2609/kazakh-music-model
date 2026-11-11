@@ -186,6 +186,17 @@
       "preferred_variant": "audio_pretrained",
       "priority": "Better melody and accompaniment",
       "scope": "One listener, one case; no numeric rating or timestamped critique supplied"
+    },
+    {
+      "listener": "project owner",
+      "comparison": "lighter-adapter",
+      "case": "B_verse_simple",
+      "selected_label": "D",
+      "preferred_variant": "audio_scale_025",
+      "checkpoint_step": 3088,
+      "adapter_strength": 0.25,
+      "criterion": "melody and accompaniment",
+      "scope": "One listener, one prompt, one seed; no numeric rating or timestamped critique supplied"
     }
   ],
   "audible_improvement_established": false,
@@ -199,7 +210,17 @@
     ],
     "scaled_lora_layers": 192,
     "new_generated_clips": 6,
-    "listening_preference": "pending",
+    "listening_preference": {
+      "listener": "project owner",
+      "comparison": "lighter-adapter",
+      "case": "B_verse_simple",
+      "selected_label": "D",
+      "preferred_variant": "audio_scale_025",
+      "checkpoint_step": 3088,
+      "adapter_strength": 0.25,
+      "criterion": "melody and accompaniment",
+      "scope": "One listener, one prompt, one seed; no numeric rating or timestamped critique supplied"
+    },
     "audio_verification": {
       "audio_pretrained/A_dombra_solo": {
         "source_sha256": "7b1a79f1fa746be2e1b72ffed06c9a6e5a34aafce989db22eaf47c4aa762a083",
@@ -310,5 +331,7 @@
         "blind_label": "C_verse_dombra_led_C"
       }
     }
-  }
+  },
+  "selected_demo": "outputs/assignment2-lighter-2026-11-11/audio/B_verse_simple_D.wav",
+  "limited_positive_listener_preference": true
 }

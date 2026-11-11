@@ -43,13 +43,20 @@ Status: training and all 12 matched audio examples completed on 11 November.
 The runner's `COMPLETE.json` confirms completion. The owner selected sample A
 in the simple-vocal row, which maps to the pretrained reference. Thus the
 full-strength trained checkpoints did not win this one listener comparison.
-The owner wants better melody and accompaniment. No audible improvement from
-training is established. A follow-up generated all three cases with the final
+The owner wants better melody and accompaniment. A follow-up generated all three cases with the final
 adapter at 25% and 50% strength, holding prompts, lyrics, seed and duration fixed.
 All 192 LoRA layers were scaled and checked against alpha/rank times the chosen
 factor. Its separate page is `outputs/assignment2-lighter-2026-11-11/index.html`.
 It compares pretrained, 25%, 50% and 100% versions with matched playback RMS.
 This is an inference-strength comparison, not another training run.
+
+Follow-up listening result: the owner selected D in the lighter page's
+`B_verse_simple` row. Its verified identity is the final checkpoint at 25% adapter
+strength (`audio_scale_025`). Select this clip for the class demo. It was preferred
+over the reference, 50% and 100% versions on this case for melody/accompaniment.
+This is one listener, one prompt and one seed, with no numeric rating or
+timestamped critique. It does not establish broader quality or pronunciation gains.
+Selected playback: `outputs/assignment2-lighter-2026-11-11/audio/B_verse_simple_D.wav`.
 
 Offline comparison: `outputs/assignment2-full-2026-11-11/index.html`. The page
 contains the pretrained reference and checkpoints 772, 1,544 and 3,088, with

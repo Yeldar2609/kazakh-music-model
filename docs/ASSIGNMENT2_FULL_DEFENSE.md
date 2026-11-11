@@ -74,8 +74,13 @@ with the training transcripts, but its wording still needs native-speaker review
 identity reveal showed the pretrained reference. On this example, I preferred
 the original model over all three full-strength trained checkpoints. My priority
 for further improvement is melody and accompaniment. This is one listener's
-preference on one case, not proof about every prompt. A follow-up compares lighter
-adapter strengths. Add a specific audible observation and timestamp during rehearsal.
+preference on one case, not proof about every prompt. In the follow-up, I selected
+D for melody and accompaniment: the final trained adapter at 25% strength. I
+preferred that version over the reference and the stronger adaptations. This
+suggests gentler adaptation worked better for this example. It does not prove
+better pronunciation or improvement on other songs. Play the pretrained reference
+and this selected version for the class; add a specific timestamped observation
+during rehearsal.
 
 ## 5:20–6:10 | Show the implementation
 

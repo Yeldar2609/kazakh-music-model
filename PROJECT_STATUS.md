@@ -121,3 +121,9 @@ founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics ma
 - Shareable package: outputs/assignment2-full-2026-11-11.zip (126.4 MiB), containing both offline comparisons and the full-run defense notes. ZIP integrity passed; 24 playback copies represent 18 distinct source generations.
 - Presentation updated and rendered after owner feedback. All generation processes finished; the temporary sleep-prevention request ended.
 - The lighter-strength listening question remains pending. Do not record a winner for that comparison without the owner's response.
+
+## Final owner selection
+- Owner selected D in B_verse_simple on the lighter-adapter page. Verified identity: final checkpoint at 25% strength (audio_scale_025).
+- Class demo selection: outputs/assignment2-lighter-2026-11-11/audio/B_verse_simple_D.wav. Preference criterion: melody and accompaniment.
+- Positive preference is limited to one listener, one prompt and one seed. Other cases and pronunciation remain unverified. Preserve the earlier full-strength result, where the owner preferred the pretrained reference.
+- Updated package: outputs/assignment2-full-2026-11-11-selected.zip. Earlier ZIP remains preserved.
