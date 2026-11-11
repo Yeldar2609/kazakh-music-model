@@ -1,0 +1,44 @@
+{
+  "_note": "Original draft demonstration verse, not native-speaker reviewed. No exact line overlap with the selected 64 vocal training clips. All comparison models use this same configuration.",
+  "model_variant": "turbo",
+  "inference_steps": 8,
+  "shift": 3.0,
+  "guidance_scale": 1.0,
+  "duration_seconds": 15,
+  "seeds": [
+    1001
+  ],
+  "vocal_language": "unknown",
+  "cases": [
+    {
+      "id": "A_dombra_solo",
+      "kind": "instrumental",
+      "caption": "solo dombra, Kazakh traditional two-string plucked lute, unaccompanied kui, steady strumming and melodic runs, no vocals, no drums, clean studio recording",
+      "lyrics": "[Instrumental]",
+      "instrumental": true,
+      "bpm": null,
+      "keyscale": "",
+      "timesignature": ""
+    },
+    {
+      "id": "B_verse_simple",
+      "kind": "vocal",
+      "caption": "Kazakh folk song, solo male vocal, simple acoustic accompaniment, slow tempo, intimate, clean recording",
+      "instrumental": false,
+      "bpm": null,
+      "keyscale": "",
+      "timesignature": "",
+      "lyrics": "[Verse]\nТаңғы самал бетімді сипайды,\nКүннің нұры далама тарайды.\nЖаңа әнім жүректен шығады,\nТуған жерім қуаныш сыйлайды."
+    },
+    {
+      "id": "C_verse_dombra_led",
+      "kind": "vocal",
+      "caption": "Kazakh folk song, solo male vocal accompanied by dombra, two-string plucked lute leads the arrangement, no drums, slow tempo, clean recording",
+      "instrumental": false,
+      "bpm": null,
+      "keyscale": "",
+      "timesignature": "",
+      "lyrics": "[Verse]\nТаңғы самал бетімді сипайды,\nКүннің нұры далама тарайды.\nЖаңа әнім жүректен шығады,\nТуған жерім қуаныш сыйлайды."
+    }
+  ]
+}
