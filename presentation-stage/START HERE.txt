@@ -1,0 +1,16 @@
+YELDAR, AISHA AND DIMASH - KAZAKH MUSIC MODEL
+
+Extract the whole ZIP, then open index.html.
+Ten slides. Arrow keys, Space or subtle screen-edge arrows navigate.
+F toggles fullscreen; browser F11 also works. M pauses or resumes animation.
+The toolbar, overview, on-screen speaker notes, assignment label and date have been removed.
+
+Slide 6 shows evidence from the actual training log. Links open the log, source, adapter configuration and verified hashes. Slide 8 plays the two music examples. No autoplay.
+
+The baseline audio was generated locally with pretrained ACE-Step. The team prepared the data/workflow and trained a LoRA adapter; the foundation model was not trained from scratch.
+
+PRINTABLE.pdf is the static fallback. SPEAKER-NOTES.md is optional preparation material, not shown in the deck. Rehearse the updated seven-minute sequence and test classroom hardware.
+
+CURRENT BUILD-STORY REVISION: no preference or Sample D discussion. Slides2,3,7and9 explain curation, instrumental/vocal phases, Hugging Face, engineering challenges and the choice of prompt-to-music. Open the evidence links for source records. The early instrumental runs used a local8GB desktop; the final vocal run used the4GB laptop.
+
+Latest: cumulative training shown as a300+minute retrospective estimate. Exact earlier GPU name omitted because repository and recollection conflict. New source trail covers Commons video, RTRK archive and Hugging Face vocals.

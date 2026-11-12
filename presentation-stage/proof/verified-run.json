@@ -1,0 +1,28 @@
+{
+  "training_log_sha256": "cd76eb3b2b8609b27f7ef3be4323f955b739b670d2beaf8523d469138f20ab25",
+  "updates": 3088,
+  "unique_new_training_clips": 2316,
+  "checkpoints": [
+    {
+      "step": 772,
+      "sha256": "ea6a07e0d7d39f1d5439d07d250b2d0466c3f9b5a38cf4027ff6cda9064ced79",
+      "parameters": 5505024
+    },
+    {
+      "step": 1544,
+      "sha256": "b79a2c587fa03fb76306c6f8c56e340f341529c5743348066e77d081a15f1bf3",
+      "parameters": 5505024
+    },
+    {
+      "step": 2316,
+      "sha256": "81ef7ab6461d9e0dcb31c748cfccdef576e669d3cff0a9c614a26c7b8017335c",
+      "parameters": 5505024
+    },
+    {
+      "step": 3088,
+      "sha256": "8e0dde48b6944d709fb2f77ee3fd1f4058edc95aa58ccab3324d82dd91e561c7",
+      "parameters": 5505024
+    }
+  ],
+  "note": "Checksums verified against local files. Logs show training activity; they do not prove musical quality."
+}

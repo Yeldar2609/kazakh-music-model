@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yeldar, Aisha and Dimash's Kazakh music generation experiment. A research presentation with recorded training evidence.">
+  <title>Kazakh Music Generation · Yeldar, Aisha & Dimash</title>
+  <link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="stage.css">
+  <script src="waveforms.js" defer></script><script src="presentation.js" defer></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <header class="masthead">
+    <a href="#slide-1" class="wordmark" aria-label="Go to opening slide"><span class="mark" aria-hidden="true">∿</span> QAZAQ <span class="wordmark-light">/ SOUND STUDY</span></a>
+    <div class="sound-signature" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span id="slide-count" class="slide-position" aria-live="polite">01 / 10</span>
+  </header>
+  <main id="deck" aria-label="Presentation slides">
+    <section class="slide active intro" id="slide-1" aria-labelledby="title-1" data-title="The question" data-speaker="Yeldar" data-time="0:00–0:30">
+      <div class="intro-copy">
+        <p class="eyebrow reveal">LYRICS → MODEL → MUSIC / A LOCAL ADAPTATION STUDY</p>
+        <h1 id="title-1" class="reveal">KAZAKH<br><em>WORDS.</em><br>NEW SOUND.</h1>
+        <p class="lede reveal">We built a local prompt-to-music workflow and trained an adapter on Kazakh music and singing.</p>
+        <div class="authors reveal"><span>Yeldar · Aisha · Dimash</span><small>Kazakh lyrics-conditioned music generation</small></div>
+      </div>
+      <div class="record-art" aria-hidden="true"><div class="petal p1"></div><div class="petal p2"></div><div class="petal p3"></div><div class="record"><div class="record-label">QAZAQ<br><small>FUTURE FREQUENCIES</small><b>Y + A + D</b></div></div><span class="record-sticker">ONE LAPTOP.<br>A NEW EXPERIMENT.</span></div>
+      <span class="corner-word" lang="kk" aria-hidden="true">ӘУЕН</span>
+    </section>
+
+    <section class="slide" id="slide-2" aria-labelledby="title-2" data-title="Instrument first. Vocals next." data-speaker="Aisha" data-time="0:30–1:25" hidden inert>
+      <p class="eyebrow reveal">OUR BUILD JOURNEY / TWO DIFFERENT DATA PROBLEMS</p>
+      <h2 id="title-2" class="reveal">FIRST THE DOMBRA.<br><em>THEN THE VOICE.</em></h2>
+      <div class="challenge-grid build-journey">
+        <article class="principle reveal"><span class="number">01</span><h3>Listen and classify</h3><p>We reviewed 116 archive recordings by ear: solo dombra, voice with dombra, or orchestra. Labels alone were not enough.</p></article>
+        <article class="principle reveal"><span class="number">02</span><h3>Instrumental expansion</h3><p>We used 59 dombra-only recordings to create 111 new instrumental crops. This stage focused on the sound of the instrument.</p></article>
+        <article class="principle reveal"><span class="number">03</span><h3>A separate vocal workflow</h3><p>Vocals also needed words aligned to each clip. We held 27 dombra-and-voice recordings back while their lyrics remained unverified.</p></article>
+      </div>
+      <p class="takeaway reveal">These were successive experiments and separate preparation tasks, not two models whose outputs we mixed together. The earlier pilot already contained a few vocal crops.</p>
+      <div class="source-route" aria-label="Source journey: online video, archive music, aligned vocals"><span><b>01</b> ONLINE VIDEO <small>Wikimedia Commons</small></span><i aria-hidden="true">→</i><span><b>02</b> ARCHIVE MUSIC <small>RTRK recordings</small></span><i aria-hidden="true">→</i><span><b>03</b> ALIGNED VOCALS <small>Hugging Face</small></span></div>
+      <div class="proof-links"><a href="proof/song-triage.csv" target="_blank">Our recording-by-recording review ↗</a><a href="proof/source-history.md" target="_blank">Video and dataset source trail ↗</a><a href="proof/data-validation-code.py" target="_blank">Audio and dataset checks ↗</a></div>
+    </section>
+
+    <section class="slide" id="slide-3" aria-labelledby="title-3" data-title="The data" data-speaker="Dimash" data-time="1:25–2:05" hidden inert>
+      <p class="eyebrow reveal">THE VOCAL STAGE / DATA FROM HUGGING FACE</p>
+      <div class="split-heading"><h2 id="title-3" class="reveal">HUGGING FACE.<br><em>ALIGNED KAZAKH VOCALS.</em></h2><div class="source-total reveal"><strong data-count="3013">3,013</strong><span>source segments<br>195 songs · 36 artists</span></div></div>
+      <div class="dataset-visual reveal" aria-label="Retained clips: 2,316 training, 334 validation, 327 test">
+        <div class="split-bar"><div class="train-bar"></div><div class="val-bar"></div><div class="test-bar"></div></div>
+        <div class="split-labels"><div><span class="dot turquoise"></span><strong data-count="2316">2,316</strong><span>Training</span></div><div><span class="dot gold"></span><strong data-count="334">334</strong><span>Validation</span></div><div><span class="dot pale"></span><strong data-count="327">327</strong><span>Test</span></div></div>
+      </div>
+      <div class="data-notes reveal"><p><b>2,977 retained</b><br>We filtered and deduplicated the source, excluding 36 segments.</p><p><b>Split by artist + song identity</b><br>Artists can still occur across splits. This is not an unseen-artist test.</p><p><b>Aligned lyrics + isolated vocals</b><br>Aligned text removed a major preparation bottleneck. These are isolated vocals, not full arrangements.</p></div>
+      <p class="source-line">We accessed Kazakh Songs ASR through our approved Hugging Face account, pinned the dataset revision, and prepared it locally. Gated academic-use recordings are not bundled here.</p>
+    </section>
+
+    <section class="slide" id="slide-4" aria-labelledby="title-4" data-title="The model" data-speaker="Yeldar" data-time="2:05–2:45" hidden inert>
+      <p class="eyebrow reveal">03 / WHAT WE TRAINED</p>
+      <h2 id="title-4" class="reveal">WHAT WE STARTED WITH.<br><em>WHAT WE TRAINED.</em></h2>
+      <div class="model-flow reveal">
+        <div class="flow-input"><span class="flow-icon">Aa + ∿</span><h3>Prompt + lyrics</h3><p>Training uses aligned audio too</p></div>
+        <div class="connector" aria-hidden="true"><i></i><span>→</span></div>
+        <div class="model-stack"><div class="base-model"><span class="mini-label">FROZEN BASE</span><h3>ACE-Step 1.5</h3><p>Existing pretrained weights<br>Frozen during our training</p><div class="matrix" aria-hidden="true"></div></div><div class="adapter"><span class="mini-label">TRAINABLE ADAPTER</span><strong>LoRA · rank 8</strong><span>5,505,024 trainable parameters</span></div></div>
+        <div class="connector" aria-hidden="true"><i></i><span>→</span></div>
+        <div class="flow-output"><div class="mini-wave" aria-hidden="true"></div><h3>Generated music</h3><p>Vocals + accompaniment</p></div>
+      </div>
+      <p class="takeaway reveal">ACE-Step is an open-source music-generation project co-led by <strong>ACE Studio and StepFun</strong>. We used its pretrained engine and trained our own adapter locally. Our baseline audio was also generated locally.</p>
+    </section>
+
+    <section class="slide" id="slide-5" aria-labelledby="title-5" data-title="Across the experiments" data-speaker="Dimash" data-time="2:45–3:20" hidden inert>
+      <p class="eyebrow reveal">04 / A COMPLETED LOCAL RUN</p>
+      <h2 id="title-5" class="reveal">MANY RUNS.<br><em>ONE WORKING PIPELINE.</em></h2>
+      <div class="run-metrics reveal"><div><strong>300+ <small>min</small></strong><span>estimated across training experiments</span></div><div><strong>66.3 <small>min</small></strong><span>logged final training run</span></div><div><strong>3,088</strong><span>updates in that final run</span></div></div>
+      <div class="timeline reveal"><div class="timeline-track"><i></i></div><div class="milestones"><span><b>0</b>Pretrained</span><span><b>772</b>Early</span><span><b>1,544</b>Halfway</span><span><b>2,316</b>Saved</span><span><b>3,088</b>Final</span></div></div>
+      <div class="run-footer reveal"><p><strong>2,316 new clips, each used once</strong><br>+ 772 updates over nine original music crops</p><p><strong>0 held-out clip IDs in the training log</strong><br>Local machines · frozen base · trained adapter</p></div>
+      <p class="source-line">300+ minutes is our retrospective estimate, not a sum verified from complete logs. The final run is measured separately; its timer excludes preparation, loading and generation.</p>
+    </section>
+
+
+    <section class="slide proof-slide" id="slide-6" aria-labelledby="title-6" data-title="The evidence" data-speaker="Dimash" data-time="3:20–3:55" hidden inert>
+      <p class="eyebrow reveal">FROM THE ACTUAL RUN / OPEN THE EVIDENCE</p>
+      <h2 id="title-6" class="reveal">RECORDED STEPS.<br><em>SAVED MODEL WEIGHTS.</em></h2>
+      <div class="proof-grid"><div class="proof-plot"><span class="mini-label">TRAINING LOSS / 64-UPDATE WINDOW MEANS</span><svg class="proof-chart" viewBox="0 0 740 190" role="img" aria-label="Actual training loss, means of consecutive 64-update windows; not a music quality score"><path d="M20 20V160H720" fill="none" stroke="currentColor" opacity=".35"/><polyline points="20.0,52.1 34.6,30.0 49.2,59.1 63.8,80.2 78.3,93.7 92.9,115.2 107.5,109.1 122.1,117.4 136.7,122.6 151.2,123.0 165.8,109.9 180.4,128.3 195.0,125.2 209.6,134.1 224.2,129.0 238.8,125.4 253.3,129.8 267.9,127.7 282.5,131.9 297.1,127.9 311.7,136.0 326.2,135.2 340.8,128.9 355.4,141.2 370.0,130.4 384.6,138.6 399.2,144.7 413.8,133.0 428.3,133.2 442.9,138.4 457.5,138.6 472.1,139.2 486.7,132.0 501.2,137.7 515.8,145.5 530.4,141.7 545.0,138.7 559.6,137.8 574.2,138.6 588.8,133.5 603.3,145.8 617.9,141.6 632.5,143.1 647.1,140.3 661.7,137.2 676.2,147.7 690.8,150.0 705.4,143.0 720.0,148.7" fill="none" stroke="currentColor" stroke-width="3"/><text x="20" y="183">Update 1</text><text x="620" y="183">3,088</text><text x="25" y="18">1.367</text><text x="25" y="155">0.850</text></svg><p>Each point summarizes recorded optimization steps. A lower value does not establish better music.</p></div><div class="proof-receipt"><span class="mini-label">VERIFIED LOCAL ARTIFACTS</span><p><strong>3,088</strong> logged updates</p><p><strong>2,316</strong> distinct new training clips</p><p><strong>4</strong> saved checkpoints with different hashes</p><code>Final adapter SHA-256<br>8e0dde48b694…91e561c7</code></div></div>
+      <div class="proof-links"><a href="proof/training-steps.jsonl" target="_blank">Open actual training log ↗</a><a href="proof/verified-run.json" target="_blank">Verified checkpoint hashes ↗</a><a href="proof/training-code.py" target="_blank">Training source ↗</a><a href="proof/adapter-config.json" target="_blank">Adapter configuration ↗</a></div>
+      <p class="source-line">We built the preparation and comparison workflow around ACE-Step. The log and saved weights demonstrate adapter training; they do not show foundation-model training from scratch.</p>
+    </section>
+    <section class="slide" id="slide-7" aria-labelledby="title-7" data-title="Why it took work" data-speaker="Aisha" data-time="3:55–4:35" hidden inert>
+      <p class="eyebrow reveal">THE ENGINEERING / MORE THAN PRESSING GENERATE</p>
+      <h2 id="title-7" class="reveal">THE HARD PARTS.<br><em>DATA, LANGUAGE, MEMORY.</em></h2>
+      <div class="challenge-grid build-journey"><article class="principle reveal"><span class="number">01</span><h3>Checking every source</h3><p>We found online videos and public datasets, checked provenance and usage terms, extracted suitable audio crops, then checked decoding, silence, clipping and duplicates.</p></article><article class="principle reveal"><span class="number">02</span><h3>Making vocals usable</h3><p>Automatic lyric drafts were not enough. Singing needs the right words in the right crop. Kazakh text had to survive processing unchanged.</p></article><article class="principle reveal"><span class="number">03</span><h3>Fitting the laptop</h3><p>We used four-bit base weights, a small adapter and gradient checkpointing to fit the final run on a 4 GB GPU.</p></article></div>
+      <p class="takeaway reveal">We estimate 300+ minutes across training experiments. Listening, source research, filtering, preparation, troubleshooting and generation added further work; total project time was not measured.</p>
+    </section>
+
+    <section class="slide audio-slide" id="slide-8" aria-labelledby="title-8" data-title="Hear the comparison" data-speaker="Aisha" data-time="4:35–5:35" hidden inert>
+      <p class="eyebrow reveal">THE OUTPUT / GENERATED LOCALLY</p>
+      <div class="audio-heading"><h2 id="title-8" class="reveal">FROM OUR PROMPT.<br><em>TO GENERATED MUSIC.</em></h2><p class="reveal">Same prompt, seed and 30-second duration.<br>Average playback levels matched.<br><b>Prerecorded AI-generated audio.</b></p></div>
+      <div class="audio-grid">
+        <article class="audio-card reveal"><div class="audio-card-title"><span class="mini-label">REFERENCE</span><span class="badge">Pretrained</span></div><h3>Our baseline generation</h3><svg class="waveform" id="wave-reference" viewBox="0 0 640 100" role="img" aria-label="Actual waveform of the pretrained reference"></svg><audio id="reference" controls preload="metadata" src="audio/reference.wav" aria-label="Pretrained reference, 30 seconds"></audio><button class="replay" data-replay="reference">↺ Replay from start</button></article>
+        <article class="audio-card selected reveal"><div class="audio-card-title"><span class="mini-label">ADAPTED OUTPUT</span><span class="badge">25% strength</span></div><h3>Our adapted output</h3><svg class="waveform" id="wave-selected" viewBox="0 0 640 100" role="img" aria-label="Actual waveform of the trained adapter output"></svg><audio id="selected" controls preload="metadata" src="audio/selected.wav" aria-label="Final trained adapter at 25 percent strength, 30 seconds"></audio><button class="replay" data-replay="selected">↺ Replay from start</button></article>
+      </div>
+      <details class="lyrics"><summary>Target lyrics <span lang="kk">/ Ән мәтіні</span></summary><p lang="kk">Таңғы самал бетімді сипайды,<br>Күннің нұры далама тарайды.<br>Жаңа әнім жүректен шығады,<br>Туған жерім қуаныш сыйлайды.</p><small>Original draft verse. Wording and generated pronunciation still need native-speaker review.</small></details>
+      <p class="source-line">These outputs demonstrate the working generation pipeline. The adapter is applied at 25% strength for this example; this is a generation setting, not a quality ranking.</p>
+    </section>
+
+    <section class="slide" id="slide-9" aria-labelledby="title-9" data-title="Why prompt-to-music" data-speaker="Dimash" data-time="5:35–6:30" hidden inert>
+      <p class="eyebrow reveal">MODEL CHOICE / A PRACTICAL INPUT FORMAT</p>
+      <h2 id="title-9" class="reveal">DESCRIBE THE MUSIC.<br><em>ADD KAZAKH WORDS.</em></h2>
+      <div class="input-comparison"><article><span class="mini-label">ALTERNATIVE WE INVESTIGATED</span><h3>VocalRender: score-driven singing</h3><p>Requires words, MIDI pitches and note durations, plus tempo. Its documented datasets include Mandarin singing. It produces the vocal line; accompaniment needs a separate path.</p><p><b>For our recordings:</b> this would require detailed note and syllable annotation.</p></article><article><span class="mini-label">OUR IMPLEMENTED PATH</span><h3>ACE-Step: prompt + lyrics → music</h3><p>We supply a description, Kazakh lyrics and duration. The model generates singing and accompaniment. We did not write a note-by-note score.</p><p><b>Our configuration:</b> 30 seconds, fixed seed, 8 generation steps. BPM and key left unspecified; automatic prompt rewriting disabled.</p></article></div>
+      <div class="prompt-example"><span class="mini-label">ACTUAL DEMO PROMPT</span><p>“Kazakh folk song, solo male vocal, simple acoustic accompaniment, slow tempo, intimate, clean recording”</p></div>
+      <div class="proof-links"><a href="proof/generation-settings.json" target="_blank">Open actual prompt and settings ↗</a><a href="proof/model-choice.md" target="_blank">Model-choice record ↗</a></div>
+    </section>
+
+    <section class="slide closing" id="slide-10" aria-labelledby="title-10" data-title="Conclusion & questions" data-speaker="Yeldar" data-time="6:30–7:00" hidden inert>
+      <p class="eyebrow reveal">08 / WHAT WE LEARNED</p>
+      <h2 id="title-10" class="reveal">OUR LOCAL BUILD.<br><em>A KAZAKH MUSIC PROTOTYPE.</em></h2>
+      <div class="closing-grid reveal"><p><b>What we demonstrated</b><br>We assembled and checked the data, built the local workflow, trained and saved an adapter, and generated Kazakh-lyrics music examples.</p><p><b>What comes next</b><br>More licensed vocal and accompaniment data, native-speaker lyric and pronunciation checks, and broader output evaluation.</p></div>
+      <div class="closing-signature reveal"><strong>Yeldar · Aisha · Dimash</strong><span>Questions? <small>2–3 minutes</small></span></div>
+      <div class="references reveal"><a href="https://huggingface.co/datasets/yeshpanovrustem/kazakh_songs_asr" target="_blank" rel="noopener">Kazakh Songs ASR ↗</a><a href="https://github.com/ace-step/ACE-Step-1.5" target="_blank" rel="noopener">ACE-Step 1.5 ↗</a><a href="https://github.com/Yeldar2609/kazakh-music-model" target="_blank" rel="noopener">Our code & evidence ↗</a><a href="evidence.json" target="_blank">Local evidence</a></div>
+      <p class="source-line">Our team: Yeldar, Aisha and Dimash. Preparation, training and generation ran on local computers. Hugging Face supplied downloads; ACE-Step supplied the pretrained foundation. This is an adaptation prototype, not a foundation model trained from scratch.</p>
+    </section>
+  </main>
+  <button id="previous" class="edge-nav prev" aria-label="Previous slide">‹</button><button id="next" class="edge-nav next" aria-label="Next slide">›</button>
+  <p id="status" role="status" class="status"></p>
+  <noscript><p class="noscript">Enable JavaScript for slide navigation and motion. The printed presentation and audio files are also included in the package.</p></noscript>
+</body>
+</html>

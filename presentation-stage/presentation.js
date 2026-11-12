@@ -1,0 +1,23 @@
+'use strict';
+const slides=[...document.querySelectorAll('.slide')];
+const audioPlayers=[...document.querySelectorAll('audio')];
+let index=0,toastTimer,motion=!matchMedia('(prefers-reduced-motion:reduce)').matches;
+function announce(message){const el=document.getElementById('status');el.textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.textContent='',5000)}
+function setMotion(value){motion=value;document.documentElement.dataset.motion=value?'on':'off'}
+setMotion(motion);
+matchMedia('(prefers-reduced-motion:reduce)').addEventListener('change',e=>{if(e.matches)setMotion(false)});
+function stopAudio(){audioPlayers.forEach(a=>a.pause())}
+function showSlide(next,focus=false){index=Math.max(0,Math.min(slides.length-1,next));stopAudio();slides.forEach((s,i)=>{s.hidden=i!==index;s.inert=i!==index;s.classList.toggle('active',i===index)});slides[index].scrollTop=0;document.getElementById('previous').disabled=index===0;document.getElementById('next').disabled=index===slides.length-1;document.getElementById('slide-count').textContent=`${String(index+1).padStart(2,'0')} / ${slides.length}`;document.title=`${slides[index].dataset.title} · Yeldar, Aisha & Dimash`;try{history.replaceState(null,'',`#slide-${index+1}`)}catch(_){}if(focus){const h=slides[index].querySelector('h1,h2');h.tabIndex=-1;h.focus({preventScroll:true})}}
+document.getElementById('previous').addEventListener('click',()=>showSlide(index-1));document.getElementById('next').addEventListener('click',()=>showSlide(index+1));
+document.querySelector('.wordmark').addEventListener('click',e=>{e.preventDefault();showSlide(0,true)});
+window.addEventListener('hashchange',()=>{const m=/^#slide-(\d+)$/.exec(location.hash);if(m)showSlide(Number(m[1])-1)});
+async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(_){announce('Use your browser fullscreen control (F11).')}}
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.altKey||e.metaKey||e.target.closest('audio,input,textarea,select,summary'))return;const k=e.key.toLowerCase();if(['arrowright','pagedown','arrowleft','pageup','home','end',' '].includes(k)){e.preventDefault();showSlide(k==='home'?0:k==='end'?slides.length-1:index+(['arrowright','pagedown',' '].includes(k)?1:-1))}else if(k==='f')fullscreen();else if(k==='m'){setMotion(!motion);announce(motion?'Motion on':'Motion off')}});
+document.querySelector('.matrix').replaceChildren(...Array.from({length:16},()=>document.createElement('i')));
+document.querySelector('.mini-wave').replaceChildren(...Array.from({length:15},(_,i)=>{const b=document.createElement('i');b.style.setProperty('--height',`${12+Math.sin(i*1.7)**2*32}px`);b.style.setProperty('--delay',`${-i*.17}s`);return b;}));
+function drawWave(id) {const svg=document.getElementById(`wave-${id}`);const values=window.KMM_WAVEFORMS?.[id];if(!values){announce('Waveform data is unavailable. Audio controls remain usable.');return;}values.forEach((v,i)=>{const bar=document.createElementNS('http://www.w3.org/2000/svg','rect');const height=Math.max(2,v*90);bar.setAttribute('x',String(i*640/values.length));bar.setAttribute('y',String((100-height)/2));bar.setAttribute('width',String(640/values.length-1.3));bar.setAttribute('height',String(height));bar.setAttribute('rx','1');svg.append(bar);});}
+audioPlayers.forEach(a=>{drawWave(a.id); a.addEventListener('play',()=>{audioPlayers.forEach(b=>{if(a!==b)b.pause();});a.closest('.audio-card').classList.add('playing');});const idle=()=>a.closest('.audio-card').classList.remove('playing');a.addEventListener('pause',idle);a.addEventListener('ended',idle);a.addEventListener('timeupdate',()=>{const bars=document.querySelectorAll(`#wave-${a.id} rect`);const progress=a.duration?a.currentTime/a.duration:0;bars.forEach((bar,i)=>bar.classList.toggle('heard',i/bars.length<progress));});a.addEventListener('error',()=>announce('Audio file unavailable. Extract the entire ZIP and keep the audio folder beside index.html.'));});
+document.querySelectorAll('[data-replay]').forEach(b=>b.addEventListener('click',async()=>{const a=document.getElementById(b.dataset.replay);a.currentTime=0;try{await a.play();}catch(_){announce('Use the audio play button to start this clip.');}}));
+window.addEventListener('pagehide',stopAudio);
+window.addEventListener('beforeprint',()=>{stopAudio();document.querySelectorAll('[data-count]').forEach(el=>el.textContent=Number(el.dataset.count).toLocaleString('en-US'));});
+const initial=/^#slide-(\d+)$/.exec(location.hash);showSlide(initial?Number(initial[1])-1:0);

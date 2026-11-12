@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yeldar and Aisha's Kazakh music generation experiment. An offline, animated Assignment 2 presentation.">
+  <title>Kazakh Music Generation · Yeldar & Aisha</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="waveforms.js" defer></script><script src="presentation.js" defer></script>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
+  <header class="masthead">
+    <a href="#slide-1" class="wordmark" aria-label="Go to opening slide"><span class="mark" aria-hidden="true">∿</span> QAZAQ <span class="wordmark-light">/ SOUND STUDY</span></a>
+    <span class="edition">ASSIGNMENT 02 <b>12 NOV 2026</b></span>
+  </header>
+  <main id="deck" aria-label="Presentation slides">
+    <section class="slide active intro" id="slide-1" aria-labelledby="title-1" data-title="The question" data-speaker="Yeldar" data-time="0:00–0:40">
+      <div class="intro-copy">
+        <p class="eyebrow reveal">A LANGUAGE. AN INSTRUMENT. AN EXPERIMENT.</p>
+        <h1 id="title-1" class="reveal">Kazakh music.<br><em>A new way<br>to listen.</em></h1>
+        <p class="lede reveal">Can adapting a pretrained model with Kazakh singing data produce music we prefer?</p>
+        <div class="authors reveal"><span>Yeldar <i>&</i> Aisha</span><small>Music generation · Assignment 2</small></div>
+      </div>
+      <div class="instrument reveal" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <svg viewBox="0 0 420 600" class="dombra"><defs><linearGradient id="wood" x1="0" x2="1"><stop stop-color="#b58a48"/><stop offset=".55" stop-color="#f2d49a"/><stop offset="1" stop-color="#af8042"/></linearGradient></defs><path class="body-outline" d="M198 292 C184 328 116 352 112 434 C107 516 163 563 210 570 C257 563 313 516 308 434 C304 352 236 328 222 292 Z"/><path class="neck" d="M198 70 L222 70 L222 330 L198 330 Z"/><path class="head" d="M193 76 L187 30 Q210 10 233 30 L227 76 Z"/><path class="fret" d="M198 120 H222 M198 153 H222 M198 184 H222 M198 212 H222 M198 239 H222 M198 264 H222 M198 287 H222"/><ellipse cx="210" cy="414" rx="8" ry="13" class="sound-hole"/><path class="string string-one" d="M206 43 Q202 285 206 521"/><path class="string string-two" d="M214 43 Q219 285 214 521"/><path class="bridge" d="M187 501 H233"/></svg>
+        <span class="instrument-caption">DOMBRA / TWO STRINGS, MANY POSSIBILITIES</span>
+      </div>
+      <span class="corner-word" lang="kk" aria-hidden="true">ӘУЕН</span>
+    </section>
+
+    <section class="slide" id="slide-2" aria-labelledby="title-2" data-title="The challenge" data-speaker="Aisha" data-time="0:40–1:25" hidden inert>
+      <p class="eyebrow reveal">01 / THE CHALLENGE</p>
+      <h2 id="title-2" class="reveal">Recognizable words.<br><em>Music worth hearing.</em></h2>
+      <div class="challenge-grid">
+        <article class="principle reveal"><span class="number">01</span><div class="glyph" lang="kk" aria-hidden="true">Ә</div><h3>Kazakh language</h3><p>Can a model connect sung lyrics to the audio it generates?</p></article>
+        <article class="principle reveal"><span class="number">02</span><div class="string-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i></div><h3>Musical character</h3><p>Melody, phrasing and accompaniment should work together.</p></article>
+        <article class="principle reveal"><span class="number">03</span><div class="listening-glyph" aria-hidden="true">◌</div><h3>Actual preference</h3><p>The final test is what a listener chooses to hear again.</p></article>
+      </div>
+      <p class="takeaway reveal">Our task is <strong>music generation</strong>, using sung text and audio. We are not training a speech recognizer.</p>
+    </section>
+
+    <section class="slide" id="slide-3" aria-labelledby="title-3" data-title="The data" data-speaker="Yeldar" data-time="1:25–2:15" hidden inert>
+      <p class="eyebrow reveal">02 / DATASET ENRICHMENT</p>
+      <div class="split-heading"><h2 id="title-3" class="reveal">More Kazakh singing.<br><em>A careful split.</em></h2><div class="source-total reveal"><strong data-count="3013">3,013</strong><span>source segments<br>195 songs · 36 artists</span></div></div>
+      <div class="dataset-visual reveal" aria-label="Retained clips: 2,316 training, 334 validation, 327 test">
+        <div class="split-bar"><div class="train-bar"></div><div class="val-bar"></div><div class="test-bar"></div></div>
+        <div class="split-labels"><div><span class="dot turquoise"></span><strong data-count="2316">2,316</strong><span>Training</span></div><div><span class="dot gold"></span><strong data-count="334">334</strong><span>Validation</span></div><div><span class="dot pale"></span><strong data-count="327">327</strong><span>Test</span></div></div>
+      </div>
+      <div class="data-notes reveal"><p><b>2,977 retained</b><br>36 segments excluded during filtering and deduplication.</p><p><b>Split by artist + song identity</b><br>Artists can still occur across splits. This is not an unseen-artist test.</p><p><b>Aligned lyrics + isolated vocals</b><br>Useful for singing adaptation; limited evidence about full arrangements.</p></div>
+      <p class="source-line">Source: Kazakh Songs ASR · gated, non-commercial academic use. Original recordings remain outside this presentation.</p>
+    </section>
+
+    <section class="slide" id="slide-4" aria-labelledby="title-4" data-title="The model" data-speaker="Aisha" data-time="2:15–3:00" hidden inert>
+      <p class="eyebrow reveal">03 / WHAT WE TRAINED</p>
+      <h2 id="title-4" class="reveal">Keep the foundation.<br><em>Learn a small adjustment.</em></h2>
+      <div class="model-flow reveal">
+        <div class="flow-input"><span class="flow-icon">Aa + ∿</span><h3>Text + audio</h3><p>Aligned Kazakh singing</p></div>
+        <div class="connector" aria-hidden="true"><i></i><span>→</span></div>
+        <div class="model-stack"><div class="base-model"><span class="mini-label">FROZEN BASE</span><h3>ACE-Step 1.5</h3><p>Pretrained music knowledge<br>Four-bit weight storage</p><div class="matrix" aria-hidden="true"></div></div><div class="adapter"><span class="mini-label">TRAINABLE ADAPTER</span><strong>LoRA · rank 8</strong><span>≈ 5.5 million parameters</span></div></div>
+        <div class="connector" aria-hidden="true"><i></i><span>→</span></div>
+        <div class="flow-output"><div class="mini-wave" aria-hidden="true"></div><h3>Generated music</h3><p>Compare by listening</p></div>
+      </div>
+      <p class="takeaway reveal">We adapted an existing model. We did <strong>not</strong> train a foundation model from scratch.</p>
+    </section>
+
+    <section class="slide" id="slide-5" aria-labelledby="title-5" data-title="The laptop run" data-speaker="Yeldar" data-time="3:00–3:45" hidden inert>
+      <p class="eyebrow reveal">04 / A COMPLETED LOCAL RUN</p>
+      <h2 id="title-5" class="reveal">A full pass.<br><em>On a 4 GB laptop.</em></h2>
+      <div class="run-metrics reveal"><div><strong><span data-count="3088">3,088</span></strong><span>training updates</span></div><div><strong>66.3 <small>min</small></strong><span>training time</span></div><div><strong>1.43 <small>GiB</small></strong><span>peak allocated GPU memory</span></div></div>
+      <div class="timeline reveal"><div class="timeline-track"><i></i></div><div class="milestones"><span><b>0</b>Pretrained</span><span><b>772</b>Early</span><span><b>1,544</b>Halfway</span><span><b>2,316</b>Saved</span><span><b>3,088</b>Final</span></div></div>
+      <div class="run-footer reveal"><p><strong>2,316 new clips, each used once</strong><br>+ 772 updates over nine original music crops</p><p><strong>0 held-out clip IDs in the training log</strong><br>RTX 3050 Ti · frozen base · small adapter</p></div>
+      <p class="source-line">Timeline replays recorded milestones, not live training. Timing excludes preparation, model loading and generation.</p>
+    </section>
+
+    <section class="slide" id="slide-6" aria-labelledby="title-6" data-title="The turning point" data-speaker="Aisha" data-time="3:45–4:25" hidden inert>
+      <p class="eyebrow reveal">05 / THE TURNING POINT</p>
+      <div class="turning-layout"><div><h2 id="title-6" class="reveal">The number improved.<br><em>The music didn’t<br>convince us.</em></h2><p class="lede reveal">The pilot lowered held-out flow loss. The owner still described the music as terrible.</p></div><div class="loss-panel reveal"><span class="mini-label">HISTORICAL PILOT · TEST FLOW LOSS</span><div class="loss-row"><span>Original-data adapter</span><div><i style="--bar:100%"></i></div><strong>1.2145</strong></div><div class="loss-row"><span>Enriched-data adapter</span><div><i style="--bar:85.1%"></i></div><strong>1.0337</strong></div><div class="loss-delta">−14.9% <span>numerical error</span></div><p>16 test clips from eight songs.<br>This is not a musical-quality score.</p></div></div>
+      <p class="takeaway reveal">So we compared saved checkpoints, then changed <strong>adapter strength</strong> and listened again.</p>
+    </section>
+
+    <section class="slide audio-slide" id="slide-7" aria-labelledby="title-7" data-title="Hear the comparison" data-speaker="Yeldar + Aisha" data-time="4:25–5:55" hidden inert>
+      <p class="eyebrow reveal">06 / THE LISTENING TEST</p>
+      <div class="audio-heading"><h2 id="title-7" class="reveal">Same words.<br><em>Different influence.</em></h2><p class="reveal">Same prompt, seed and 30-second duration.<br>Average playback levels matched.<br><b>Prerecorded AI-generated audio.</b></p></div>
+      <div class="audio-grid">
+        <article class="audio-card reveal"><div class="audio-card-title"><span class="mini-label">REFERENCE</span><span class="badge">Pretrained</span></div><h3>Before adaptation</h3><svg class="waveform" id="wave-reference" viewBox="0 0 640 100" role="img" aria-label="Actual waveform of the pretrained reference"></svg><audio id="reference" controls preload="metadata" src="audio/reference.wav" aria-label="Pretrained reference, 30 seconds"></audio><button class="replay" data-replay="reference">↺ Replay from start</button></article>
+        <article class="audio-card selected reveal"><div class="audio-card-title"><span class="mini-label">SELECTED DEMO</span><span class="badge">25% strength</span></div><h3>Gentler adaptation</h3><svg class="waveform" id="wave-selected" viewBox="0 0 640 100" role="img" aria-label="Actual waveform of the selected trained model"></svg><audio id="selected" controls preload="metadata" src="audio/selected.wav" aria-label="Final trained adapter at 25 percent strength, 30 seconds"></audio><button class="replay" data-replay="selected">↺ Replay from start</button></article>
+      </div>
+      <details class="lyrics"><summary>Target lyrics <span lang="kk">/ Ән мәтіні</span></summary><p lang="kk">Таңғы самал бетімді сипайды,<br>Күннің нұры далама тарайды.<br>Жаңа әнім жүректен шығады,<br>Туған жерім қуаныш сыйлайды.</p><small>Original draft verse. Wording and generated pronunciation still need native-speaker review.</small></details>
+      <p class="source-line">Waveforms come from these files. Highlighting follows actual playback. One sample plays at a time.</p>
+    </section>
+
+    <section class="slide" id="slide-8" aria-labelledby="title-8" data-title="What listening changed" data-speaker="Aisha" data-time="5:55–6:30" hidden inert>
+      <p class="eyebrow reveal">07 / THE LISTENING RESULT</p>
+      <h2 id="title-8" class="reveal">Less influence.<br><em>A preferred example.</em></h2>
+      <div class="result-layout"><div class="strength-scale reveal"><div class="strength-labels"><span>Pretrained</span><span class="chosen">25%</span><span>50%</span><span>100%</span></div><div class="strength-track"><i></i><b></b></div><div class="selection-callout"><span class="mini-label">OWNER’S FOLLOW-UP CHOICE</span><strong>Sample D</strong><span>Final checkpoint · 25% adapter strength</span></div></div><div class="result-story reveal"><p><span>FIRST COMPARISON</span>Pretrained beat the three full-strength checkpoints on the simple-vocal case.</p><p><span>STRENGTH FOLLOW-UP</span>The owner selected 25% strength for melody and accompaniment.</p><p class="definition"><b>25% = adapter influence during generation.</b><br>All 2,316 eligible training clips were still used.</p></div></div>
+      <p class="takeaway reveal">A positive preference on <strong>one example</strong>. No claim of a general improvement or better pronunciation.</p>
+    </section>
+
+    <section class="slide closing" id="slide-9" aria-labelledby="title-9" data-title="Conclusion & questions" data-speaker="Yeldar" data-time="6:30–7:00, then Q&A" hidden inert>
+      <p class="eyebrow reveal">08 / WHAT WE LEARNED</p>
+      <h2 id="title-9" class="reveal">Train. Compare.<br><em>Listen carefully.</em></h2>
+      <div class="closing-grid reveal"><p><b>What we demonstrated</b><br>Full-data adapter training on a 4 GB laptop, reproducible comparisons, and one preferred lighter-adapter example.</p><p><b>What comes next</b><br>More listeners, prompts and seeds. Native-speaker assessment. More suitable licensed accompaniment data.</p></div>
+      <div class="closing-signature reveal"><strong>Yeldar <i>&</i> Aisha</strong><span>Questions? <small>2–3 minutes</small></span></div>
+      <div class="references reveal"><a href="https://huggingface.co/datasets/yeshpanovrustem/kazakh_songs_asr" target="_blank" rel="noopener">Kazakh Songs ASR ↗</a><a href="https://github.com/ace-step/ACE-Step-1.5" target="_blank" rel="noopener">ACE-Step 1.5 ↗</a><a href="https://github.com/Yeldar2609/kazakh-music-model" target="_blank" rel="noopener">Our code & evidence ↗</a><a href="evidence.json" target="_blank">Local evidence</a></div>
+      <p class="source-line">Dataset-enrichment route · confirm sung-language generation fits your instructor’s NLP track. Source links require internet; this presentation does not.</p>
+    </section>
+  </main>
+  <footer class="controls" aria-label="Presentation controls">
+    <div class="navigation"><button id="previous" aria-label="Previous slide">←</button><span id="slide-count" aria-live="polite">01 / 09</span><button id="next" aria-label="Next slide">→</button><span id="slide-name">The question</span></div>
+    <div class="utilities"><button id="overview-button" title="Slide overview (O)">Overview</button><button id="notes-button" title="Speaker notes (N)">Notes</button><button id="motion-button" aria-pressed="true">Motion on</button><button id="fullscreen-button" title="Fullscreen (F)">Fullscreen</button><button id="print-button" title="Print all slides">Print</button></div>
+    <div class="deck-progress" aria-hidden="true"><i id="progress"></i></div>
+  </footer>
+  <dialog id="overview" aria-labelledby="overview-title"><div class="dialog-header"><h2 id="overview-title">The presentation</h2><button data-close aria-label="Close slide overview">×</button></div><p>Seven minutes · Yeldar & Aisha · followed by Q&A</p><div id="overview-grid"></div></dialog>
+  <dialog id="notes" aria-labelledby="notes-title"><div class="dialog-header"><h2 id="notes-title">Speaker notes</h2><button data-close aria-label="Close speaker notes">×</button></div><p id="notes-meta" class="eyebrow"></p><div id="notes-body"></div></dialog>
+  <p id="status" role="status" class="status"></p>
+  <noscript><p class="noscript">Enable JavaScript for slide navigation and motion. The printed presentation and audio files are also included in the package.</p></noscript>
+</body>
+</html>

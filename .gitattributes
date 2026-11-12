@@ -7,3 +7,6 @@
 *.cmd text eol=crlf
 *.txt text eol=lf
 *.srt text eol=lf
+
+# Preserve the verified training log byte-for-byte on every checkout.
+presentation-stage/proof/training-steps.jsonl -text

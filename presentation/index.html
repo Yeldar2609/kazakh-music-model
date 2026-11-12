@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazakh Music Generation — Yeldar &amp; Aisha</title>
+<style>
+/* KAZAKH FUTURISM: flag turquoise and solar gold on deep space, shanyrak geometry, ram's-horn ornament as circuitry.
+   ponytail: system fonts only (Bahnschrift, Segoe UI, Cascadia ship with Windows); bundle font files if it must look identical elsewhere */
+:root{
+  --night:#05060f; --night2:#0c1230; --ivory:#eaf6ff; --dim:#8fa6c8; --turq:#00d5ea; --gold:#ffc533; --hot:#ff5c7a;
+  --disp:"Bahnschrift","Segoe UI Variable Display","Segoe UI","Arial Narrow",Arial,sans-serif;
+  --sans:"Segoe UI Variable Text","Segoe UI","Noto Sans","DejaVu Sans",Arial,sans-serif;
+  --mono:"Cascadia Mono","Cascadia Code",Consolas,"DejaVu Sans Mono","Courier New",monospace;
+  --cut:polygon(0 0,calc(100% - 1.1em) 0,100% 1.1em,100% 100%,1.1em 100%,0 calc(100% - 1.1em));
+  --cutS:polygon(.55em 0,100% 0,100% calc(100% - .55em),calc(100% - .55em) 100%,0 100%,0 .55em);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--night);color:var(--ivory);font-family:var(--sans);overflow:hidden;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:4;background:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+#bg{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+[lang=kk]{font-family:"Segoe UI Variable Display","Segoe UI","Noto Sans",Arial,sans-serif}
+
+/* ---------- stage: a 1600x900 canvas scaled to the screen ---------- */
+#stage{position:absolute;left:50%;top:0;width:1600px;height:900px;font-size:20px;transform-origin:top center;counter-reset:s}
+.hud{position:absolute;inset:0;pointer-events:none;font-family:var(--mono);font-size:.78em;letter-spacing:.22em;color:var(--dim);text-transform:uppercase}
+.hud i{position:absolute;width:2.6em;height:2.6em;border:2px solid var(--turq);opacity:.8}
+.hud i:nth-child(1){left:1em;top:1em;border-right:0;border-bottom:0}
+.hud i:nth-child(2){right:1em;top:1em;border-left:0;border-bottom:0}
+.hud i:nth-child(3){left:1em;bottom:3.4em;border-right:0;border-top:0}
+.hud i:nth-child(4){right:1em;bottom:3.4em;border-left:0;border-top:0}
+.hud span{position:absolute;top:1.5em}.hud .hl{left:7.6em}.hud .hr{right:4.6em;color:var(--gold)}
+.slide{position:absolute;inset:0;padding:4.3em 5em 4.6em 6em;opacity:0;visibility:hidden;clip-path:inset(0 0 0 100%);counter-increment:s;
+  transition:opacity .45s ease,clip-path .85s cubic-bezier(.7,0,.2,1),visibility 0s .85s;overflow:hidden}
+.slide.past{clip-path:inset(0 100% 0 0)}
+.slide.active{opacity:1;visibility:visible;clip-path:inset(0 0 0 0);transition:opacity .45s ease,clip-path .85s cubic-bezier(.7,0,.2,1)}
+/* the two strings: gold = Yeldar, turquoise = Aisha */
+.slide::before{content:"";position:absolute;left:2.7em;top:4.4em;bottom:4.6em;width:.55em;border-left:2px solid var(--gold);border-right:2px solid var(--turq);filter:drop-shadow(0 0 5px rgba(0,213,234,.8))}
+/* ghost slide number */
+.slide::after{content:counter(s,decimal-leading-zero);position:absolute;right:.32em;top:-.02em;z-index:-1;font-family:var(--disp);font-weight:700;font-stretch:75%;font-size:15em;line-height:1;
+  color:transparent;-webkit-text-stroke:2px rgba(0,213,234,.2)}
+.deco{position:absolute;right:2.4em;bottom:6.6em;width:3em;height:9.6em;z-index:-1;fill:none;stroke:var(--turq);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:.5;filter:drop-shadow(0 0 4px var(--turq))}
+[data-r]{opacity:0;transform:translateY(1em);filter:blur(8px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1),filter .6s ease}
+.slide.active [data-r]{opacity:1;transform:none;filter:none;transition-delay:calc(var(--i,0)*120ms + 420ms)}
+
+h1,h2{font-family:var(--disp);font-weight:700;font-stretch:75%;margin:0;text-transform:uppercase;letter-spacing:.005em}
+h2{font-size:3.7em;line-height:.98;max-width:19em;text-wrap:balance}
+h2 em{font-style:normal;color:var(--gold);text-shadow:0 0 .5em rgba(255,197,51,.35)}
+.eyebrow{font-family:var(--mono);font-size:.95em;letter-spacing:.26em;text-transform:uppercase;color:var(--turq);margin:0 0 .9em}
+.eyebrow::before{content:counter(s,decimal-leading-zero) " // ";color:var(--gold)}
+p{margin:0}
+.lead{font-size:1.45em;line-height:1.4}
+.small{font-size:1.08em;color:var(--dim);line-height:1.45}
+.gold{color:var(--gold)} .turq{color:var(--turq)}
+.num{font-family:var(--disp);font-weight:700;font-stretch:80%;font-variant-numeric:tabular-nums lining-nums}
+.tag{display:inline-block;font-family:var(--mono);font-size:.82em;letter-spacing:.14em;text-transform:uppercase;padding:.4em .9em;border:1px solid currentColor;border-left-width:5px;background:rgba(5,6,15,.6)}
+.notes{display:none}
+/* shared angular panel */
+.s2 .row,.player,.replay,.s6 .duo>div,.s9 .cols>div,.s3 .facts p,.kinfo{background:linear-gradient(135deg,rgba(14,22,58,.84),rgba(6,8,22,.74));border:1px solid rgba(0,213,234,.32);clip-path:var(--cut)}
+
+/* ---------- 1 opening ---------- */
+.s1{padding-top:5.6em}
+.s1::after{display:none}
+.s1 canvas{position:absolute;left:0;top:23.6em;width:100%;height:10em;z-index:-1}
+.s1 h1{font-size:8.6em;line-height:.86}
+.s1 h1 em{font-style:normal;color:transparent;-webkit-text-stroke:2.5px var(--turq);filter:drop-shadow(0 0 .12em rgba(0,213,234,.6))}
+.s1 .kk{font-size:2.1em;font-weight:700;color:var(--gold);margin-top:.5em;letter-spacing:.04em;text-shadow:0 0 .6em rgba(255,197,51,.4)}
+.s1 .q{font-size:1.4em;max-width:25em;line-height:1.4;position:absolute;left:4.3em;bottom:7.6em}
+.s1 .by{position:absolute;left:1.72em;bottom:1.25em;font-family:var(--disp);font-stretch:75%;font-weight:700;font-size:3.5em;text-transform:uppercase;letter-spacing:.03em}
+.by i{color:var(--gold);font-style:normal;padding:0 .25em}
+.s1 .hint{position:absolute;right:5em;bottom:4.6em;text-align:right;font-family:var(--mono);font-size:.82em;letter-spacing:.06em;color:var(--dim);line-height:1.6}
+.s1 .hint b{color:var(--gold);font-weight:400}
+.s1{cursor:crosshair}
+.shan{position:absolute;right:-2.5em;top:3em;width:29em;height:29em;z-index:-1;fill:none;stroke:var(--turq);filter:drop-shadow(0 0 8px rgba(0,213,234,.55))}
+.shan .spin{animation:spin 90s linear infinite;transform-origin:0 0}
+.shan .rev{animation:spin 140s linear infinite reverse;transform-origin:0 0}
+.shan text{font-family:var(--mono);font-size:12.5px;letter-spacing:5px;fill:var(--gold);stroke:none}
+.shan .au{stroke:var(--gold)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- 2 challenge ---------- */
+.s2 .rows{margin-top:1.6em;display:grid;gap:.75em;max-width:68em}
+.s2 .row{display:grid;grid-template-columns:4.6em 22em 1fr;align-items:center;gap:1.4em;padding:.75em 1.6em .75em 1.2em;border-left:3px solid var(--gold)}
+.s2 .row .num{font-size:4.2em;line-height:1;color:transparent;-webkit-text-stroke:2px var(--gold)}
+.s2 .row h3{font-family:var(--disp);font-stretch:80%;font-size:2.1em;margin:0 0 .1em;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.s2 .row svg{width:100%;height:4em;filter:drop-shadow(0 0 5px currentColor)}
+.s2 .row path{fill:none;stroke-width:3;stroke-linecap:round}
+.wave{stroke-dasharray:14 10;animation:flow 2.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-48}}
+.s2 .foot{margin-top:1.2em;font-family:var(--mono);font-size:.95em;letter-spacing:.04em}
+
+/* ---------- 3 dataset ---------- */
+.s3 .trio{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:4.2em;margin-top:1.3em}
+.s3 .trio .num{font-size:6.4em;line-height:.95;display:block;text-shadow:0 0 .35em rgba(0,213,234,.45)}
+.s3 .trio .gold{text-shadow:0 0 .35em rgba(255,197,51,.5)}
+.s3 .trio span{font-family:var(--mono);font-size:.95em;color:var(--dim);letter-spacing:.2em;text-transform:uppercase}
+.s3 .arrow{margin:1.2em 0 .6em;font-family:var(--mono);font-size:1.05em;color:var(--dim)}
+.s3 .arrow .num{color:var(--ivory);font-size:1.5em}
+.split{display:flex;height:4.8em;gap:.35em;max-width:70em}
+.split div{height:100%;transform-origin:left;display:flex;align-items:center;padding-left:.7em;overflow:hidden;white-space:nowrap;
+  background:repeating-linear-gradient(90deg,var(--c) 0 7px,transparent 7px 10px);clip-path:var(--cutS);filter:drop-shadow(0 0 6px var(--c))}
+.split .num{font-size:2.3em;background:var(--night);color:var(--c);padding:0 .35em;line-height:1.25}
+.split .tr{flex:2316;--c:var(--turq)} .split .va{flex:334;--c:var(--ivory)} .split .te{flex:327;--c:var(--gold)}
+.slide .split div{transform:scaleX(0);transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.slide.active .split div{transform:none}
+.slide.active .split .tr{transition-delay:1s}.slide.active .split .va{transition-delay:1.5s}.slide.active .split .te{transition-delay:1.8s}
+.legend{display:flex;gap:.35em;margin-top:.5em;font-size:1.08em;max-width:70em}
+.legend span:nth-child(1){flex:2316}.legend span:nth-child(2){flex:334}.legend span:nth-child(3){flex:327}
+.s3 .facts{display:grid;grid-template-columns:1fr 1fr;gap:1.6em;margin-top:1.2em;max-width:70em}
+.s3 .facts p{border-left:3px solid var(--gold);padding:.7em 1.2em;font-size:1.22em;line-height:1.4}
+
+/* ---------- 4 model ---------- */
+.s4>svg:not(.deco){width:100%;height:27em;margin-top:.8em;filter:drop-shadow(0 0 7px rgba(0,213,234,.35))}
+.s4 text{font-family:var(--mono);fill:var(--ivory)}
+.s4 .t-ser{font-family:var(--disp);font-weight:700;font-stretch:80%;text-transform:uppercase}
+.sig{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:10 22;animation:sig 1.6s linear infinite}
+@keyframes sig{to{stroke-dashoffset:-64}}
+
+/* ---------- 5 training ---------- */
+.s5 .grid{display:grid;grid-template-columns:22em 1fr;gap:3em;margin-top:1.3em;max-width:70em}
+.s5 h3{font-family:var(--mono);font-size:.9em;letter-spacing:.16em;text-transform:uppercase;color:var(--turq);margin:0 0 .7em;font-weight:400}
+.mem{height:2.6em;border:1px solid var(--ivory);position:relative}
+.mem i{position:absolute;left:0;top:0;bottom:0;width:35.7%;background:repeating-linear-gradient(90deg,var(--gold) 0 7px,transparent 7px 10px);transform-origin:left}
+.slide .mem i{transform:scaleX(0);transition:transform 1.4s ease .9s}.slide.active .mem i{transform:none}
+.cfg{list-style:none;padding:0;margin:1.2em 0 0;font-family:var(--mono);font-size:1.02em;line-height:1.9}
+.cfg li::before{content:"> ";color:var(--turq)}
+.cfg b{color:var(--gold);font-weight:400}
+.replay{padding:1.1em 1.5em 1.3em}
+.replay .top{display:flex;justify-content:space-between;align-items:center;gap:1em}
+.replay .tag{color:var(--gold)}
+.replay button{border:1px solid var(--ivory);padding:.35em 1em;font-family:var(--mono);font-size:.85em;text-transform:uppercase;letter-spacing:.1em}
+.replay .big{display:flex;gap:3em;margin:.7em 0 .8em;align-items:baseline}
+.replay .big .num{font-size:5em;line-height:1;text-shadow:0 0 .35em rgba(0,213,234,.5)}
+.replay .big span{font-family:var(--mono);font-size:.95em;color:var(--dim)}
+.track{height:2em;background:rgba(234,246,255,.08);position:relative}
+.track .fill{position:absolute;left:0;top:0;bottom:0;width:100%;background:repeating-linear-gradient(90deg,var(--turq) 0 9px,var(--gold) 9px 12px);filter:drop-shadow(0 0 5px rgba(0,213,234,.7))}
+.cps{display:grid;grid-template-columns:repeat(4,1fr);margin-top:.5em;text-align:right;font-family:var(--mono);font-size:.95em;color:var(--dim)}
+.cps span{border-right:2px solid rgba(234,246,255,.3);padding:.2em .5em 0 0}
+.cps span.on{color:var(--ivory);border-color:var(--gold)}
+.key{display:flex;gap:2em;margin-top:.9em;font-size:1em;color:var(--dim)}
+.key i{display:inline-block;width:.9em;height:.9em;margin-right:.45em;vertical-align:-.08em}
+.checks{list-style:none;padding:0;margin:1em 0 0;font-size:1.2em;line-height:1.6}
+.checks li::before{content:"✓";color:var(--turq);font-weight:700;margin-right:.6em}
+
+/* ---------- 6 loss ---------- */
+.s6 h2 em{color:var(--hot);text-shadow:0 0 .5em rgba(255,92,122,.4)}
+.s6 .duo{display:grid;grid-template-columns:1fr 1fr;gap:1.4em;margin-top:1.6em;max-width:70em}
+.s6 .duo>div{padding:1.3em 1.6em 1.5em;display:grid;grid-template-columns:6.5em 1fr;gap:1.4em;align-items:center}
+.s6 .duo>div:first-child{border-top:3px solid var(--turq)}
+.s6 .duo>div:last-child{border-top:3px solid var(--hot);border-color:var(--hot)}
+.s6 .duo h3{font-family:var(--disp);font-stretch:80%;text-transform:uppercase;font-size:2.2em;line-height:1.05;margin:.35em 0 0;font-weight:700}
+.s6 .duo svg{width:6.5em;height:6.5em;filter:drop-shadow(0 0 6px currentColor)}
+.s6 .duo path{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+.s6 .duo>div:last-child .tag{color:var(--hot)}
+.draw{stroke-dasharray:300;stroke-dashoffset:300}
+.slide.active .draw{animation:draw 1.6s ease 1s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.wob{animation:wob 3s ease-in-out infinite;transform-origin:50% 50%}
+@keyframes wob{50%{transform:scaleY(.55)}}
+.s6 .rule{margin-top:1.6em;display:grid;grid-template-columns:auto 1fr;gap:2em;align-items:start;max-width:70em}
+.s6 .rule .lead{font-family:var(--disp);font-stretch:80%;text-transform:uppercase;font-weight:700;font-size:1.7em;line-height:1.1;color:var(--gold)}
+.s6 .rule ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:.5em 2.2em;font-size:1.22em;line-height:1.35}
+.s6 .rule li{border-left:3px solid var(--turq);padding-left:.8em}
+
+/* ---------- 7 blind listening test ---------- */
+.s7 .players{display:grid;grid-template-columns:1fr 1fr;gap:1.6em;margin-top:1em;max-width:70em}
+.player{padding:.9em 1.4em 1em;transition:box-shadow .3s;--pc:var(--ivory)}
+.player.playing{box-shadow:inset 0 0 0 2px var(--pc),inset 0 0 2.5em rgba(0,213,234,.18)}
+.s7.revealed .player[data-env=reference]{--pc:var(--turq)} .s7.revealed .player[data-env=selected]{--pc:var(--gold)}
+.player .hd{display:flex;justify-content:space-between;align-items:center;gap:1em}
+.player h3{font-family:var(--disp);font-stretch:80%;text-transform:uppercase;font-size:2em;margin:0;font-weight:700;letter-spacing:.02em;color:var(--pc)}
+.player .sub{font-family:var(--mono);font-size:.9em;color:var(--dim);margin-top:.15em}
+.id{display:none}.s7.revealed .id{display:inline}.s7.revealed .anon{display:none}
+.hands{display:flex;align-items:center;gap:.4em;font-family:var(--mono);font-size:.9em;color:var(--dim);white-space:nowrap;text-transform:uppercase;letter-spacing:.1em}
+.hands button{width:2.2em;height:2.2em;border:1px solid rgba(234,246,255,.5);font-size:1.1em;color:var(--ivory)}
+.hands b{font-family:var(--disp);font-size:2.3em;min-width:1.3em;text-align:center;color:var(--gold);font-variant-numeric:tabular-nums}
+.seek{position:relative;height:4.4em;margin-top:.6em}
+.seek canvas{width:100%;height:100%;display:block}
+.seek input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;margin:0}
+.seek:focus-within{outline:3px solid var(--gold);outline-offset:3px}
+.ctl{display:flex;align-items:center;gap:.8em;margin-top:.7em}
+.ctl button{border:2px solid var(--pc,var(--gold));padding:.4em 1.1em;font-family:var(--disp);font-stretch:85%;text-transform:uppercase;letter-spacing:.06em;font-size:1.2em;font-weight:700;min-width:6.4em}
+.ctl .play{background:var(--pc,var(--gold));color:var(--night);clip-path:var(--cutS)}
+.ctl time{margin-left:auto;font-family:var(--mono);font-size:1.15em;font-variant-numeric:tabular-nums}
+.ctl .err{color:var(--hot);font-size:1em}
+.s7 .below{display:grid;grid-template-columns:27em 1fr;gap:2.2em;margin-top:1em;align-items:start;max-width:70em}
+.lyrics{font-size:1.5em;line-height:1.4;font-weight:600}
+.s7 .below canvas{width:100%;height:4.6em}
+.s7 .act{display:flex;gap:1.2em;align-items:center;flex-wrap:wrap;margin-top:.5em}
+#reveal{background:var(--gold);color:var(--night);clip-path:var(--cutS);padding:.45em 1.3em;font-family:var(--disp);font-stretch:85%;text-transform:uppercase;letter-spacing:.06em;font-size:1.3em;font-weight:700}
+.s7 .tag{color:var(--gold)}
+
+/* ---------- 8 the strength knob ---------- */
+.knobwrap{display:grid;grid-template-columns:23em 1fr;gap:2.6em;align-items:center;margin-top:.4em;max-width:70em}
+.knob{position:relative;width:23em;height:21em}
+.knob svg{position:absolute;left:12%;top:10%;width:76%;height:84%;overflow:visible;filter:drop-shadow(0 0 8px rgba(255,197,51,.45))}
+#arc{transition:stroke-dasharray .7s cubic-bezier(.3,.8,.3,1)}
+#needle{transition:transform .7s cubic-bezier(.3,.8,.3,1)}
+.kstop{position:absolute;transform:translate(-50%,-50%);font-family:var(--disp);font-stretch:80%;font-size:1.7em;font-weight:700;padding:.2em .6em;border:1px solid rgba(234,246,255,.45);background:var(--night)}
+.kstop[aria-pressed=true]{background:var(--gold);color:var(--night);border-color:var(--gold)}
+.kinfo{padding:1em 1.5em 1.1em}
+.kbig{display:flex;align-items:baseline;gap:.6em}
+.kbig .num{font-size:6em;line-height:.9;color:var(--gold);text-shadow:0 0 .3em rgba(255,197,51,.5)}
+.kbig span{font-family:var(--mono);font-size:.95em;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.kdesc{font-size:1.35em;line-height:1.35;min-height:2.8em;margin-top:.4em}
+.def{margin-top:.9em;display:grid;grid-template-columns:1fr auto;gap:2em;align-items:center;border-top:1px solid rgba(0,213,234,.35);padding-top:.8em;max-width:70em}
+.def p{font-size:1.22em;line-height:1.4}
+.def .tag{color:var(--turq)}
+
+/* ---------- 9 conclusion ---------- */
+.s9 .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.3em;margin-top:1.1em;max-width:70em}
+.s9 .cols>div{padding:.9em 1.2em 1em;border-top:3px solid currentColor}
+.s9 .cols h3{font-family:var(--mono);font-size:.9em;letter-spacing:.16em;text-transform:uppercase;margin:0 0 .6em;font-weight:400}
+.s9 .cols ul{margin:0;padding-left:1em;font-size:1.15em;line-height:1.36;color:var(--ivory)}
+.s9 .cols li{margin-bottom:.4em}
+.s9 .cols li::marker{color:var(--gold)}
+.s9 .end{position:absolute;left:6em;right:6.5em;bottom:4.2em;display:flex;justify-content:space-between;align-items:flex-end;gap:2em}
+.s9 .end .by{font-family:var(--disp);font-stretch:75%;font-weight:700;text-transform:uppercase;font-size:3em;line-height:1;letter-spacing:.03em}
+.s9 .end .qs{font-family:var(--disp);font-stretch:75%;font-weight:700;text-transform:uppercase;font-size:5.4em;line-height:.9;color:transparent;-webkit-text-stroke:2.5px var(--gold);filter:drop-shadow(0 0 .15em rgba(255,197,51,.6))}
+.s9 .src{font-family:var(--mono);font-size:.68em;color:var(--dim);line-height:1.6;max-width:56em;margin-top:.6em}
+
+/* ---------- chrome: controls, notes, overview ---------- */
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:.4rem;padding:.35rem .7rem;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.08em;z-index:6;background:rgba(5,6,15,.92);border-top:1px solid rgba(0,213,234,.35)}
+#bar button{padding:.4rem .7rem;border:1px solid rgba(0,213,234,.45)}
+#bar button:hover{border-color:var(--gold);color:var(--gold)}
+#bar button[aria-pressed=true]{background:var(--turq);color:var(--night)}
+#frets{flex:1;display:flex;align-items:center;margin:0 .6rem;min-width:0}
+#frets .who{font-size:10px;line-height:11px;letter-spacing:.1em;margin-right:.5rem}
+#frets .who span{display:block}
+#bar .fret{flex:1;height:30px;position:relative;border:0;border-left:1px solid rgba(234,246,255,.25);padding:0}
+.fret::before,.fret::after{content:"";position:absolute;left:0;right:0;height:2px;transition:background .5s,box-shadow .5s}
+.fret::before{top:8px;background:rgba(255,197,51,.22)} .fret::after{top:19px;background:rgba(0,213,234,.22)}
+.fret.y.on::before{background:var(--gold);height:3px;box-shadow:0 0 8px var(--gold)} .fret.a.on::after{background:var(--turq);height:3px;box-shadow:0 0 8px var(--turq)}
+.fret i{position:absolute;left:50%;width:11px;height:11px;margin-left:-5px;display:none;z-index:1;transform:rotate(45deg)}
+.fret.cur i{display:block} .fret.y i{top:4px;background:var(--gold);box-shadow:0 0 10px var(--gold)} .fret.a i{top:15px;background:var(--turq);box-shadow:0 0 10px var(--turq)}
+#count{min-width:4.6em;text-align:center;font-variant-numeric:tabular-nums}
+#notes{position:fixed;left:0;right:0;bottom:44px;z-index:5;background:#03040b;border-top:2px solid var(--gold);padding:.8rem 1.4rem 1rem;font-size:17px;line-height:1.5;max-height:36vh;overflow:auto}
+#notes[hidden]{display:none}
+#notes .hd{display:flex;gap:1.2rem;align-items:baseline;flex-wrap:wrap;margin-bottom:.4rem;color:var(--dim);font-family:var(--mono);font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+#notes .who{color:var(--night);background:var(--gold);padding:.1em .7em;font-weight:700}
+#notes .hd button{margin-left:auto;border:1px solid rgba(234,246,255,.3);padding:0 .7em;font-variant-numeric:tabular-nums}
+#notes p{margin:.35em 0;max-width:70em}
+#over{position:fixed;inset:0;z-index:7;background:rgba(3,4,11,.97);padding:5vh 6vw;display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;overflow:auto}
+#over[hidden]{display:none}
+#over button{border:1px solid rgba(0,213,234,.35);clip-path:var(--cut);background:linear-gradient(135deg,rgba(14,22,58,.84),rgba(6,8,22,.74));text-align:left;padding:1rem 1.3rem;display:flex;flex-direction:column;gap:.3rem}
+#over button:hover,#over button.cur{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold)}
+#over .num{font-size:3rem;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--gold)}
+#over b{font-family:var(--disp);font-stretch:80%;text-transform:uppercase;font-size:1.5rem;font-weight:700}
+#over span{color:var(--dim);font-family:var(--mono);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
+
+/* ---------- motion off ---------- */
+body.still *,body.still *::before,body.still *::after{animation:none!important;transition:none!important}
+body.still .draw{stroke-dashoffset:0}
+
+/* ---------- small screens: slides become a scrolling page ---------- */
+body.flow{overflow:auto;height:auto}
+body.flow #stage{position:static;width:auto;height:auto;transform:none!important;font-size:11.5px;padding-bottom:60px}
+body.flow .hud,body.flow .deco,body.flow .shan{display:none}
+body.flow .slide{position:relative;inset:auto;opacity:1;visibility:visible;clip-path:none;padding:3.4em 1.6em 3em 2.6em;border-bottom:1px solid rgba(0,213,234,.3)}
+body.flow .slide::before{left:.9em;top:3em;bottom:3em} body.flow .slide::after{font-size:7em;right:.2em}
+body.flow [data-r],body.flow .split div,body.flow .mem i{opacity:1;transform:none;filter:none}
+body.flow .draw{stroke-dashoffset:0;animation:none}
+body.flow h2{font-size:2.9em}
+body.flow .s1{display:flex;flex-direction:column}
+body.flow .s1 h1{font-size:5.6em}
+body.flow .s1 canvas{position:static;order:1;width:auto;height:9em;margin:1.5em -1.6em 0 -2.6em;z-index:auto}
+body.flow .s1 .q,body.flow .s1 .by{order:2}body.flow .s1 .q,body.flow .s1 .by,body.flow .s9 .end{position:static;margin-top:1.4em}
+body.flow .s1 .hint{position:static;order:1;text-align:left;margin-top:.6em}
+body.flow .s2 .row{grid-template-columns:3em 1fr} body.flow .s2 .row svg{grid-column:1/-1}
+body.flow .s3 .trio{gap:1.6em} body.flow .s3 .trio .num{font-size:3.8em}
+body.flow .split .va .num,body.flow .split .te .num{font-size:1.1em} body.flow .split div{padding-left:.2em}
+body.flow .legend{flex-direction:column}
+body.flow .s3 .facts,body.flow .s5 .grid,body.flow .s6 .duo,body.flow .s6 .rule,body.flow .s6 .rule ul,body.flow .s7 .players,body.flow .s7 .below,body.flow .knobwrap,body.flow .def,body.flow .s9 .cols{grid-template-columns:1fr;gap:1.2em}
+body.flow .s4>svg:not(.deco){height:auto}
+body.flow .knob{margin:0 auto}
+body.flow .s9 .end{flex-direction:column;align-items:flex-start} body.flow .s9 .end .qs{font-size:4em}
+body.flow .replay .big{gap:1.5em;flex-wrap:wrap}
+body.flow #bar .deck{display:none}
+body.flow.shownotes .notes{display:block;margin-top:2em;padding:1em;background:#03040b;border-left:3px solid var(--gold);font-size:1.25em;line-height:1.5}
+body.flow.shownotes .notes::before{content:attr(data-label);display:block;color:var(--gold);font-weight:700;margin-bottom:.4em}
+body.flow #notes{display:none}
+
+/* ---------- print: one static slide per page ---------- */
+@page{size:1600px 900px;margin:0}
+@media print{
+  html,body{height:auto;overflow:visible}
+  body::after,#bg,#bar,#notes,#over,.hud{display:none!important}
+  #stage{position:static!important;transform:none!important;width:1600px!important;height:auto!important;font-size:20px!important;padding:0!important}
+  .slide{position:relative!important;width:1600px;height:900px;opacity:1!important;visibility:visible!important;clip-path:none!important;transform:none!important;break-after:page;background:var(--night)}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-r],.split div,.mem i{opacity:1!important;transform:none!important;filter:none!important}
+  .draw{stroke-dashoffset:0!important}
+  .id{display:inline!important}.anon,.hands,#reveal,.s1 .hint{display:none!important}
+}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <!-- koshkar muiz (ram's horn) drawn as a circuit trace -->
+  <g id="horn">
+    <path d="M0 46V6C0 -22 -40 -22 -40 4C-40 20 -18 20 -18 5C-18 -3 -27 -5 -30 2M0 6C0 -22 40 -22 40 4C40 20 18 20 18 5C18 -3 27 -5 30 2M0 -28 8 -38 0 -48 -8 -38Z"/>
+    <circle cx="-30" cy="2" r="2.5"/><circle cx="30" cy="2" r="2.5"/><circle cx="0" cy="46" r="2.5"/>
+  </g>
+</defs></svg>
+<main id="stage">
+<div class="hud" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="hl">Qazaq music gen // assignment 02</span><span class="hr">Yeldar × Aisha</span></div>
+
+<!-- 1 -->
+<section class="slide s1" data-title="Kazakh Music Generation" data-who="Yeldar" data-sec="30">
+  <canvas class="strings" data-mode="pluck" aria-hidden="true"></canvas>
+  <svg class="shan" viewBox="-240 -240 480 480" aria-hidden="true">
+    <defs><path id="ringpath" d="M0 -222a222 222 0 1 1 -.1 0"/></defs>
+    <g class="rev"><text><textPath href="#ringpath">QAZAQ · MUSIC · GENERATION · ҚАЗАҚ · МУЗЫКА · QAZAQ · MUSIC · GENERATION · ҚАЗАҚ · МУЗЫКА · </textPath></text></g>
+    <g class="spin">
+      <circle r="205" stroke-width="2"/><circle r="150" stroke-width="3"/>
+      <circle r="177" stroke-width="52" stroke-dasharray="2 28.89" opacity=".8"/>
+      <g class="au" stroke-width="3"><path d="M-20 -148V148M0 -150V150M20 -148V148M-148 -20H148M-150 0H150M-148 20H148"/></g>
+    </g>
+    <circle r="232" stroke-width="1" stroke-dasharray="1 9" opacity=".7"/>
+  </svg>
+  <p class="eyebrow" data-r>Assignment 2 · Adapting a pretrained music model</p>
+  <h1 data-r>Kazakh Music<br><em>Generation</em></h1>
+  <p class="kk" lang="kk" data-r>Қазақ музыкасын генерациялау</p>
+  <p class="q" data-r>Can adapting a pretrained model with Kazakh singing data produce music we prefer?</p>
+  <p class="by" data-r>Yeldar <i>&amp;</i> Aisha</p>
+  <p class="hint" data-r><b>Two strings, two presenters.</b> Pluck them: click, or press 1 and 2.<br>Interface sound made in the browser, not model output.</p>
+  <aside class="notes">
+    <p><b>Pluck the two strings once before speaking</b> (click them, or press 1 and 2). The sound is made by the browser, not by the model.</p>
+    <p>Welcome. We are Yeldar and Aisha. The dombra has two strings and there are two of us: the gold string below lights up when Yeldar speaks, the turquoise one when Aisha speaks.</p>
+    <p>Our question: if we adapt an existing music model with Kazakh singing data, do we get music we prefer? We will tell the whole story, including the disappointing part.</p>
+    <p>The verse we asked the model to sing is about morning light over the steppe, so the sky here moves from night towards dawn as our results come in.</p>
+</aside>
+</section>
+
+<!-- 2 -->
+<section class="slide s2" data-title="The challenge" data-who="Yeldar" data-sec="35">
+  <p class="eyebrow" data-r>The challenge</p>
+  <h2 data-r>Three things have to work <em>at the same time</em></h2>
+  <div class="rows">
+    <div class="row" data-r><span class="num">1</span>
+      <div><h3>Kazakh lyrics</h3><p class="small" lang="kk">«Таңғы самал бетімді сипайды…»</p></div>
+      <svg viewBox="0 0 600 80" preserveAspectRatio="none"><path class="wave" stroke="#00d5ea" d="M0 40Q25 5 50 40T100 40T150 40T200 40T250 40T300 40T350 40T400 40T450 40T500 40T550 40T600 40"/></svg></div>
+    <div class="row" data-r><span class="num">2</span>
+      <div><h3>Musical character</h3><p class="small">A melody that sounds recognisably Kazakh</p></div>
+      <svg viewBox="0 0 600 80" preserveAspectRatio="none"><path class="wave" stroke="#eaf6ff" d="M0 40Q50 -10 100 40T200 40Q225 15 250 40T300 40Q350 -10 400 40T500 40Q525 15 550 40T600 40"/></svg></div>
+    <div class="row" data-r><span class="num">3</span>
+      <div><h3>Accompaniment</h3><p class="small">Instruments that support the voice convincingly</p></div>
+      <svg viewBox="0 0 600 80" preserveAspectRatio="none"><path class="wave" stroke="#ffc533" d="M0 40Q75 0 150 40T300 40T450 40T600 40"/><path class="wave" stroke="#ffc533" opacity=".5" d="M0 40Q75 70 150 40T300 40T450 40T600 40"/></svg></div>
+  </div>
+  <p class="small foot" data-r>The pretrained model we start from has no Kazakh language setting.</p>
+  <aside class="notes">
+    <p>Why is this hard? A convincing Kazakh song needs three things together.</p>
+    <p>First, the words: the lyrics must be sung in Kazakh so a listener can follow them. Second, the musical character: the melody and phrasing should feel Kazakh. Third, the accompaniment: the instruments behind the voice have to sound convincing.</p>
+    <p>The model we start from is a general music model. It has no language setting for Kazakh, so we wanted to see whether extra Kazakh data could help.</p>
+  </aside>
+</section>
+
+<!-- 3 -->
+<section class="slide s3" data-title="The new dataset" data-who="Yeldar" data-sec="45">
+  <p class="eyebrow" data-r>The new dataset</p>
+  <h2 data-r>Kazakh singing, <em>split before any training</em></h2>
+  <div class="trio" data-r>
+    <div><b class="num gold" data-count="3013">3,013</b><span>sung segments</span></div>
+    <div><b class="num" data-count="195">195</b><span>songs</span></div>
+    <div><b class="num" data-count="36">36</b><span>artists</span></div>
+  </div>
+  <p class="arrow" data-r>After filtering and removing exact duplicates → <b class="num" data-count="2977">2,977</b> clips kept</p>
+  <div class="split" aria-label="2,316 training, 334 validation, 327 test">
+    <div class="tr"><b class="num" data-count="2316">2,316</b></div><div class="va"><b class="num">334</b></div><div class="te"><b class="num">327</b></div>
+  </div>
+  <div class="legend" data-r><span><b class="turq">Training</b> — the model learns from these</span><span><b>Validation</b></span><span><b class="gold">Test</b></span></div>
+  <div class="facts">
+    <p data-r>Isolated vocals with aligned lyrics. <span class="gold">No full musical arrangements.</span></p>
+    <p data-r>Clips from the same song stay in the same part. Validation and test clips never enter training.</p>
+  </div>
+  <aside class="notes">
+    <p>Our new data is the Kazakh Songs ASR corpus: 3,013 sung segments from 195 songs by 36 artists.</p>
+    <p>After filtering and removing exact duplicate audio, 2,977 clips remain. We split them into 2,316 for training, 334 for validation and 327 for testing. Clips from the same song always stay together, and the validation and test clips are never used for training.</p>
+    <p>One detail matters for the rest of the story: this is isolated singing with aligned lyrics. There is no band and no dombra behind the voice. It can teach words, but it does not teach arrangement.</p>
+    <p><i>If asked:</i> artists can appear in more than one part, so this is not an unseen-artist test. The original recordings and transcripts are access-controlled and are not in this presentation.</p>
+  </aside>
+</section>
+
+<!-- 4 -->
+<section class="slide s4" data-title="How the model works" data-who="Yeldar" data-sec="45">
+  <p class="eyebrow" data-r>How the model works</p>
+  <h2 data-r>The big model stays frozen. <em>A small adapter learns.</em></h2>
+  <svg viewBox="0 0 1400 560" role="img" aria-label="A text prompt and lyrics go into a frozen pretrained music model. A small trainable adapter adds adjustments inside it. Audio comes out.">
+    <!-- input -->
+    <g data-r><rect x="2" y="150" width="290" height="170" fill="none" stroke="#eaf6ff" stroke-width="2"/>
+      <text x="24" y="192" font-size="19" fill="#00d5ea" style="fill:#00d5ea;letter-spacing:3px">INPUT</text>
+      <text x="24" y="238" font-size="30" class="t-ser">Style prompt</text>
+      <text x="24" y="284" font-size="30" class="t-ser">+ Kazakh lyrics</text></g>
+    <!-- frozen model -->
+    <g data-r><rect x="420" y="40" width="580" height="330" fill="#0c1230" stroke="#00d5ea" stroke-width="3"/>
+      <text x="446" y="88" font-size="19" style="fill:#00d5ea;letter-spacing:3px">FROZEN · NOT CHANGED BY US</text>
+      <text x="446" y="136" font-size="38" class="t-ser">Pretrained music model</text>
+      <g fill="#eaf6ff" opacity=".28"><rect x="446" y="170" width="430" height="26"/><rect x="446" y="212" width="430" height="26"/><rect x="446" y="254" width="430" height="26"/><rect x="446" y="296" width="430" height="26"/></g>
+      <text x="446" y="354" font-size="19" style="fill:#8fa6c8">Stored in 4-bit numbers to fit in laptop memory</text>
+      <!-- lock -->
+      <g fill="none" stroke="#00d5ea" stroke-width="4"><rect x="930" y="66" width="40" height="32" fill="#00d5ea"/><path d="M938 66v-12a12 12 0 0 1 24 0v12"/></g></g>
+    <!-- adapter -->
+    <g data-r><g fill="#ffc533"><rect x="888" y="170" width="86" height="26"/><rect x="888" y="212" width="86" height="26"/><rect x="888" y="254" width="86" height="26"/><rect x="888" y="296" width="86" height="26"/></g>
+
+      <rect x="560" y="430" width="440" height="120" fill="rgba(255,197,51,.12)" stroke="#ffc533" stroke-width="3"/>
+      <text x="584" y="470" font-size="19" style="fill:#ffc533;letter-spacing:3px">TRAINED · ON KAZAKH SINGING</text>
+      <text x="584" y="512" font-size="34" class="t-ser">LoRA adapter, rank 8</text>
+      <text x="584" y="540" font-size="16" style="fill:#8fa6c8">about 5.5 million adjustable numbers</text></g>
+    <!-- output -->
+    <g data-r><rect x="1130" y="150" width="268" height="170" fill="none" stroke="#eaf6ff" stroke-width="2"/>
+      <text x="1152" y="192" font-size="19" style="fill:#00d5ea;letter-spacing:3px">OUTPUT</text>
+      <text x="1152" y="238" font-size="30" class="t-ser">30 seconds</text>
+      <text x="1152" y="284" font-size="30" class="t-ser">of audio</text></g>
+    <!-- moving signal -->
+    <path class="sig" stroke="#eaf6ff" d="M292 235H420M1000 235H1130"/>
+    <path class="sig" stroke="#ffc533" d="M931 430V326"/>
+  </svg>
+  <aside class="notes">
+    <p>Here is the idea without the mathematics. A style prompt and the lyrics go in on the left, and audio comes out on the right.</p>
+    <p>The large box is the pretrained model, ACE-Step. We did not build it and we did not change it: it stays frozen. We store its numbers in a compact four-bit form so it fits on a laptop.</p>
+    <p>The gold part is what we trained: a small add-on called a LoRA adapter, with about five and a half million adjustable numbers. It sits inside the model and nudges its behaviour. Think of it as a volume knob for what the model learned from our Kazakh data. That knob becomes important later.</p>
+    <p><b>Hand over to Aisha.</b></p>
+  </aside>
+</section>
+
+<!-- 5 -->
+<section class="slide s5" data-title="Training on our laptop" data-who="Aisha" data-sec="45">
+  <p class="eyebrow" data-r>Training on our laptop</p>
+  <h2 data-r>One laptop, 66 minutes, <em>every training clip once</em></h2>
+  <div class="grid">
+    <div data-r>
+      <h3>GPU memory · RTX 3050 Ti, 4 GB</h3>
+      <div class="mem"><i></i></div>
+      <p class="small" style="margin-top:.5em"><b class="gold">≈ 1.43 GiB</b> peak allocated during training</p>
+      <ul class="cfg">
+        <li><b>Frozen</b> base, 4-bit weights</li>
+        <li>LoRA rank <b>8</b>, alpha <b>16</b></li>
+        <li>Learning rate <b>0.00002</b>, batch <b>1</b></li>
+        <li>Seed <b>42</b>, no paid compute</li>
+      </ul>
+    </div>
+    <div data-r>
+      <div class="replay">
+        <div class="top"><span class="tag">Replay of the recorded run · not live</span><button type="button" id="rerun">↻ Replay</button></div>
+        <div class="big"><div><b class="num" id="upd">3,088</b> <span>of 3,088 updates</span></div><div><b class="num" id="min">66.3</b> <span>minutes</span></div></div>
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <div class="cps" id="cps"><span class="on">772</span><span class="on">1,544</span><span class="on">2,316</span><span class="on">3,088 · final</span></div>
+        <div class="key"><span><i style="background:var(--turq)"></i>2,316 updates on new Kazakh clips</span><span><i style="background:var(--gold)"></i>772 on nine original music crops</span></div>
+      </div>
+      <ul class="checks">
+        <li>All 2,316 training clips used exactly once</li>
+        <li>No validation or test clip appeared in training</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>Thank you. We trained on our own laptop, whose graphics card has only four gigabytes of memory. Because the base is frozen and compressed, training peaked at about 1.43 gibibytes.</p>
+    <p>On the right is a replay of the finished run, not live training: 3,088 updates in 66.3 minutes. Three of every four updates used a new Kazakh clip, so each of the 2,316 training clips was used exactly once. Every fourth update used one of nine crops of original music with accompaniment.</p>
+    <p>We checked the log afterwards: every training clip appears once, and no validation or test clip appears at all.</p>
+    <p><i>If asked:</i> checkpoints were saved every 772 updates; the one at 2,316 was not in the listening comparison. The timing excludes loading and data preparation.</p>
+</aside>
+</section>
+
+<!-- 6 -->
+<section class="slide s6" data-title="Why loss was not enough" data-who="Aisha" data-sec="40">
+  <p class="eyebrow" data-r>Why loss was not enough</p>
+  <h2 data-r>The number improved. <em>The music did not.</em></h2>
+  <div class="duo">
+    <div data-r>
+      <svg viewBox="0 0 100 100"><path class="draw" stroke="#00d5ea" d="M12 14C40 18 58 50 84 80M84 80V56M84 80H60"/></svg>
+      <div><span class="tag turq">Earlier pilot · the metric</span><h3>Held-out flow loss went down</h3></div>
+    </div>
+    <div data-r>
+      <svg viewBox="0 0 100 100"><path class="wob" stroke="#ffc533" d="M6 50L16 30 24 72 33 18 42 80 50 40 58 66 67 24 76 74 85 42 94 50"/></svg>
+      <div><span class="tag gold">Earlier pilot · the listening</span><h3>The listener judged the music poor</h3></div>
+    </div>
+  </div>
+  <div class="rule" data-r>
+    <p class="lead">So we changed<br>how we judge:</p>
+    <ul>
+      <li>Same prompt, lyrics, seed and length for every version</li>
+      <li>Playback levels matched</li>
+      <li>Labels shuffled, identities revealed only after choosing</li>
+      <li>The pretrained model is allowed to win</li>
+    </ul>
+  </div>
+  <aside class="notes">
+    <p>Before the full run we did a small pilot. Its loss on held-out clips went down. Loss is the model's own error score, so on paper it looked better.</p>
+    <p>But when the project owner listened, the music was poor. A lower loss did not mean better music.</p>
+    <p>So we changed how we judge. Every version gets the same prompt, lyrics, seed and length. Loudness is matched, labels are shuffled, and identities are revealed only after choosing. The untouched pretrained model is in the line-up, and it is allowed to win.</p>
+</aside>
+</section>
+
+<!-- 7 -->
+<section class="slide s7" data-title="Blind listening test" data-who="Aisha" data-sec="75">
+  <p class="eyebrow" data-r>Listening demonstration · you are the listeners</p>
+  <h2 data-r>Blind test: <em>which clip do you prefer?</em></h2>
+  <div class="players">
+    <div class="player" data-env="reference" data-r>
+      <div class="hd"><h3><span class="anon">Clip</span><span class="id">Pretrained</span></h3>
+        <div class="hands">hands <button type="button" aria-label="One hand fewer">−</button><b>0</b><button type="button" aria-label="One hand more">+</button></div></div>
+      <p class="sub"><span class="anon">Identity hidden</span><span class="id">Reference: the original model, no adapter</span></p>
+      <div class="seek"><canvas width="1280" height="200"></canvas><input type="range" min="0" max="30" step="0.1" value="0" aria-label="Seek"></div>
+      <div class="ctl"><button type="button" class="play">▶ Play</button><button type="button" class="again">↻ Replay</button><span class="err" hidden>Audio file not found</span><time>0:00 / 0:30</time></div>
+      <audio preload="auto" src="audio/reference_pretrained.wav"></audio>
+    </div>
+    <div class="player" data-env="selected" data-r>
+      <div class="hd"><h3><span class="anon">Clip</span><span class="id">Adapter at 25%</span></h3>
+        <div class="hands">hands <button type="button" aria-label="One hand fewer">−</button><b>0</b><button type="button" aria-label="One hand more">+</button></div></div>
+      <p class="sub"><span class="anon">Identity hidden</span><span class="id">Final trained adapter at 25% strength</span></p>
+      <div class="seek"><canvas width="1280" height="200"></canvas><input type="range" min="0" max="30" step="0.1" value="0" aria-label="Seek"></div>
+      <div class="ctl"><button type="button" class="play">▶ Play</button><button type="button" class="again">↻ Replay</button><span class="err" hidden>Audio file not found</span><time>0:00 / 0:30</time></div>
+      <audio preload="auto" src="audio/selected_adapter_025.wav"></audio>
+    </div>
+  </div>
+  <div class="below">
+    <div data-r>
+      <p class="small" style="margin-bottom:.3em">Target lyrics the model was asked to sing</p>
+      <p class="lyrics" lang="kk">Таңғы самал бетімді сипайды,<br>Күннің нұры далама тарайды.<br>Жаңа әнім жүректен шығады,<br>Туған жерім қуаныш сыйлайды.</p>
+    </div>
+    <div data-r>
+      <canvas class="strings" data-mode="audio" aria-hidden="true"></canvas>
+      <div class="act"><button type="button" id="reveal">Reveal identities</button><span class="tag">Prerecorded generated examples · levels matched</span></div>
+      <p class="small" style="margin-top:.5em">Same prompt, lyrics and seed. Order shuffled on load. A class poll, not a recorded result.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p>Now you are the listeners. These are two prerecorded generated clips with matched loudness. Same prompt, same four lines, same seed. One is the untouched pretrained model, the other uses our adapter. The page shuffled them, so we do not know which is which either.</p>
+    <p><b>Play 15 seconds of Clip 1, then the same 15 seconds of Clip 2.</b> Click a waveform to jump to the same place in both.</p>
+    <p><b>Ask for hands</b> for Clip 1, then Clip 2. Enter the counts with the plus buttons, then press <b>Reveal identities</b>.</p>
+    <p>Whatever the room says, we report it honestly. It is a class poll and does not change our recorded result.</p>
+    <p><i>If asked:</i> the lyrics are our own draft lines with no exact-line overlap with the training transcripts. Their wording still needs a native-speaker review, and we have not verified pronunciation.</p>
+    <p><b>Hand over to Yeldar.</b></p>
+</aside>
+</section>
+
+<!-- 8 -->
+<section class="slide s8" data-title="The strength knob" data-who="Yeldar" data-sec="60">
+  <p class="eyebrow" data-r>What changed</p>
+  <h2 data-r>We turned <em>the adapter down</em></h2>
+  <div class="knobwrap">
+    <div class="knob" data-r>
+      <svg viewBox="-170 -170 340 340" aria-hidden="true">
+        <path d="M-106.07 106.07A150 150 0 1 1 106.07 106.07" fill="none" stroke="rgba(234,246,255,.22)" stroke-width="12" stroke-linecap="round"/>
+        <path id="arc" d="M-106.07 106.07A150 150 0 1 1 106.07 106.07" pathLength="100" fill="none" stroke="#ffc533" stroke-width="12" stroke-linecap="round" stroke-dasharray="100 100"/>
+        <circle r="108" fill="#0c1230" stroke="#eaf6ff" stroke-width="2.5"/>
+        <g id="needle" style="transform:rotate(135deg)">
+          <g fill="none" stroke="#00d5ea" stroke-width="2.5" opacity=".85"><path d="M-11 -79V79M0 -80V80M11 -79V79M-79 -11H79M-80 0H80M-79 11H79"/><circle r="80"/></g>
+          <path d="M0 -84V-106" stroke="#ffc533" stroke-width="10" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <button type="button" class="kstop" style="left:15%;top:86%" aria-pressed="false">0%</button>
+      <button type="button" class="kstop" style="left:6%;top:31%" aria-pressed="false">25%</button>
+      <button type="button" class="kstop" style="left:50%;top:5%" aria-pressed="false">50%</button>
+      <button type="button" class="kstop" style="left:85%;top:86%" aria-pressed="true">100%</button>
+    </div>
+    <div class="kinfo" data-r>
+      <p class="kbig"><b class="num" id="kval">100%</b><span id="kname">adapter strength · full</span></p>
+      <p class="kdesc" id="kdesc">The final adapter after 3,088 updates. Not chosen in either listening round.</p>
+      <div class="seek"><canvas id="kbars" width="1280" height="200"></canvas><input id="kseek" type="range" min="0" max="30" step="0.1" value="0" aria-label="Seek"></div>
+      <p class="small" style="margin-top:.4em">Turning the knob keeps your place in the verse.</p>
+      <div class="ctl"><button type="button" class="play" id="kplay">▶ Play</button><button type="button" id="kagain">↻ Replay</button><span class="err" id="kerr" hidden>Audio file not found</span><time id="ktime">0:00 / 0:30</time></div>
+    </div>
+  </div>
+  <div class="def" data-r>
+    <p><b class="gold">25% strength</b> means the adapter's influence is scaled down while generating. The 25%, 50% and 100% positions all use the same adapter, trained on all 2,316 clips — <b>not</b> on 25% of the data. 0% is the pretrained model alone.</p>
+    <span class="tag">1 listener · 1 prompt · 1 seed</span>
+  </div>
+  <audio preload="auto" src="audio/reference_pretrained.wav"></audio>
+  <audio preload="auto" src="audio/selected_adapter_025.wav"></audio>
+  <audio preload="auto" src="audio/adapter_050.wav"></audio>
+  <audio preload="auto" src="audio/adapter_100.wav"></audio>
+  <aside class="notes">
+    <p>This knob is the adapter from the diagram. Every position is a real prerecorded output of the same verse.</p>
+    <p>Round one: the listener compared the pretrained model with our checkpoints at full strength, and chose the pretrained model. At full strength our training did not win. The feedback was: better melody and accompaniment. That fits, because we trained on isolated vocals.</p>
+    <p>Round two: same adapter, turned down while generating. <b>Press Play at 100%, then click 25%</b> (about ten seconds; keys 1 to 4 also work). The clip keeps its place in the verse.</p>
+    <p>Twenty-five percent means a quarter of the adapter's influence. It does not mean a quarter of the data, and it is not a new training run. This time the listener chose 25%. One listener, one prompt, one seed: an encouraging sign, not proof.</p>
+    <p><i>If short of time:</i> skip the playback here and offer it during questions.</p>
+    <p><b>Hand over to Aisha.</b></p>
+</aside>
+</section>
+
+<!-- 9 -->
+<section class="slide s9" data-title="Conclusion and questions" data-who="Aisha" data-sec="45">
+  <p class="eyebrow" data-r>Conclusion</p>
+  <h2 data-r>First light — <em>not yet daylight</em></h2>
+  <div class="cols">
+    <div data-r class="turq"><h3>What we found</h3><ul>
+      <li>The full run finished and was verified on a 4 GB laptop</li>
+      <li>Lower loss did not mean better music</li>
+      <li>Full strength lost to the pretrained model; 25% strength was preferred</li></ul></div>
+    <div data-r class="gold"><h3>What we cannot claim</h3><ul>
+      <li>One listener, one prompt, one seed, no numeric ratings</li>
+      <li>Pronunciation and general improvement are unverified</li>
+      <li>Accompaniment came from nine repeated crops</li></ul></div>
+    <div data-r><h3>Next steps</h3><ul>
+      <li>More listeners, prompts and seeds</li>
+      <li>Native-speaker check of the lyrics and sung words</li>
+      <li>Richer licensed data with accompaniment</li></ul></div>
+  </div>
+  <div class="end" data-r>
+    <div><p class="by">Yeldar <i>&amp;</i> Aisha</p>
+      <p class="src">Sources: ASSIGNMENT2_FULL_RUN.md · ASSIGNMENT2_FULL_DEFENSE.md · assignment2_full_results.json · verification.json (lighter-adapter comparison).
+      Dataset: yeshpanovrustem/kazakh_songs_asr. Base model: ACE-Step 1.5 turbo. All four demo clips match the playback hashes in verification.json.</p></div>
+    <p class="qs">Questions?</p>
+  </div>
+  <aside class="notes">
+    <p>The sky has reached first light, and that is how far our evidence goes: a first sign, not daylight.</p>
+    <p>We completed and verified a full training run on a small laptop. A lower loss did not mean better music. At full strength our adapter lost to the pretrained model; at 25% it was the version the listener preferred.</p>
+    <p>The limits: one listener, one prompt, one seed, no numeric ratings, and pronunciation is unverified. Next we would ask more listeners, try more prompts and seeds, have a native speaker check the words, and add licensed data with accompaniment.</p>
+    <p>Thank you. We are happy to take questions.</p>
+    <p><i>Likely questions:</i> Why an ASR dataset? It gives aligned sung text and audio, which we use for conditional generation. Why only one pass? It was a bounded local experiment. Can others reproduce it? The configuration, code, dataset revision and logs are recorded, but dataset access and similar hardware are needed.</p>
+</aside>
+</section>
+
+</main>
+
+<section id="notes" hidden aria-label="Speaker notes">
+  <div class="hd"><span class="who" id="nwho"></span><span id="ntime"></span><button type="button" id="timer" title="Click to reset the timer">0:00</button></div>
+  <div id="nbody"></div>
+</section>
+<div id="over" hidden></div>
+
+<nav id="bar" aria-label="Presentation controls">
+  <button type="button" id="prev" class="deck" aria-label="Previous slide">‹ Prev</button>
+  <span id="count" class="deck">1 / 9</span>
+  <button type="button" id="next" class="deck" aria-label="Next slide">Next ›</button>
+  <div id="frets" class="deck" aria-label="Slides, one string per presenter"><div class="who"><span class="gold">Yeldar</span><span class="turq">Aisha</span></div></div>
+  <button type="button" id="bover" class="deck" title="O">Overview</button>
+  <button type="button" id="bnotes" aria-pressed="false" title="N">Notes</button>
+  <button type="button" id="bmotion" aria-pressed="true" title="M">Motion: on</button>
+  <button type="button" id="bprint" title="Print or save as PDF">Print</button>
+  <button type="button" id="bfull" class="deck" title="F">Fullscreen</button>
+</nav>
+
+<script src="envelope.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+var body=document.body, stage=$('#stage'), slides=$$('.slide'), N=slides.length, cur=-1;
+var ENV=window.ENVELOPE||{};
+var flow=false, printing=false, flowMQ=matchMedia('screen and (max-width: 820px)'), still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var fmt=function(n){return Math.round(n).toLocaleString('en-US')};
+var mmss=function(s){s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+('0'+s%60).slice(-2)};
+
+// stagger order for reveals
+slides.forEach(function(s){$$('[data-r]',s).forEach(function(el,i){el.style.setProperty('--i',i)})});
+
+slides.forEach(function(sl,i){if(i)sl.insertAdjacentHTML('beforeend','<svg class="deco" viewBox="-50 -52 100 320" aria-hidden="true"><use href="#horn"/><use href="#horn" transform="translate(0 106)"/><use href="#horn" transform="translate(0 212)"/></svg>')});
+
+/* ---------- layout ---------- */
+function fit(){
+  flow=flowMQ.matches&&!printing; body.classList.toggle('flow',flow);
+  if(flow){stage.style.transform='';stage.style.top='';return}
+  var nh=$('#notes').hidden?0:$('#notes').offsetHeight, H=innerHeight-nh, s=Math.min(innerWidth/1600,H/900);
+  stage.style.top=Math.max(0,(H-900*s)/2)+'px';
+  stage.style.transform='translateX(-50%) scale('+s+')';
+  var bg=$('#bg');bg.width=innerWidth;bg.height=innerHeight;
+}
+addEventListener('resize',fit);flowMQ.addEventListener('change',fit);
+
+/* ---------- navigation ---------- */
+var cum=[0];slides.forEach(function(s){cum.push(cum[cum.length-1]+ +s.dataset.sec)});
+function go(n){
+  n=Math.max(0,Math.min(N-1,n)); if(n===cur)return;
+  slides.forEach(function(s,i){s.classList.toggle('active',i===n);s.classList.toggle('past',i<n);s.setAttribute('aria-hidden',i!==n&&!flow)});
+  if(cur>0||n>0)startTimer();
+  cur=n; pauseAll();
+  $('#count').textContent=(n+1)+' / '+N; frets(n);
+  if(location.hash!=='#'+(n+1))location.replace('#'+(n+1));
+  var s=slides[n];
+  $('#nwho').textContent=s.dataset.who; $('#ntime').textContent='Slide '+(n+1)+' · about '+s.dataset.sec+' s · '+mmss(cum[n])+'–'+mmss(cum[n+1])+' of '+mmss(cum[N]);
+  $('#nbody').innerHTML=$('.notes',s).innerHTML;
+  $$('#over button').forEach(function(b,i){b.classList.toggle('cur',i===n)});
+  $$('[data-count]',s).forEach(count);
+  if(s.classList.contains('s5'))replay();
+  if(n===0){pluck(0,false);setTimeout(function(){pluck(1,false)},350)}   // visual only: no sound without a click
+  fit();
+}
+addEventListener('hashchange',function(){var n=parseInt(location.hash.slice(1),10);if(n)go(n-1)});
+$('#prev').onclick=function(){go(cur-1)}; $('#next').onclick=function(){go(cur+1)};
+
+addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  var t=e.target.tagName, k=e.key;
+  if(t==='INPUT')return;                                   // the seek slider keeps its arrow keys
+  if(t==='BUTTON'&&(k===' '||k==='Enter'))return;          // buttons keep space/enter
+  if(k==='Escape'){$('#over').hidden=true;return}
+  if(flow)return;
+  if(k>='1'&&k<='4'&&slides[cur].classList.contains('s8')){knob(+k-1);return}
+  if((k==='1'||k==='2')&&cur===0){pluck(+k-1,true);return}
+  if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' ')go(cur+1);
+  else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp')go(cur-1);
+  else if(k==='Home')go(0); else if(k==='End')go(N-1);
+  else if(k==='f'||k==='F')full(); else if(k==='o'||k==='O')overview();
+  else if(k==='n'||k==='N')notes(); else if(k==='m'||k==='M')motion();
+  else return;
+  e.preventDefault();
+});
+
+/* ---------- controls ---------- */
+function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+function overview(){$('#over').hidden=!$('#over').hidden}
+function notes(){var el=$('#notes');el.hidden=!el.hidden;body.classList.toggle('shownotes',!el.hidden);$('#bnotes').setAttribute('aria-pressed',!el.hidden);fit()}
+function motion(){still=!still;applyMotion()}
+function applyMotion(){body.classList.toggle('still',still);$('#bmotion').textContent='Motion: '+(still?'off':'on');$('#bmotion').setAttribute('aria-pressed',!still);if(still)setReplay(1)}
+$('#bfull').onclick=full;$('#bover').onclick=overview;$('#bnotes').onclick=notes;$('#bmotion').onclick=motion;$('#bprint').onclick=function(){print()};
+slides.forEach(function(s,i){
+  var b=document.createElement('button');b.type='button';
+  b.innerHTML='<span class="num">'+(i+1)+'</span><b></b><span></span>';
+  b.children[1].textContent=s.dataset.title; b.children[2].textContent=s.dataset.who+' · '+s.dataset.sec+' s';
+  b.onclick=function(){$('#over').hidden=true;go(i)}; $('#over').appendChild(b);
+  $('.notes',s).dataset.label='Speaker notes · '+s.dataset.who+' · about '+s.dataset.sec+' s';
+});
+var t0=0;function startTimer(){if(!t0)t0=Date.now()}
+$('#timer').onclick=function(){t0=Date.now()};
+setInterval(function(){$('#timer').textContent=mmss(t0?(Date.now()-t0)/1000:0)},500);
+
+/* ---------- counters (final values live in the HTML; this only animates towards them) ---------- */
+function count(el){
+  var to=+el.dataset.count; el.textContent=fmt(to);
+  if(still||flow)return;
+  var st=performance.now()+500;
+  (function step(now){var p=Math.min(1,Math.max(0,(now-st)/1300));el.textContent=fmt(to*(1-Math.pow(1-p,3)));if(p<1&&slides[cur].contains(el))requestAnimationFrame(step);else el.textContent=fmt(to)})(st);
+}
+
+/* ---------- replay of the recorded training run (totals only; no loss values are invented) ---------- */
+var rp=0;
+function setReplay(p){
+  $('#fill').style.width=(p*100)+'%'; $('#upd').textContent=fmt(3088*p); $('#min').textContent=(66.3*p).toFixed(1);
+  $$('#cps span').forEach(function(s,i){s.classList.toggle('on',p>=(i+1)/4)});
+}
+function replay(){
+  var id=++rp; if(still||flow){setReplay(1);return}
+  var st=performance.now()+900; setReplay(0);
+  (function step(now){if(id!==rp)return;var p=Math.min(1,Math.max(0,(now-st)/8000));setReplay(p);if(p<1)requestAnimationFrame(step)})(st);
+}
+$('#rerun').onclick=replay;
+
+/* ---------- audio: prerecorded clips only, one at a time, never autoplayed ---------- */
+var audios=$$('audio'), s7=$('.s7');
+function startA(a){audios.forEach(function(x){if(x!==a)x.pause()});var r=a.play();if(r&&r.catch)r.catch(function(){})}
+function pauseAll(){audios.forEach(function(a){a.pause()})}
+function bars(cv,env,pos,col){
+  var c=cv.getContext('2d'),w=cv.width,h=cv.height,n=150,bw=w/n;
+  c.clearRect(0,0,w,h);if(printing){c.fillStyle='#05060f';c.fillRect(0,0,w,h)}
+  for(var i=0;i<n;i++){var m=0;for(var j=0;j<6;j++)m=Math.max(m,env[i*6+j]||0);var bh=Math.max(4,m/99*h*.95);
+    c.fillStyle=(i+.5)/n<=pos?col:'rgba(234,246,255,.3)';c.fillRect(i*bw+1,(h-bh)/2,bw-2.5,bh)}
+  c.fillStyle='#eaf6ff';c.fillRect(pos*w-1.5,0,3,h);
+}
+
+/* slide 7: blind test. Order shuffled on load; identities hidden until Reveal. */
+var players=$$('.player').map(function(el){
+  var p={el:el,a:$('audio',el),env:ENV[el.dataset.env]||[],btn:$('.play',el),range:$('input',el),time:$('time',el),cv:$('canvas',el)};
+  p.btn.onclick=function(){p.a.paused?startA(p.a):p.a.pause()};
+  $('.again',el).onclick=function(){p.a.currentTime=0;startA(p.a)};
+  p.range.oninput=function(){p.a.currentTime=+p.range.value};
+  p.a.onplay=p.a.onpause=p.a.onended=function(){var on=!p.a.paused&&!p.a.ended;el.classList.toggle('playing',on);p.btn.textContent=on?'❚❚ Pause':'▶ Play'};
+  p.a.ontimeupdate=function(){p.range.value=p.a.currentTime;p.time.textContent=mmss(p.a.currentTime)+' / 0:30'};
+  p.a.onerror=function(){$('.err',el).hidden=false;p.btn.disabled=true};
+  return p;
+});
+(function(){
+  var swap=Math.random()<.5;
+  players.forEach(function(p,i){var first=(i===0)!==swap;p.el.style.order=first?0:1;$('h3 .anon',p.el).textContent='Clip '+(first?1:2)});
+  $$('.hands').forEach(function(h){var n=0,b=$('b',h);$$('button',h).forEach(function(bt,i){bt.onclick=function(){n=Math.max(0,n+(i?1:-1));b.textContent=n}})});
+  $('#reveal').onclick=function(){this.textContent=s7.classList.toggle('revealed')?'Hide identities':'Reveal identities'};
+})();
+function playerCol(p){return s7.classList.contains('revealed')||printing?(p.el.dataset.env==='selected'?'#ffc533':'#00d5ea'):'#eaf6ff'}
+
+/* slide 8: the strength knob. Four verified recordings; switching keeps the playback position. */
+var K=[
+ {s:0,  k:'reference',v:'0%',  n:'no adapter · the pretrained model',d:'Round 1: the listener preferred this over every full-strength checkpoint (772, 1,544 and 3,088 updates).'},
+ {s:.25,k:'selected', v:'25%', n:'adapter strength',d:'Round 2: the listener’s choice, for melody and accompaniment.'},
+ {s:.5, k:'s050',     v:'50%', n:'adapter strength',d:'Round 2: compared, not chosen.'},
+ {s:1,  k:'s100',     v:'100%',n:'adapter strength · full',d:'The final adapter after 3,088 updates. Not chosen in either listening round.'}
+], ki=3, kA=$$('.s8 audio');
+function kui(){var a=kA[ki],on=!a.paused&&!a.ended;$('#kplay').textContent=on?'❚❚ Pause':'▶ Play';$('#ktime').textContent=mmss(a.currentTime)+' / 0:30';$('#kseek').value=a.currentTime}
+function knob(i){
+  var was=kA[ki],now=kA[i],on=!was.paused&&!was.ended;
+  if(i!==ki){try{now.currentTime=was.currentTime}catch(e){} was.pause();ki=i;if(on)startA(now)}
+  $('#needle').style.transform='rotate('+(-135+270*K[i].s)+'deg)';$('#arc').style.strokeDasharray=(K[i].s*100)+' 100';
+  $('#kval').textContent=K[i].v;$('#kname').textContent=K[i].n;$('#kdesc').textContent=K[i].d;
+  $$('.kstop').forEach(function(b,j){b.setAttribute('aria-pressed',j===i)});kui();
+}
+kA.forEach(function(a){a.onplay=a.onpause=a.onended=a.ontimeupdate=kui;a.onerror=function(){$('#kerr').hidden=false}});
+$('#kplay').onclick=function(){var a=kA[ki];a.paused?startA(a):a.pause()};
+$('#kagain').onclick=function(){kA[ki].currentTime=0;startA(kA[ki])};
+$('#kseek').oninput=function(){kA[ki].currentTime=+this.value};
+$$('.kstop').forEach(function(b,i){b.onclick=function(){knob(i)}});
+
+function level(){ // loudness of whatever is playing right now, from the measured envelope
+  for(var i=0;i<players.length;i++){var p=players[i];if(!p.a.paused&&!p.a.ended)return {v:(p.env[Math.floor(p.a.currentTime*30)]||0)/99,c:playerCol(p)}}
+  return {v:0,c:'#eaf6ff'};
+}
+
+/* ---------- opening: two strings you can pluck (synthesised interface sound, not model output) ---------- */
+var AC=null, pl=[-9,-9], s1=$('.s1'), lastY=null;
+function pluck(k,sound){
+  pl[k]=performance.now()/1000; if(!sound)return;
+  try{ // Karplus-Strong plucked string, computed once per pluck
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+    var sr=AC.sampleRate,n=Math.round(sr/(k?196:146.83)),len=sr*2.2|0,buf=AC.createBuffer(1,len,sr),d=buf.getChannelData(0),i;
+    for(i=0;i<n;i++)d[i]=Math.random()*2-1;
+    for(i=n;i<len;i++)d[i]=(d[i-n]+d[i-n+1])*.4975;
+    var src=AC.createBufferSource(),g=AC.createGain();g.gain.value=.35;src.buffer=buf;src.connect(g);g.connect(AC.destination);src.start();
+  }catch(e){}
+}
+function stringY(k){var r=$('canvas',s1).getBoundingClientRect();return r.top+r.height*(.4+.2*k)}
+s1.addEventListener('click',function(e){if(e.target.closest('button'))return;pluck(Math.abs(e.clientY-stringY(0))<Math.abs(e.clientY-stringY(1))?0:1,true)});
+s1.addEventListener('pointermove',function(e){ // crossing a string makes it move; sound only on click or keys 1 / 2
+  if(lastY!==null)for(var k=0;k<2;k++){var y=stringY(k);if((lastY-y)*(e.clientY-y)<0)pluck(k,false)}
+  lastY=e.clientY;
+});
+
+/* ---------- two-string navigator: gold string = Yeldar, turquoise string = Aisha ---------- */
+var fretEls=slides.map(function(sl,i){
+  var b=document.createElement('button');b.type='button';b.className='fret '+(sl.dataset.who==='Yeldar'?'y':'a');
+  b.setAttribute('aria-label','Slide '+(i+1)+': '+sl.dataset.title+' ('+sl.dataset.who+')');b.title=(i+1)+' · '+sl.dataset.title+' · '+sl.dataset.who;
+  b.appendChild(document.createElement('i'));b.onclick=function(){go(i)};$('#frets').appendChild(b);return b;
+});
+function frets(n){fretEls.forEach(function(b,i){b.classList.toggle('on',i<=n);b.classList.toggle('cur',i===n)})}
+
+/* ---------- canvases: strings, and a sky that moves from night towards first light ---------- */
+function drawStrings(cv,t,amps,col){
+  var w=cv.clientWidth*1.5|0,h=cv.clientHeight*1.5|0;if(!w||!h)return;
+  if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}   // resize only when the layout changes
+  var c=cv.getContext('2d'),x,y;c.clearRect(0,0,w,h);c.lineCap='round';
+  if(printing){c.fillStyle='#05060f';c.fillRect(0,0,w,h)}   // printed canvases lose transparency
+  for(var k=0;k<2;k++){var sc=k?(col||'#00d5ea'):(col||'#ffc533');
+    for(var g=1;g>=0;g--){c.beginPath();
+      for(x=0;x<=w;x+=6){var e=Math.sin(Math.PI*x/w),u=x/w*Math.PI*2,ph=t-g*.04;
+        y=h*(.4+.2*k)+amps[k]*h*.16*e*(Math.sin(u*(2+k))*Math.cos(ph*(5+k*1.7))*.6+Math.sin(u*(5+2*k))*Math.cos(ph*(9+k))*.4);x?c.lineTo(x,y):c.moveTo(x,y)}
+      c.globalAlpha=g?.3:1;c.strokeStyle=sc;c.shadowColor=sc;c.shadowBlur=g?0:16;c.lineWidth=g?7:3;c.stroke()}}
+  c.globalAlpha=1;c.shadowBlur=0;
+}
+// ponytail: sun height per slide is a design choice, not data; it stops short of full day on purpose ("first light")
+var DAWN=[0,.04,.1,.16,.22,.16,.36,.62,.85], dawn=0, stars=[];
+for(var si=0;si<130;si++)stars.push([Math.random(),Math.random()*.66,Math.random()*1.6+.5,Math.random()*6.3]);
+function drawBg(t){
+  var cv=$('#bg'),c=cv.getContext('2d'),w=cv.width,h=cv.height,x,y,j,hy=h*.72,cx=w*.5;c.clearRect(0,0,w,h);
+  dawn+=((DAWN[cur]||0)-dawn)*(still?1:.025);
+  // sky glow above the horizon
+  var g=c.createLinearGradient(0,hy-h*.45,0,hy);g.addColorStop(0,'rgba(5,6,15,0)');g.addColorStop(.7,'rgba(70,40,160,'+(.1+.3*dawn)+')');g.addColorStop(1,'rgba(255,92,122,'+(.08+.34*dawn)+')');
+  c.fillStyle=g;c.fillRect(0,hy-h*.45,w,h*.45);
+  for(j=0;j<stars.length;j++){var s=stars[j];c.globalAlpha=Math.max(0,1-dawn*1.1)*(.5+.35*Math.sin(t*.7+s[3]));c.fillStyle=j%9?'#eaf6ff':'#00d5ea';c.fillRect(s[0]*w,s[1]*h,s[2],s[2])}
+  c.globalAlpha=1;
+  // the sun is a shanyrak rising behind the steppe
+  var R=h*.2,sx=w*.8,sy=hy+R*(1.08-dawn*1.25);
+  if(sy-R<hy){c.save();c.beginPath();c.rect(0,0,w,hy);c.clip();
+    var sg=c.createLinearGradient(0,sy-R,0,sy+R);sg.addColorStop(0,'#ffc533');sg.addColorStop(1,'#ff5c7a');
+    c.globalAlpha=.8;c.shadowColor='#ffc533';c.shadowBlur=50;c.fillStyle=sg;c.beginPath();c.arc(sx,sy,R,0,7);c.fill();c.shadowBlur=0;
+    c.globalAlpha=.9;c.strokeStyle='#05060f';c.lineWidth=Math.max(2,R*.035);
+    c.save();c.beginPath();c.arc(sx,sy,R*.74,0,7);c.clip();   // crossed roof bars, straight, inside the ring
+    for(j=-1;j<=1;j++){c.beginPath();c.moveTo(sx+j*R*.11,sy-R);c.lineTo(sx+j*R*.11,sy+R);c.moveTo(sx-R,sy+j*R*.11);c.lineTo(sx+R,sy+j*R*.11);c.stroke()}
+    c.restore();c.beginPath();c.arc(sx,sy,R*.74,0,7);c.stroke();
+    for(j=0;j<40;j++){var an=j/40*6.2832;c.beginPath();c.moveTo(sx+Math.cos(an)*R*.74,sy+Math.sin(an)*R*.74);c.lineTo(sx+Math.cos(an)*R,sy+Math.sin(an)*R);c.stroke()}   // roof poles
+    c.restore()}
+  // steppe: a wireframe plain running to the horizon
+  c.globalAlpha=1;c.fillStyle='rgba(5,6,15,.55)';c.fillRect(0,hy,w,h-hy);
+  c.strokeStyle='#00d5ea';c.lineWidth=1.2;
+  for(j=-16;j<=16;j++){c.globalAlpha=.2;c.beginPath();c.moveTo(cx+j*w*.03,hy);c.lineTo(cx+j*w*.16,h);c.stroke()}
+  var ph=(t*.12)%1;
+  for(j=0;j<9;j++){var f=Math.pow((j+ph)/9,2.3);y=hy+(h-hy)*f;c.globalAlpha=.08+.3*f;c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke()}
+  c.globalAlpha=.9;c.shadowColor='#00d5ea';c.shadowBlur=14;c.lineWidth=2;c.beginPath();c.moveTo(0,hy);c.lineTo(w,hy);c.stroke();c.shadowBlur=0;c.globalAlpha=1;
+}
+var smooth=0;
+function draw(now){
+  var t=still?1.3:now/1000, all=flow||printing, rt=now/1000;
+  if(!flow)drawBg(t);
+  slides.forEach(function(s,i){
+    if(!all&&i!==cur)return;
+    $$('canvas.strings',s).forEach(function(cv){
+      if(cv.dataset.mode==='audio'){var L=level();smooth+=(L.v-smooth)*.25;var a=.06+smooth*1.5;drawStrings(cv,rt*2.2,[a,a],L.c)}
+      else drawStrings(cv,still?1.3:rt,still?[.6,.6]:[.1+Math.exp(-(rt-pl[0])*1.1),.1+Math.exp(-(rt-pl[1])*1.1)]);
+    });
+    if(s===s7)players.forEach(function(p){bars(p.cv,p.env,p.a.currentTime/30,playerCol(p))});
+    if(s.classList.contains('s8'))bars($('#kbars'),ENV[K[ki].k]||[],kA[ki].currentTime/30,ki?'#ffc533':'#00d5ea');
+  });
+}
+function frame(now){draw(now);requestAnimationFrame(frame)}
+// printing: desktop slide layout, every canvas drawn, recorded totals shown
+addEventListener('beforeprint',function(){printing=true;fit();rp++;setReplay(1);$$('[data-count]').forEach(function(el){el.textContent=fmt(el.dataset.count)});draw(performance.now())});
+addEventListener('afterprint',function(){printing=false;fit()});
+
+/* ---------- start ---------- */
+applyMotion(); fit(); go((parseInt(location.hash.slice(1),10)||1)-1); requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

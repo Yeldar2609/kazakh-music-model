@@ -1,0 +1,17 @@
+YELDAR AND AISHA - KAZAKH MUSIC MODEL
+
+1. Extract the ENTIRE ZIP into a folder.
+2. Open index.html in Chrome or Edge. No installation or internet is required.
+3. Use the arrow keys or bottom arrows to change slides.
+4. Click Notes (or N) for your speaking notes. Overview (O) jumps to a slide.
+5. Use Fullscreen (F), or the browser F11 key if fullscreen is unavailable.
+6. Slide 7 contains the reference and selected music demos. Click Play.
+7. Motion can be switched off using the bottom control.
+
+Rehearse seven minutes together. Speaker notes allocate equal time. Play about 25 seconds of each demo. Test classroom speakers before presenting.
+
+PRINTABLE.pdf is a nine-page static fallback. Audio and animation are available in the website only. SPEAKER-NOTES.md contains the two-person script. RESEARCH-NOTES.md provides background and defense questions.
+
+The selected demo is the final adapter at 25% influence, preferred by one listener for one prompt and seed. This is not evidence of general superiority; Kazakh pronunciation is unverified. All eligible training clips were used.
+
+Only generated listening examples are included. No gated dataset recordings or credentials are bundled. Audio is excluded from Git: a source checkout needs the audio folder from this package. Keep the whole folder together.

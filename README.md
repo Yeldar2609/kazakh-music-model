@@ -1,31 +1,53 @@
-# Kazakh Music Model — ACE-Step-based prototype
+# Kazakh Music Model
 
-A small, reproducible experiment: can a pretrained music model (ACE-Step 1.5, 2B `acestep-v15-turbo`) produce
-(a) a dombra instrumental and (b) a short Kazakh vocal passage with dombra accompaniment, and does a tiny LoRA
-adapter trained on licensed Kazakh recordings change the result? Built by a beginner in music ML as
-independent preparation for a research collaboration; nothing here is a claim of a trained Kazakh music model.
+**Updated 12 November 2026 · Yeldar, Aisha and Dimash**
 
-**Four outcomes, reported separately** (see `docs/DECISIONS.md`): infrastructure+data prepared · pretrained
-generation works · adapter trained and reloaded · human-reviewed improvement. Current state: `PROJECT_STATUS.md`.
+A local prompt-to-music prototype built on ACE-Step 1.5. We prepared and checked
+Kazakh instrumental and vocal material, trained LoRA adapters, and generated music
+from descriptive prompts and Kazakh lyrics. The pretrained foundation stays frozen;
+our work is local adaptation, data preparation and a reproducible generation workflow.
 
-## Assignment 2, November 2026
+## Current presentation and rehearsal materials
 
-The 4 GB laptop now supports NF4 adapter training. A small pilot reduced held-out
-flow loss, but the owner judged its music poor. The follow-up completed training
-on all 2,316 eligible Kazakh Songs ASR training clips in 66.3 minutes and generated
-12 matched audio examples. The offline page compares the pretrained reference
-with three checkpoints. The owner preferred the pretrained reference on the
-simple-vocal case and requested better melody and accompaniment. In the strength
-follow-up, the owner preferred the final trained adapter at 25% strength over the
-reference, 50%, and 100% versions for that case. This is a positive one-listener,
-one-prompt preference, not a general musical-quality or pronunciation benchmark.
+- [Current ten-slide presentation source](presentation-stage/index.html)
+- [Presentation PDF](presentation-stage/PRINTABLE.pdf)
+- [Rehearsal script PDF](presentation-stage/REHEARSAL-SCRIPT.pdf)
+- [Speaker script](presentation-stage/SPEAKER-NOTES.md), with Aisha presenting slide 8
+- [Opening instructions](presentation-stage/START%20HERE.txt)
+- [Training evidence and source records](presentation-stage/proof/)
 
-- [Full-run status and reproduction](docs/ASSIGNMENT2_FULL_RUN.md)
-- [Seven-minute presentation guide](docs/ASSIGNMENT2_FULL_DEFENSE.md)
+The HTML presentation opens locally in a browser; GitHub displays its source.
+The PDFs can be viewed directly on GitHub. Audio is intentionally excluded from Git.
+For playback, use the complete offline package or provide the two generated WAVs in
+`presentation-stage/audio/` as described in the opening instructions.
+
+## What is implemented
+
+- Online video/audio source research, provenance checks and recording-by-recording triage.
+- Instrumental expansion using 59 dombra-only archive recordings, followed by a separate vocal-data workflow.
+- Hugging Face Kazakh Songs ASR preparation: 2,316 training clips, with validation and test splits held out.
+- A completed 3,088-update adapter run, saved checkpoints, and local prompt-to-music generation.
+- A presentation with working audio controls, animation, actual training-log evidence and rehearsal materials.
+
+The final run logged **66.3 minutes** of training. **300+ minutes across experiments**
+is a retrospective team estimate, not a verified sum of complete logs. Earlier GPU
+recollection conflicts with the historical machine record; original evidence is retained.
+Training completion does not establish general musical-quality or pronunciation gains.
+
+## Reproduction and history
+
+- [Full-run configuration and reproduction](docs/ASSIGNMENT2_FULL_RUN.md)
+- [Dataset source inventory](docs/DATA_SOURCES.md)
+- [Model choices and engineering decisions](docs/DECISIONS.md)
+- [Current status and chronological project history](PROJECT_STATUS.md)
 - [Historical pilot measurements](docs/ASSIGNMENT2_RESULTS.md)
 
-Restricted source recordings and transcripts stay outside the repository. The
-offline listening demo contains generated examples only.
+`presentation-stage/` is the current deck. `design-directions/`, `presentation-website/`
+and `presentation/` preserve earlier explorations. Their older credits and framing are
+historical; use the current deck and rehearsal script for class.
+
+Restricted recordings, generated audio, model weights and credentials are not committed.
+Earlier commits remain part of the project's genuine development history.
 
 ## Pinned foundation
 - Engine: `ace-step/ACE-Step-1.5` @ `ca1e85fe…` (2026-08-29), MIT. Weights: HF `ACE-Step/Ace-Step1.5` @ `19671f40…`

@@ -1,4 +1,10 @@
-# Project status — updated 2026-09-14 11:55 (Monday, RTX 5060 8 GB desktop)
+# Current project status - 12 November 2026
+
+Team: Yeldar, Aisha and Dimash. Current deck: `presentation-stage/index.html`. Current rehearsal PDF: `presentation-stage/REHEARSAL-SCRIPT.pdf`; Aisha presents slide 8. The build-story deck includes sources, data preparation, locally trained adapters, generated audio controls and verified training evidence. See README.md for current entry points.
+
+The dated entries below preserve the development record. They are not the date of the latest project update.
+
+# Historical status: 14 September 2026 (RTX 5060 8 GB desktop)
 
 ## The four outcomes
 
@@ -127,3 +133,28 @@ founder's Hugging Face account; with a token we can pull sung-Kazakh + lyrics ma
 - Class demo selection: outputs/assignment2-lighter-2026-11-11/audio/B_verse_simple_D.wav. Preference criterion: melody and accompaniment.
 - Positive preference is limited to one listener, one prompt and one seed. Other cases and pronunciation remain unverified. Preserve the earlier full-strength result, where the owner preferred the pretrained reference.
 - Updated package: outputs/assignment2-full-2026-11-11-selected.zip. Earlier ZIP remains preserved.
+
+## Animated Assignment 2 presentation, 11 November 2026
+
+Open `presentation-website/index.html` for the nine-slide offline presentation credited to Yeldar and Aisha. It includes animated diagrams, the pretrained reference and selected 25% adapter audio, equal speaking-time notes, and a static PDF fallback. Full class package: `outputs/kazakh-music-presentation-yeldar-aisha-2026-11-11.zip` (10.0 MiB). Extract the entire ZIP before opening. Audio files are ignored by Git; the package includes both generated examples. Verification is in `presentation-website/QA.md`. Classroom hardware and live rehearsal remain unchecked. This is a local website, not a public deployment.
+
+## Second presentation variant (`presentation/`), 11 November 2026
+
+A separate nine-slide offline deck lives in `presentation/index.html` (branch `presentation/assignment2-site`, uncommitted). It does not replace `presentation-website/`; the owner should pick one for class. Distinct features: a two-string navigator (gold = Yeldar, turquoise = Aisha), pluckable opening strings (browser-synthesised interface sound, labelled as not model output), a night-to-first-light background, a blind class poll on slide 7 (order shuffled per load, labelled as not a recorded result), and a strength knob on slide 8 that switches between the four verified `B_verse_simple` listening copies (0%, 25%, 50%, 100%) at the same playback position. The four WAVs are byte-identical copies whose hashes match `outputs/assignment2-lighter-2026-11-11/verification.json`. Package: `outputs/kazakh-music-generation-presentation-2026-11-11.zip` (19.9 MiB). Checked in headless Chromium from an extracted copy: all slides, navigation, audio exclusivity, print layout, 390-pixel layout, no non-local requests. Not checked: a real classroom screen and speakers, real-browser Ctrl+P output, and the Kazakh subtitle on slide 1 by a native speaker.
+
+## Current presentation: A + D stage deck, 11 November 2026
+
+User chose the Festival Poster + Kazakh Futurism blend and requested presentation navigation rather than a landing page. Current deck: presentation-stage/index.html. Team confirmed: Yeldar, Aisha and Dimash. Nine slides, motion, two verified music demos, speaker notes with 2:20 per person including playback. Package: outputs/kazakh-music-stage-yeldar-aisha-dimash.zip. PDF fallback included. Earlier presentation and design previews preserved. Slides describe model adaptation and retain the need to confirm NLP/dataset eligibility. Desktop fit, mobile widths, navigation and exclusive audio verified; classroom hardware and live rehearsal remain open.
+
+### Current stage revision: evidence and clean presentation UI
+
+presentation-stage/index.html now has ten slides. Removed assignment/date and bottom toolbar including overview/notes. Edge arrows and keyboard navigation remain; F fullscreen, M motion. Presenter voice uses I/we rather than owner. Added real training-loss plot, raw step log, copied training/data-preparation source, adapter configuration and verified checkpoint hashes. Clarified baseline as locally generated pretrained ACE-Step output, with locally trained LoRA; no scratch foundation-training claim. Updated PDF and versioned package outputs/kazakh-music-stage-evidence-v2.zip. User asked for scratch-training emphasis, but current code explicitly loads pretrained weights and freezes them; that distinction was explained.
+
+### Build-story revision
+
+Removed Sample D/preference narrative from current presentation and rehearsal notes. Focus is the team's local implementation:116recordings reviewed by ear,59dombra-only recordings added as111crops,27vocal recordings withheld for unverified lyrics, later HF aligned-vocal data and4GB run. Model-choice slide correctly distinguishes score-driven VocalRender (Mandarin-related sources) from ACE-Step prompt+lyrics generation, credits ACE Studio/StepFun, and avoids Chinese-only or required-score claims for ACE-Step. Earlier work used a local8GB desktop; final run used4GB laptop. Current package outputs/kazakh-music-local-build-v3.zip; PDF refreshed. Original experiment history retained in evidence rather than rewritten.
+
+### Source trail and cumulative-time revision
+
+Remote GitHub DATA_SOURCES.md and DECISIONS.md re-read. Added Wikimedia Commons online video pilot, RTRK archive, HF aligned-vocal source trail with proof/source-history.md. Removed visible peak allocated GPU statistic. User recalls5090 and estimates300+training minutes; GitHub explicitly records5060 correction. Slides omit disputed model and label300+minutes retrospective cumulative estimate, distinct from66.3minute logged final run. Added decorative signature/source motion, honors M/reduced motion. Ten-page PDF and package outputs/kazakh-music-source-story-v4.zip refreshed; checks passed.
+- Later the same day `presentation/` was restyled at the owner's request to a "Kazakh Futurism" look (neon turquoise and gold on near-black, wireframe steppe, shanyrak sun and knob, ram-horn ornament). Content, audio and logic are unchanged; the ZIP was rebuilt. Re-checked in headless Chromium: all nine slides, keys, navigator, knob, blind test, print layout, 390-pixel layout.

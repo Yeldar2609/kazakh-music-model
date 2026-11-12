@@ -1,0 +1,5 @@
+Ten-slide revision verified: no assignment/date label, owner wording or bottom toolbar in HTML. Keyboard and edge-arrow navigation, exclusive audio playback and pause on slide change passed. All ten slides fit 1280x720; no horizontal overflow at390x844. Training log checksum and all four checkpoint hashes checked against actual local artifacts. Proof chart uses64-update window means from3088 log entries; reduced-motion retains the full chart. PDF has ten pages. Classroom hardware and rehearsal unchecked.
+
+Build-story revision: no preference narrative in HTML/PDF. Original triageCSV and validation source copied, model inputs cross-checked with local pinned upstream README and project decision record. All10slides fit1280x720; zero horizontal overflow at390x844. Ten-page PDF checked.
+
+Source/timing revision: remote GitHub source and decisions files checked.300+minutes labeled retrospective estimate;66.3-minute final log preserved separately. Peak-memory metric removed from slides/PDF. All10slides fit1280x720, mobile width390passes; new decorative motion stops with M. Source slide PDF visually reviewed.
